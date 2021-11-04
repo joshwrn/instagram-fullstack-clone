@@ -1,0 +1,265 @@
+.card {
+  display: flex;
+  width: 560px;
+  height: 750px;
+  margin: 0 0 4em 0;
+  justify-content: center;
+  /* box-shadow: 0px 0px 26px 5px rgba(0, 0, 0, 0.089); */
+  border: var(--primary-border);
+  position: relative;
+  border-radius: 16px;
+}
+
+/*@ Contain main overflow */
+.container {
+  position: absolute;
+  width: inherit;
+  height: inherit;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/*+ card top and profile picture */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  box-sizing: border-box;
+  height: 56px;
+  background-color: var(--primary-background-color);
+  padding: 1.5em;
+}
+
+.header .left {
+  display: flex;
+}
+
+.header .right {
+  display: flex;
+  height: 100%;
+  align-items: center;
+}
+
+.moreIcon {
+  cursor: pointer;
+}
+
+/*# card profile picture */
+.avatar {
+  border-radius: 100%;
+  height: 2.25em;
+  width: 2.25em;
+  object-fit: cover;
+  display: block;
+  object-position: center;
+  cursor: pointer;
+}
+
+/* card user info */
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 16px;
+}
+
+.displayName {
+  font-weight: bold;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.username {
+  color: var(--secondary-font-color);
+  font-size: 0.85em;
+  cursor: pointer;
+}
+
+/*+ image */
+
+.loading {
+  width: 560px;
+  height: 500px;
+  position: absolute;
+  z-index: 1;
+  background: var(--loading-gradient);
+  background-size: 200%;
+  animation: 2s linear infinite gradientMove;
+}
+
+.imageLink {
+  width: inherit;
+  height: inherit;
+}
+
+.imageContainer {
+  width: 560px;
+  height: 500px;
+}
+
+.imageBlur {
+  position: absolute;
+  filter: blur(2em);
+  opacity: 0;
+  width: inherit;
+  height: inherit;
+  object-fit: cover;
+  display: block;
+  object-position: center;
+  z-index: -2;
+  animation: fade 1.5s forwards;
+}
+
+/*+ card__footer */
+.footer {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  padding: 16px 1.25em;
+  background-color: var(--primary-background-color);
+  z-index: 3;
+  bottom: 0;
+  box-sizing: border-box;
+}
+
+.footer > .firstChild {
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer > .firstChild > .left .icon {
+  margin: 0 7px 0 0;
+}
+
+.icon {
+  cursor: pointer;
+}
+
+.likeIcon {
+  margin: 0 7px 0 0;
+  cursor: pointer;
+}
+
+.likeIcon > path:hover {
+  fill: red;
+  stroke: red;
+}
+
+.likedIcon {
+  margin: 0 7px 0 0;
+  cursor: pointer;
+}
+
+.likedIcon > path {
+  fill: red;
+  stroke: red;
+}
+
+.likes {
+  cursor: pointer;
+  margin: 0.5rem 0;
+  font-weight: bold;
+  font-size: 0.85rem;
+}
+
+/*+ comments */
+
+.commentContainer {
+  display: flex;
+  flex-direction: column;
+  height: 48px;
+  width: 100%;
+}
+
+.comments .viewAll {
+  color: var(--secondary-font-color);
+  margin: 0 0 6px 0;
+  cursor: pointer;
+}
+
+.comments {
+  font-size: 0.85rem;
+}
+
+.comments .comment {
+  padding: 0 0 6px 0;
+  height: 15px;
+}
+
+.comments .commentUser {
+  font-weight: bold;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+/*+ comment input */
+
+.footer .commentBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  background: rgba(32, 32, 32, 0);
+  border: 1px solid rgba(124, 124, 124, 0);
+  border-top: 1px solid rgba(124, 124, 124, 0.281);
+  padding-top: 10px;
+}
+
+.footer .commentForm {
+  width: 100%;
+}
+
+.footer .inputBox {
+  width: 100%;
+  text-align: left;
+  border: 0px solid rgba(124, 124, 124, 0);
+  background: rgba(32, 32, 32, 0);
+  color: var(--primary-font-color);
+}
+
+.footer .send {
+  cursor: pointer;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}
+
+@media only screen and (max-width: 850px) {
+  .footer input::placeholder {
+    font-size: 13px;
+  }
+
+  .card {
+    display: flex;
+    width: 340px;
+    height: 590px;
+    margin: 0 0 4em 0;
+    justify-content: center;
+    /* box-shadow: 0px 0px 26px 5px rgba(0, 0, 0, 0.089); */
+    border: var(--primary-border);
+    position: relative;
+    border-radius: 16px;
+  }
+
+  .imageContainer {
+    width: 340px;
+    height: 340px;
+  }
+
+  .imageBlur {
+    -webkit-backface-visibility: hidden;
+    -webkit-transform: translateZ(0) scale(1, 1);
+  }
+}

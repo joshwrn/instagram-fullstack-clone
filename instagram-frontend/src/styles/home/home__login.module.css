@@ -1,0 +1,42 @@
+.loginButtons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  color: var(--secondary-font-color);
+}
+
+.signUp,
+.login {
+  padding: 0 2em;
+  height: 2.25em;
+  width: 13em;
+  font-size: 16px;
+  border-radius: 16px;
+  cursor: pointer;
+  box-sizing: border-box;
+  font-weight: bold;
+  transition: box-shadow 0.25s, transform 0.25s;
+}
+
+.signUp {
+  background-color: var(--primary-font-color);
+  color: var(--primary-background-color);
+  border: var(--primary-border);
+}
+
+.login {
+  border: none;
+  box-shadow: 0px 0px 20px 1px rgba(0, 0, 0, 0.1);
+  background-color: var(--primary-background-color);
+  color: var(--primary-font-color);
+  position: relative;
+  z-index: 10;
+  border: var(--primary-border);
+}
+
+.login:hover,
+.signUp:hover {
+  box-shadow: 0px 0px 20px 1px rgba(0, 0, 0, 0.2);
+}

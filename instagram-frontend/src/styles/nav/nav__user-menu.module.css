@@ -1,0 +1,120 @@
+.container {
+  position: fixed;
+  transform: translateX(-7.2em) translateY(1em);
+  width: 10em;
+}
+
+.container:after {
+  bottom: 100%;
+  left: 80%;
+  border: solid transparent;
+  content: ' ';
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+  border-bottom-color: var(--primary-transparent-color);
+  border-width: 8px;
+  margin-left: -8px;
+}
+
+.inner {
+  display: flex;
+  position: fixed;
+  flex-direction: column;
+  top: 0;
+  width: 100%;
+  align-items: flex-start;
+  justify-content: center;
+  background-color: var(--primary-transparent-color);
+  height: fit-content;
+  border: var(--primary-border);
+  box-shadow: 0px 0px 26px 5px rgba(0, 0, 0, 0.089);
+  backdrop-filter: blur(100px);
+  border-radius: 0.25rem;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  height: 2.2em;
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: 0.5em;
+  color: var(--user-menu-font-color);
+  transition: background-color 0.25s;
+  font-size: 0.86rem;
+  gap: 5px;
+}
+
+.option:hover {
+  background-color: var(--menu-hover-color);
+}
+
+.icon {
+  font-size: 1.05rem;
+}
+
+@media only screen and (max-width: 850px) {
+  .container {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    margin: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-105%) translateX(22%);
+  }
+
+  .container:after {
+    bottom: -15px;
+    left: 68%;
+    border: solid transparent;
+    content: ' ';
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border-bottom-color: var(--primary-transparent-color);
+    border-width: 8px;
+    transform: rotateX(180deg);
+  }
+  .inner {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    top: initial;
+    align-items: flex-start;
+    justify-content: flex-start;
+    background-color: var(--primary-transparent-color);
+    width: 200px;
+    overflow-y: scroll;
+    border: var(--primary-border);
+    backdrop-filter: none;
+    border-radius: 0.25rem;
+    box-sizing: border-box;
+  }
+
+  .option {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+    padding-left: 0.5em;
+    color: var(--user-menu-font-color);
+    transition: background-color 0.25s;
+    font-size: 16px;
+    gap: 5px;
+  }
+
+  .icon {
+    font-size: 19px;
+  }
+}

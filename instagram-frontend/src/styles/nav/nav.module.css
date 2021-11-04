@@ -1,0 +1,229 @@
+.nav {
+  display: flex;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--nav-background-color);
+  backdrop-filter: blur(2em);
+  height: 54px;
+  border-bottom: var(--primary-border);
+  box-shadow: 0px 0px 26px 5px rgba(0, 0, 0, 0.089);
+  z-index: 100;
+  box-sizing: border-box;
+}
+
+@-moz-document url-prefix() {
+  .nav {
+    background-color: var(--primary-background-color);
+  }
+}
+
+.inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1600px;
+  width: 90%;
+  padding: 0 1em 0 1em;
+  box-sizing: border-box;
+}
+
+.logoImg {
+  height: 30px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  cursor: pointer;
+}
+
+/* search box */
+.searchInput {
+  padding: 0em 1em 0 1em;
+  background: rgba(32, 32, 32, 0);
+  border: 1px solid rgba(124, 124, 124, 0.281);
+  border-radius: 0.65em;
+  height: 28px;
+  text-align: center;
+  transition: width 0.5s;
+  box-sizing: border-box;
+  width: 175px;
+  color: var(--secondary-font-color);
+}
+
+.searchInput:focus {
+  text-align: left;
+  width: 250px;
+  color: var(--primary-font-color);
+}
+
+input,
+select,
+textarea {
+  color: var(--primary-font-color);
+
+  font-family: helvetica;
+}
+
+input::placeholder {
+  color: var(--secondary-font-color) !important;
+  font-family: helvetica;
+}
+
+input::placeholder:focus {
+  text-align: left;
+}
+
+/* nav icons */
+.icons {
+  display: flex;
+  gap: 24px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.icon {
+  cursor: pointer;
+  font-size: 1.5rem !important;
+}
+.person {
+  transform: translateY(2px) translateX(-1px);
+  font-size: 1.45rem !important;
+}
+
+.add {
+  display: none;
+}
+
+.home {
+  transform: translateY(1px);
+  font-size: 1.5rem !important;
+}
+
+.heart {
+  font-size: 1.65rem !important;
+  transform: translateY(-1px);
+}
+.chat {
+}
+
+.notiBadge {
+  display: flex;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  padding: 0 5px;
+  max-width: 10px;
+  height: 15px;
+  background: rgb(255, 0, 98);
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  border-radius: 100%;
+  transform: translate(19px, -9px);
+  cursor: pointer;
+}
+
+.icon path {
+  stroke-width: 25px;
+}
+
+.icons > a {
+  color: var(--primary-font-color);
+}
+
+.icons > :global(.active) {
+  color: var(--primary-font-color);
+}
+
+:global(.active) > .icon > path {
+  fill: var(--primary-font-color);
+  stroke: var(--primary-font-color);
+}
+
+.icon:hover:not(.add) > path {
+  fill: var(--primary-font-color);
+  stroke: var(--primary-font-color);
+}
+
+.profileLink {
+  cursor: default;
+}
+
+.notiContainer {
+  display: flex;
+  align-items: center;
+}
+
+/*! mobile */
+@media only screen and (max-width: 850px) {
+  .nav {
+    top: initial;
+    height: fit-content;
+    bottom: 0;
+    box-sizing: initial;
+  }
+
+  .logo {
+    display: none;
+  }
+
+  /* search box */
+  .searchInput {
+    display: none;
+  }
+
+  .inner {
+    justify-content: center;
+    padding: 0;
+    width: 100%;
+  }
+
+  .icons {
+    display: flex;
+    gap: 0.95em;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 25px;
+  }
+  .notiContainer {
+    display: initial;
+    align-items: initial;
+  }
+
+  .notiBadge {
+    transform: translate(19px, -35px);
+    width: 7px;
+    padding: 5px 5px;
+    height: 7px;
+  }
+
+  .icon path {
+    stroke-width: 30px;
+  }
+
+  .icon {
+    transform: scale(1.11);
+  }
+
+  .add {
+    display: initial;
+    font-size: 1.88rem !important;
+  }
+  .add path {
+    stroke-width: 25px;
+  }
+
+  @supports (padding: max(0px)) {
+    .nav {
+      padding-top: 12px;
+      padding-bottom: max(12px, env(safe-area-inset-bottom));
+    }
+  }
+}

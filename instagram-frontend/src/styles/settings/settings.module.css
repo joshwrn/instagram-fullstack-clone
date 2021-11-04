@@ -1,0 +1,306 @@
+.settings {
+  display: grid;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  padding-top: 54px;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  box-sizing: border-box;
+}
+
+.container {
+  display: grid;
+  flex-direction: column;
+  align-items: center;
+  grid-template-rows: 1fr 8fr 3fr;
+  box-shadow: 0px 0px 16px 1px rgba(0, 0, 0, 0.103);
+  overflow: hidden;
+  border-radius: 16px;
+  border: var(--primary-border);
+  width: 400px;
+  height: 672px;
+  box-sizing: border-box;
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.bannerOverlayContainer {
+  display: flex;
+  cursor: pointer;
+}
+
+.bannerContainer {
+  display: flex;
+  align-items: center;
+  height: 144px;
+  width: 100%;
+  box-sizing: border-box;
+  align-self: flex-start;
+  justify-self: flex-start;
+}
+
+.bannerImage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  object-position: center;
+  box-sizing: border-box;
+}
+
+.bannerOverlay {
+  display: flex;
+  position: absolute;
+  justify-content: flex-end;
+  align-items: flex-start;
+  background-color: rgba(0, 0, 0, 0.301);
+  opacity: 0;
+  width: 400px;
+  height: 144px;
+  box-sizing: border-box;
+  transition: opacity 0.25s;
+  padding: 19px;
+}
+
+.bannerOverlayContainer:hover > .bannerOverlay {
+  opacity: 1;
+}
+
+.bannerIcon {
+  position: absolute;
+  color: white;
+  font-size: 24px;
+}
+
+.bannerOverlayContainer > .fileInput {
+  position: absolute;
+  width: 400px;
+  height: 144px;
+  opacity: 0;
+  z-index: -1;
+}
+
+/*! profile picture */
+
+.containerBar {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 56px;
+}
+
+.profileOverlayContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  transform: translateY(-50%);
+  border-radius: 100%;
+  width: 112px;
+  height: 112px;
+  cursor: pointer;
+}
+
+.profileOverlay {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.301);
+  opacity: 0;
+  width: 112px;
+  height: 112px;
+  border-radius: 100%;
+  z-index: 1;
+  transition: opacity 0.25s;
+  -webkit-backface-visibility: hidden;
+  -webkit-transform: translateZ(0) scale(1, 1);
+}
+
+.profileOverlayContainer:hover > .profileOverlay {
+  opacity: 1;
+}
+
+.profileIcon {
+  z-index: 2;
+  position: absolute;
+  color: white;
+  font-size: 40px;
+}
+
+.profileOverlayContainer > .fileInput {
+  position: absolute;
+  height: 112px;
+  width: 112px;
+  border-radius: 100%;
+  z-index: -1;
+  opacity: 0;
+}
+
+/*! text inputs */
+.textInputs {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  color: var(--primary-font-color);
+  margin-top: 32px;
+}
+
+.textForm {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  gap: 16px;
+}
+
+.inputContainer {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.inputContainer > p {
+  width: 50%;
+  font-size: 11px;
+  text-align: left;
+  font-weight: bold;
+  color: var(--secondary-font-color);
+  margin-bottom: 5px;
+}
+
+.input {
+  display: flex;
+  width: 60%;
+  justify-content: center;
+  align-items: center;
+  border: var(--secondary-border);
+  border-radius: 16px;
+  height: 32px;
+}
+
+.input > .inputBoxDisplay {
+  width: 100%;
+  text-align: center;
+  border: 0px solid rgba(124, 124, 124, 0);
+  background: rgba(32, 32, 32, 0);
+  color: var(--primary-font-color);
+  font-size: 13px;
+}
+
+.input > .inputBoxDisplay:focus {
+  text-align: left;
+  margin-left: 16px;
+}
+
+.bioInput {
+  padding: 16px 16px 0 16px;
+  border: 1px solid rgba(124, 124, 124, 0.281);
+  border-radius: 8px;
+  height: 112px;
+  width: 60%;
+  box-sizing: border-box;
+  resize: none;
+  text-align: center;
+  background-color: var(--primary-background-color);
+}
+
+.bioInput:focus {
+  text-align: left;
+}
+
+.bioInput::placeholder:focus {
+  text-align: left;
+}
+
+.textBtn {
+  background-color: var(--primary-font-color);
+  color: var(--primary-background-color);
+  padding: 0 32px;
+  height: 40px;
+  font-size: 17px;
+  border-radius: 20px;
+  cursor: pointer;
+  box-sizing: border-box;
+  font-weight: bold;
+  border: var(--secondary-border);
+  justify-self: center;
+  transition: box-shadow 0.25s, transform 0.25s;
+  margin-top: 16px;
+}
+
+.textBtn:hover {
+  box-shadow: 0px 5px 10px 1px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+.profileBtnContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100%;
+}
+
+.profileLink {
+  height: 36px;
+  margin-top: 19px;
+}
+
+.profileBtn {
+  background-color: var(--primary-background-color);
+  color: var(--secondary-font-color);
+  padding: 0 32px;
+  height: 36px;
+  font-size: 16px;
+  border-radius: 16px;
+  cursor: pointer;
+  box-sizing: border-box;
+  font-weight: bold;
+  transition: box-shadow 0.25s;
+  border: var(--secondary-border);
+}
+
+@media only screen and (max-width: 850px) {
+  .settings {
+    padding-top: 0;
+    padding: 0 0 54px 0;
+    overflow: hidden;
+    top: 0;
+    -ms-transform: none;
+    transform: none;
+  }
+
+  .container {
+    width: 100vw;
+    height: 80vh;
+    border: none;
+    box-shadow: none;
+  }
+
+  .input > .inputBoxDisplay {
+    font-size: 16px;
+  }
+
+  .bioInput {
+    font-size: 16px;
+  }
+}

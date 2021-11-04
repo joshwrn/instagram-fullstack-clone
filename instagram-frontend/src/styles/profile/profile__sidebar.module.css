@@ -1,0 +1,162 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  margin: 24px 0 0 0;
+}
+
+.usernames {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.displayName {
+  color: var(--primary-font-color);
+  font-size: 28px;
+}
+
+.username {
+  color: var(--secondary-font-color);
+  font-size: 20px;
+}
+
+.postsContainer {
+  display: flex;
+  align-items: flex-end;
+  padding: 16px 0 0 0;
+}
+
+.posts {
+  color: var(--secondary-font-color);
+  font-size: 16px;
+  margin-left: 0.5rem;
+  font-weight: bold;
+}
+
+.userInfo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  border-top: 1px solid rgba(124, 124, 124, 0.2);
+  border-bottom: 1px solid rgba(124, 124, 124, 0.2);
+  padding: 16px 0;
+  margin: 16px 0;
+  font-weight: bold;
+  width: 90%;
+}
+
+.followersContainer,
+.followingContainer {
+  cursor: pointer;
+}
+
+.followers,
+.following {
+  color: var(--secondary-font-color);
+  font-size: 14px;
+  width: fit-content;
+  transition: color 0.25s;
+}
+
+.followersContainer:hover p,
+.followingContainer:hover p {
+  color: var(--primary-font-color);
+}
+
+.bio {
+}
+
+.bioHeader {
+  margin-bottom: 4px;
+  color: var(--primary-font-color);
+}
+
+.bioText {
+  font-size: 14px;
+  line-height: 18px;
+  color: var(--primary-font-color);
+}
+
+/*+ loading */
+
+.nameLoading {
+  border-radius: 8px;
+  width: 160px;
+  height: 32px;
+}
+
+.usernameLoading {
+  margin-top: 8px;
+  border-radius: 8px;
+  width: 96px;
+  height: 16px;
+}
+
+.countersLoading {
+  display: flex;
+  flex-direction: column;
+}
+
+.counterLoading {
+  margin-top: 20px;
+  border-radius: 8px;
+  width: 208px;
+  height: 32px;
+}
+
+/*! mobile */
+@media only screen and (max-width: 850px) {
+  .inner {
+    display: grid;
+    grid-template-columns: none;
+    grid-template-rows: minmax(240px, 1fr) 5fr;
+  }
+
+  .sidebar {
+    display: grid;
+    display: flex;
+    flex-direction: column;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    row-gap: 12px;
+    width: 60%;
+    min-width: 256px;
+    height: 170px;
+    justify-self: center;
+    justify-content: center;
+  }
+
+  .usernames {
+    align-items: center;
+  }
+
+  .secondContainer {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .userInfo {
+    width: 100%;
+  }
+
+  .followersContainer,
+  .followingContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .bio {
+    display: none;
+  }
+  .postsContainer {
+    display: none;
+    text-align: center;
+    justify-content: center;
+  }
+  .posts {
+    text-align: center;
+  }
+}

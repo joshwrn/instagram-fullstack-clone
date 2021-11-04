@@ -1,0 +1,164 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  /* box-shadow: 0px 0px 2em 0px rgba(0, 0, 0, 0.089); */
+  border: 0px solid rgba(59, 59, 59, 0.158);
+  border-radius: 16px;
+  height: 30em;
+  position: relative;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  width: 25em;
+  align-items: center;
+}
+
+/*+ profile */
+.profileContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profileContainer:hover {
+}
+
+.imageContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  transition: transform 0.25s;
+  cursor: pointer;
+}
+
+.imageContainer:hover {
+  transform: translateY(-0.1em);
+}
+
+.profileImg {
+  border-radius: 100%;
+  width: 80px;
+  height: 80px;
+  position: absolute;
+  object-fit: cover;
+  transition: opacity 1s;
+}
+
+.profileImgBlur {
+  border-radius: 100%;
+  width: 80px;
+  height: 80px;
+  position: absolute;
+  filter: blur(16px);
+  z-index: -3;
+  opacity: 0;
+  object-fit: cover;
+  -webkit-backface-visibility: hidden;
+  -webkit-transform: translateZ(0) scale(1, 1);
+  animation: fade 1s 1s forwards;
+}
+
+/*+ user info */
+
+.nameContainer {
+  margin-left: 16px;
+  cursor: pointer;
+}
+
+.username {
+  color: var(--secondary-font-color);
+}
+
+/*+ user stats */
+
+.stats {
+  display: flex;
+  justify-content: center;
+  width: 70%;
+  margin: 20px 0 0 0px;
+  align-items: center;
+  gap: 20px;
+  height: 45px;
+  box-shadow: 0px 5px 20px 1px rgba(0, 0, 0, 0.05);
+  border-radius: 20px;
+  /* border: var(--secondary-border); */
+  transition: box-shadow 0.5s, background-color 0.5s, color 0.25s, transform 0.5s;
+  border: var(--primary-border);
+  color: var(--primary-font-color);
+}
+
+.stats:hover {
+  box-shadow: 0px 5px 20px 1px rgba(0, 0, 0, 0.2);
+  background-color: var(--primary-font-color);
+  color: var(--primary-background-color);
+  transform: translateY(-3px);
+}
+
+.postsLink {
+  transition: color 0.25s;
+}
+
+.stats:hover .postsLink {
+  color: var(--primary-background-color);
+}
+
+.statContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+
+.stat {
+  display: flex;
+  font-size: 14px;
+  gap: 5px;
+  cursor: pointer;
+  align-items: center;
+  font-weight: bold;
+}
+
+.statContainer {
+  cursor: pointer;
+}
+
+.statContainer > p {
+  font-size: 11px;
+  color: var(--secondary-font-color);
+}
+
+.number {
+  font-size: 14px;
+  line-height: 14px;
+  height: 14px;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0.65;
+  }
+}
+
+@media only screen and (max-width: 850px) {
+  .sidebar {
+    padding-top: 50px;
+    position: relative;
+    height: fit-content;
+    margin-bottom: 50px;
+  }
+
+  .container {
+    position: relative;
+  }
+}
