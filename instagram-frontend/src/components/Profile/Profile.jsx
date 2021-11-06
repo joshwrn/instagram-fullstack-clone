@@ -13,11 +13,11 @@ import ScrollToTop from '../../functions/ScrollToTop';
 import stopScroll from '../../functions/stopScroll';
 
 //+ graphql
-import { FIND_USER } from '../../graphql/queries/userQueries';
+import { FIND_USER_PROFILE } from '../../graphql/queries/userQueries';
 import { useQuery } from '@apollo/client';
 
 const Profile = (props) => {
-  const [currentProfile, setCurrentProfile] = useState();
+  const [currentProfile, setCurrentProfile] = useState(null);
   const [avatarModal, setAvatarModal] = useState(false);
   const [renderModal, setRenderModal] = useState(false);
   const [newPost, setNewPost] = useState(0);
@@ -49,24 +49,24 @@ const Profile = (props) => {
   };
 
   //+ get the current profiles data
-  const getUserObject = () => {
-    firestore
-      .collection('users')
-      .doc(match.params.uid)
-      .get()
-      .then((userData) => {
-        if (userData.exists) {
-          setCurrentProfile(userData.data());
-        }
-      });
-  };
+  // const getUserObject = () => {
+  //   firestore
+  //     .collection('users')
+  //     .doc(match.params.uid)
+  //     .get()
+  //     .then((userData) => {
+  //       if (userData.exists) {
+  //         setCurrentProfile(userData.data());
+  //       }
+  //     });
+  // };
 
   //$ graphql get profile data
   const {
     loading: userLoading,
     error: userError,
     data: userData,
-  } = useQuery(FIND_USER, {
+  } = useQuery(FIND_USER_PROFILE, {
     variables: {
       id: match.params.uid,
     },
@@ -82,11 +82,11 @@ const Profile = (props) => {
   //+ when theres a new post update the user profile
   useEffect(() => {
     setNoPosts(false);
-    return getUserObject();
+    // return getUserObject();
   }, [newPost]);
 
   useEffect(() => {
-    getUserObject();
+    // getUserObject();
     setNoPosts(false);
   }, [match]);
 
@@ -124,6 +124,16 @@ const Profile = (props) => {
     );
   }
 
+  if (!currentProfile) {
+    return (
+      <div className={Styles.profile}>
+        <div style={{ display: 'flex', height: '100vh', alignItems: 'center' }}>
+          <h1 style={{ color: 'white' }}>error</h1>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className={Styles.profile}>
@@ -136,7 +146,7 @@ const Profile = (props) => {
           />
           <img
             className={Styles.hero}
-            src={currentProfile?.banner}
+            src={currentProfile.banner}
             alt="banner"
             onLoad={handleLoad}
             style={!loaded ? { display: 'none' } : null}
@@ -153,14 +163,14 @@ const Profile = (props) => {
               <img
                 onClick={getAvatarModal}
                 className={Styles.avatar}
-                src={currentProfile?.avatar}
+                src={currentProfile.avatar}
                 alt="avatar"
                 onLoad={handleLoad}
                 style={!loaded ? { display: 'none' } : null}
               />
               <img
                 className={Styles.avatarBlur}
-                src={currentProfile?.avatar}
+                src={currentProfile.avatar}
                 alt=""
                 style={!loaded ? { display: 'none' } : null}
               />
@@ -168,7 +178,7 @@ const Profile = (props) => {
             {avatarModal && (
               <ProfileAvatarModal
                 getAvatarModal={getAvatarModal}
-                src={currentProfile?.avatar}
+                src={currentProfile.avatar}
               />
             )}
             <div className={Styles.topRight}>
@@ -180,7 +190,6 @@ const Profile = (props) => {
                   currentUser={currentUser}
                   match={match.params.uid}
                   currentProfile={currentProfile}
-                  getUserObject={getUserObject}
                 />
                 {actionButton}
               </div>
@@ -198,11 +207,10 @@ const Profile = (props) => {
             match={match}
             currentProfile={currentProfile}
             currentUser={currentUser}
-            getUserObject={getUserObject}
           />
-          {/*//@ posts */}
+          {/*//+ posts */}
           <ProfileFeed
-            posts={currentProfile?.posts}
+            posts={currentProfile.posts}
             newPost={newPost}
             setLoading={setLoading}
             loading={loading}

@@ -13,66 +13,66 @@ const ProfileFeed = ({ firestore, match, newPost, noPosts, posts }) => {
   const dummyRef = useRef();
   const [isFetching, setIsFetching] = useIntersect(dummyRef, endFeedRef);
 
-  const getMore = async () => {
-    let temp = [];
-    if (!lastPost) return;
-    const snap = await firestore
-      .collection('users')
-      .doc(match.params.uid)
-      .collection('posts')
-      .orderBy('date', 'desc')
-      .startAfter(lastPost)
-      .limit(8)
-      .get();
-    await snap.forEach((doc) => {
-      doc.complete = false;
-      temp.push(doc);
-    });
-    if (!snap.docs[snap.docs.length - 1]) {
-      setIsFetching(false);
-      setEndFeed(true);
-      endFeedRef.current = true;
-      return;
-    }
-    setLastPost(snap.docs[snap.docs.length - 1]);
-    return temp;
-  };
+  // const getMore = async () => {
+  //   let temp = [];
+  //   if (!lastPost) return;
+  //   const snap = await firestore
+  //     .collection('users')
+  //     .doc(match.params.uid)
+  //     .collection('posts')
+  //     .orderBy('date', 'desc')
+  //     .startAfter(lastPost)
+  //     .limit(8)
+  //     .get();
+  //   await snap.forEach((doc) => {
+  //     doc.complete = false;
+  //     temp.push(doc);
+  //   });
+  //   if (!snap.docs[snap.docs.length - 1]) {
+  //     setIsFetching(false);
+  //     setEndFeed(true);
+  //     endFeedRef.current = true;
+  //     return;
+  //   }
+  //   setLastPost(snap.docs[snap.docs.length - 1]);
+  //   return temp;
+  // };
 
-  const getInitial = async () => {
-    let temp = [];
-    const snap = await firestore
-      .collection('users')
-      .doc(match.params.uid)
-      .collection('posts')
-      .orderBy('date', 'desc')
-      .limit(8)
-      .get();
-    await snap.forEach((doc) => {
-      doc.complete = false;
-      temp.push(doc);
-    });
-    setLastPost(snap.docs[snap.docs.length - 1]);
-    return temp;
-  };
+  // const getInitial = async () => {
+  //   let temp = [];
+  //   const snap = await firestore
+  //     .collection('users')
+  //     .doc(match.params.uid)
+  //     .collection('posts')
+  //     .orderBy('date', 'desc')
+  //     .limit(8)
+  //     .get();
+  //   await snap.forEach((doc) => {
+  //     doc.complete = false;
+  //     temp.push(doc);
+  //   });
+  //   setLastPost(snap.docs[snap.docs.length - 1]);
+  //   return temp;
+  // };
 
   const updateFeed = async () => {
-    const temp = await getMore();
-    if (!temp) return;
-    const combine = [...feed, ...temp];
-    setFeed(combine);
+    // const temp = await getMore();
+    // if (!temp) return;
+    // const combine = [...feed, ...temp];
+    // setFeed(combine);
   };
 
   //! get the feed
-  const getFeed = async () => {
-    //const temp = await getInitial();
-    const temp = [];
-    setFeed(temp);
-  };
+  // const getFeed = async () => {
+  //   //const temp = await getInitial();
+  //   const temp = [];
+  //   setFeed(temp);
+  // };
 
-  // get the feed after a new post
-  useEffect(() => {
-    return getFeed();
-  }, [newPost]);
+  // // get the feed after a new post
+  // useEffect(() => {
+  //   return getFeed();
+  // }, [newPost]);
 
   useEffect(() => {
     if (!posts) return;
@@ -106,8 +106,8 @@ const ProfileFeed = ({ firestore, match, newPost, noPosts, posts }) => {
                   src={item.image}
                   match={match}
                   postId={item.id}
-                  likes={item.likes}
-                  comments={item.comments}
+                  likeCount={item.likeCount}
+                  commentCount={item.commentCount}
                 />
               );
             })}

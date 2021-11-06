@@ -8,7 +8,6 @@ const ProfileButton = ({
   currentUser,
   match,
   currentProfile,
-  getUserObject,
   handleFollowers,
 }) => {
   const [following, setFollowing] = useState(false);
@@ -16,12 +15,13 @@ const ProfileButton = ({
   let history = useHistory();
 
   useEffect(() => {
-    const check = currentProfile?.followers.includes(userProfile?.userID);
-    if (check) {
-      setFollowing(true);
-    } else {
-      setFollowing(false);
-    }
+    // need to switch to check signed in user
+    // const check = currentProfile.followers.includes(userProfile?.userID);
+    // if (check) {
+    //   setFollowing(true);
+    // } else {
+    //   setFollowing(false);
+    // }
   }, [currentProfile]);
 
   //+ follow
@@ -44,7 +44,7 @@ const ProfileButton = ({
         time: Date.now(),
       }),
     });
-    getUserObject();
+    // getUserObject();
   };
 
   //+ unfollow
@@ -60,7 +60,7 @@ const ProfileButton = ({
     await userRef.update({
       following: firestoreFieldValue.arrayRemove(currentProfile.userID),
     });
-    getUserObject();
+    // getUserObject();
   };
 
   const handleLink = (e) => {

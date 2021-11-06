@@ -26,6 +26,9 @@ const ProfileFollowers = ({
   useEffect(() => {
     if (!currentProfile) return;
     const { followers, following } = currentProfile;
+    //! need to request followers and following
+    if (!followers || !following) return;
+    console.log('followers', followers);
     let current;
     currentTab === 'following' ? (current = following) : (current = followers);
 
@@ -38,6 +41,9 @@ const ProfileFollowers = ({
   const createMore = () => {
     if (!currentProfile) return;
     const { followers, following } = currentProfile;
+    //! need to request followers and following
+    if (!followers || !following) return;
+    console.log('followers', followers);
     let current;
     currentTab === 'following' ? (current = following) : (current = followers);
 
@@ -100,7 +106,9 @@ const ProfileFollowers = ({
                   onClick={handleSwitch}
                   data-type="following"
                   className={
-                    currentTab === 'following' ? Styles.activeHeader : Styles.inactiveHeader
+                    currentTab === 'following'
+                      ? Styles.activeHeader
+                      : Styles.inactiveHeader
                   }
                 >
                   <h3 data-type="following">Following</h3>
@@ -109,13 +117,18 @@ const ProfileFollowers = ({
                   onClick={handleSwitch}
                   data-type="followers"
                   className={
-                    currentTab === 'followers' ? Styles.activeHeader : Styles.inactiveHeader
+                    currentTab === 'followers'
+                      ? Styles.activeHeader
+                      : Styles.inactiveHeader
                   }
                 >
                   <h3 data-type="followers">Followers</h3>
                 </div>
               </div>
-              <IoCloseOutline onClick={handleFollowers} className={Styles.close} />
+              <IoCloseOutline
+                onClick={handleFollowers}
+                className={Styles.close}
+              />
             </div>
             {/*//+ list of followers is here */}
             <div className={Styles.listContainer}>

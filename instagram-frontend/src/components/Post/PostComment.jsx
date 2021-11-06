@@ -16,24 +16,37 @@ const PostComment = ({ comment, user, time }) => {
   };
 
   useEffect(() => {
-    const getUser = async () => {
-      const userRef = firestore.collection('users').doc(user);
-      const thisUser = await userRef.get();
-      setCurrent(thisUser.data());
-    };
-    getUser();
     getTime();
-  }, []);
+  }, [time]);
+
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
+  // useEffect(() => {
+  //   const getUser = async () => {
+  //     const userRef = firestore.collection('users').doc(user);
+  //     const thisUser = await userRef.get();
+  //     setCurrent(thisUser.data());
+  //   };
+  //   getUser();
+  //   getTime();
+  // }, []);
 
   return (
     <div className={Styles.commentContainer}>
       <div className={Styles.start}>
-        <Link to={`/profile/${user}`}>
-          <ImageLoader src={current?.profilePhoto} width="27px" height="27px" borderRadius="100%" />
+        <Link to={`/profile/${user.id}`}>
+          <ImageLoader
+            src={user.avatar}
+            width="27px"
+            height="27px"
+            borderRadius="100%"
+          />
         </Link>
         <p className={Styles.comment}>
           <span className={Styles.user}>
-            <Link to={`/profile/${user}`}>{current?.displayName} </Link>
+            <Link to={`/profile/${user.id}`}>{user.displayName} </Link>
           </span>
           {comment}
         </p>

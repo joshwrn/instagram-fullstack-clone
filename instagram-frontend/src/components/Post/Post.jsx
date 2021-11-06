@@ -7,6 +7,10 @@ import PostSidebar from './PostSidebar';
 import { useAuth } from '../../contexts/AuthContext';
 import ScrollToTop from '../../functions/ScrollToTop';
 
+//$ graphql
+import { FIND_POST_BY_ID } from '../../graphql/queries/postQueries';
+import { useQuery } from '@apollo/client';
+
 const Post = ({ match }) => {
   const [currentPost, setCurrentPost] = useState();
   const [postUser, setPostUser] = useState();
@@ -36,17 +40,37 @@ const Post = ({ match }) => {
     if (thisPost.exists) {
       setCurrentPost(thisPost.data());
     } else {
-      setLoaded('error');
     }
   };
 
+  //$ graphql query for the current post
+  const {
+    loading: postLoading,
+    error: postError,
+    data: postData,
+  } = useQuery(FIND_POST_BY_ID, {
+    variables: {
+      id: match.params.postid,
+    },
+  });
+
+  useEffect(() => {
+    if (postData && !postLoading && !postError) {
+      setCurrentPost(postData.findPost);
+      setPostUser(postData.findPost.user);
+      console.log(postData);
+    }
+  }, [postData]);
+
   //+ get the profile of the current post
   const getPostUser = async () => {
-    const getUser = await firestore.collection('users').doc(match.params.uid).get();
+    const getUser = await firestore
+      .collection('users')
+      .doc(match.params.uid)
+      .get();
     if (getUser.exists) {
       setPostUser(getUser.data());
     } else {
-      setLoaded('error');
     }
   };
 
@@ -88,7 +112,7 @@ const Post = ({ match }) => {
         <img
           style={!loaded ? { display: 'none' } : null}
           onLoad={handleLoad}
-          src={currentPost?.src}
+          src={currentPost?.image}
           alt="post"
           className={Styles.image}
         />

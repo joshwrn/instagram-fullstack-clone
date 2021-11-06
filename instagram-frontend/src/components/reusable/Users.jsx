@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { FIND_ALL_USERS, FIND_USER } from '../../graphql/queries/userQueries';
+import {
+  FIND_ALL_USERS,
+  FIND_USER_PROFILE,
+} from '../../graphql/queries/userQueries';
 import { useQuery } from '@apollo/client';
 
 const Users = ({ username }) => {
   const [repositories, setRepositories] = useState();
   const [textInput, setInput] = useState('');
-  const { loading, error, data } = useQuery(FIND_USER, {
+  const { loading, error, data } = useQuery(FIND_USER_PROFILE, {
     variables: {
       id: textInput,
     },
   });
 
   useEffect(() => {
+    console.log(data, error);
     if (data && !loading && !error) {
       setRepositories(data);
     }

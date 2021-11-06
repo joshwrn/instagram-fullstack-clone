@@ -42,7 +42,7 @@ const ProfileSidebar = ({ currentProfile, loaded, currentUser }) => {
         </div>
         <div className={Styles.secondContainer}>
           <div className={Styles.postsContainer}>
-            <h3>{currentProfile.posts.length}</h3>
+            <h3>{currentProfile.postCount}</h3>
             <p className={Styles.posts}>Posts</p>
           </div>
           {/*//+ followers / following */}
@@ -63,7 +63,7 @@ const ProfileSidebar = ({ currentProfile, loaded, currentUser }) => {
               data-type="following"
               className={Styles.followingContainer}
             >
-              <h3 data-type="following"> {currentProfile.following.length} </h3>
+              <h3 data-type="following"> {currentProfile.followingCount} </h3>
               <p data-type="following" className={Styles.following}>
                 Following
               </p>
@@ -73,7 +73,7 @@ const ProfileSidebar = ({ currentProfile, loaded, currentUser }) => {
               onClick={handleFollowers}
               className={Styles.followersContainer}
             >
-              <h3 data-type="followers">{currentProfile.followers.length}</h3>
+              <h3 data-type="followers">{currentProfile.followerCount}</h3>
               <p data-type="followers" className={Styles.followers}>
                 Followers
               </p>

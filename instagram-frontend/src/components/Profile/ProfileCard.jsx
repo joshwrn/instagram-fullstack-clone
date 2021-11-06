@@ -4,7 +4,7 @@ import { IoHeartOutline, IoChatbubbleOutline } from 'react-icons/io5';
 import Styles from '../../styles/profile/profile__card.module.css';
 import ImageLoader from '../reusable/ImageLoader';
 
-const ProfileCard = ({ src, match, postId, likes, comments }) => {
+const ProfileCard = ({ src, match, postId, likeCount, commentCount }) => {
   return (
     <div className={Styles.card}>
       <div className={Styles.container}>
@@ -14,11 +14,11 @@ const ProfileCard = ({ src, match, postId, likes, comments }) => {
         >
           <div className={Styles.overlay}>
             <div className={Styles.icon}>
-              <IoHeartOutline /> <p>{likes}</p>
+              <IoHeartOutline /> <p>{likeCount}</p>
             </div>
             <div className={Styles.icon}>
               <IoChatbubbleOutline />
-              <p>{comments}</p>
+              <p>{commentCount}</p>
             </div>
           </div>
           <ImageLoader src={src} borderRadius="9px" />

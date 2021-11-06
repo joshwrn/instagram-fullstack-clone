@@ -9,9 +9,9 @@ export const FIND_ALL_USERS = gql`
   }
 `;
 
-export const FIND_USER = gql`
-  query Query($username: String, $id: ID) {
-    findUser(username: $username, id: $id) {
+export const FIND_USER_PROFILE = gql`
+  query Query($id: ID) {
+    findUser(id: $id) {
       displayName
       username
       bio
@@ -21,13 +21,12 @@ export const FIND_USER = gql`
       posts {
         id
         image
+        commentCount
+        likeCount
       }
-      following {
-        username
-      }
-      followers {
-        username
-      }
+      followingCount
+      followerCount
+      postCount
     }
   }
 `;

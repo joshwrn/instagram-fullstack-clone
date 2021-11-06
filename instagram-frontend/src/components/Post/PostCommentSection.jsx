@@ -18,6 +18,7 @@ const PostCommentSection = ({ loaded, currentPost }) => {
   };
 
   const getMore = () => {
+    console.log('get more');
     if (!currentPost) return;
     const reverse = currentPost.comments.slice(0).reverse();
     const sliced = reverse.slice(comments.length, comments.length + 10);
@@ -62,8 +63,8 @@ const PostCommentSection = ({ loaded, currentPost }) => {
             {comments.map((item) => {
               return (
                 <PostComment
-                  key={item.time}
-                  time={item.time}
+                  key={item.date}
+                  time={item.date}
                   comment={item.comment}
                   user={item.user}
                 />

@@ -10,7 +10,11 @@ import PostCommentSection from './PostCommentSection';
 import PostMenu from './PostMenu';
 import Styles from '../../styles/post/post__sidebar.module.css';
 import Loading from '../../styles/post/post__loading.module.css';
-import { firestore, storage, firestoreFieldValue } from '../../services/firebase';
+import {
+  firestore,
+  storage,
+  firestoreFieldValue,
+} from '../../services/firebase';
 import PostLikeButton from './PostLikeButton';
 import PostCommentBox from './PostCommentBox';
 import convertTime from '../../functions/convertTime';
@@ -47,22 +51,28 @@ const PostSidebar = ({
               <img
                 style={!loaded ? { display: 'none' } : null}
                 onLoad={handleLoad}
-                src={postUser?.profilePhoto}
+                src={postUser?.avatar}
                 alt="avatar"
                 className={Styles.profileImg}
               />
               <img
                 className={Styles.profileImgBlur}
                 style={!loaded ? { display: 'none' } : null}
-                src={postUser?.profilePhoto}
+                src={postUser?.avatar}
                 alt=""
               />
             </div>
-            <div className={Styles.nameContainer} style={loaded ? { display: 'none' } : null}>
+            <div
+              className={Styles.nameContainer}
+              style={loaded ? { display: 'none' } : null}
+            >
               <div className={Loading.displayName + ' ' + 'gradientLoad'} />
               <div className={Loading.username + ' ' + 'gradientLoad'} />
             </div>
-            <div className={Styles.nameContainer} style={!loaded ? { display: 'none' } : null}>
+            <div
+              className={Styles.nameContainer}
+              style={!loaded ? { display: 'none' } : null}
+            >
               <h2 className={Styles.displayName}>{postUser?.displayName}</h2>
               <p className={Styles.username}>@{postUser?.username}</p>
             </div>
