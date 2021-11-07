@@ -5,16 +5,20 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
+    "dev": "nodemon -r esm index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "apollo-server": "^3.4.0",
+    "apollo-server-express": "^3.5.0",
     "dotenv": "^10.0.0",
+    "esm": "^3.2.25",
     "graphql": "^15.7.2",
+    "graphql-upload": "^12.0.0",
     "mongoose": "^6.0.12",
-    "mongoose-unique-validator": "^3.0.0"
+    "mongoose-unique-validator": "^3.0.0",
+    "shortid": "^2.2.16"
   },
   "devDependencies": {
     "nodemon": "^2.0.14"
