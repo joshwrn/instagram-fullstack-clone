@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server');
+const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
   type ProfilePost {
@@ -6,15 +6,17 @@ const typeDefs = gql`
     image: String!
     likeCount: Int
     commentCount: Int
+    contentType: String
   }
 
   type Post {
     id: ID!
-    image: String!
+    image: String
     caption: String
     likes: [User]
     comments: [Comment]
-    user: User!
+    user: User
+    contentType: String
   }
 `;
 

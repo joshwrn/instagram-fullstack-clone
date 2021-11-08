@@ -5,6 +5,10 @@ const schema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  contentType: {
+    type: String,
+    required: true,
+  },
   caption: {
     type: String,
   },

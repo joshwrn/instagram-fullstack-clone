@@ -1,10 +1,13 @@
 const { ApolloServer } = require('apollo-server-express');
 const mongoose = require('mongoose');
 const express = require('express');
-import * as path from 'path';
-import * as fs from 'fs';
+const cors = require(`cors`);
 
-const { GraphQLUpload, graphqlUploadExpress } = require('graphql-upload');
+const { makeExecutableSchema } = require('@graphql-tools/schema');
+
+const { createServer } = require('http');
+
+const { graphqlUploadExpress } = require('graphql-upload');
 
 const { typeDefs, resolvers } = require('./src/graphql/schema');
 
@@ -21,18 +24,21 @@ mongoose
     console.log('error connection to MongoDB:', error.message);
   });
 
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-});
-
 async function startServer() {
-  await server.start();
   const app = express();
+  const schema = makeExecutableSchema({ typeDefs, resolvers });
+
+  const httpServer = createServer(app);
+
+  const server = new ApolloServer({
+    schema,
+  });
   app.use(graphqlUploadExpress());
-  server.applyMiddleware({ app });
-  app.use(express.static(path.join(__dirname, './upload')));
-  await new Promise((r) => app.listen({ port: 4000 }, r));
+
+  await server.start();
+  server.applyMiddleware({ app, path: '/' });
+  // Modified server startup
+  await new Promise((resolve) => httpServer.listen({ port: 4000 }, resolve));
   console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
 }
 

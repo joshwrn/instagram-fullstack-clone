@@ -1,14 +1,18 @@
-const { gql } = require('apollo-server');
+const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
+  type UserImage {
+    image: String
+    contentType: String
+  }
   type User {
     username: String!
     displayName: String!
     password: String!
     theme: String
     bio: String
-    avatar: String
-    banner: String
+    avatar: UserImage
+    banner: UserImage
     id: ID!
     posts: [Post]
     notifications: [Notification]
@@ -20,8 +24,8 @@ const typeDefs = gql`
     username: String!
     displayName: String!
     bio: String
-    avatar: String
-    banner: String
+    avatar: UserImage
+    banner: UserImage
     id: ID!
     followerCount: Int
     followingCount: Int

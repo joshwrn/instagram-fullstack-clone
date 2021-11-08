@@ -22,12 +22,8 @@ const schema = new mongoose.Schema({
     type: String,
     maxlength: 300,
   },
-  avatar: {
-    type: String,
-  },
-  banner: {
-    type: String,
-  },
+  avatar: mongoose.Schema.Types.Mixed,
+  banner: mongoose.Schema.Types.Mixed,
   password: {
     type: String,
     required: true,

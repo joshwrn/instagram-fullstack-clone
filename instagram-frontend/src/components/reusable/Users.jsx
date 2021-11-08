@@ -9,13 +9,11 @@ const Users = ({ username }) => {
   const [repositories, setRepositories] = useState();
   const [textInput, setInput] = useState('');
   const { loading, error, data } = useQuery(FIND_USER_PROFILE, {
-    variables: {
-      id: textInput,
-    },
+    variables: { id: textInput },
   });
 
   useEffect(() => {
-    console.log(data, error);
+    console.log(data, 'error:', error);
     if (data && !loading && !error) {
       setRepositories(data);
     }

@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server');
+const { gql } = require('apollo-server-express');
 const User = require('../../models/user');
 const Post = require('../../models/post');
 const mongoose = require('mongoose');
@@ -7,12 +7,14 @@ const mongoose = require('mongoose');
 
 const typeDefs = gql`
   type Query {
-    findUser(id: ID): UserProfile
+    findUser(id: ID!): UserProfile
+    findAllUsers: Int
   }
 `;
 
 const resolvers = {
   Query: {
+    findAllUsers: async () => User.collection.countDocuments(),
     findUser: async (root, args) => {
       try {
         const result = await User.findById(args.id).populate({

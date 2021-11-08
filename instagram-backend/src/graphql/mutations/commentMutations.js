@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server');
+const { gql } = require('apollo-server-express');
 const Post = require('../../models/post');
 const Comment = require('../../models/comment');
 const mongoose = require('mongoose');

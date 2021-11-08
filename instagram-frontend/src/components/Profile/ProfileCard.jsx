@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IoHeartOutline, IoChatbubbleOutline } from 'react-icons/io5';
 import Styles from '../../styles/profile/profile__card.module.css';
 import ImageLoader from '../reusable/ImageLoader';
+import convertSrc from '../../functions/convertSrc.js';
 
-const ProfileCard = ({ src, match, postId, likeCount, commentCount }) => {
+const ProfileCard = ({
+  src: base,
+  match,
+  postId,
+  likeCount,
+  commentCount,
+  contentType,
+}) => {
+  const src = convertSrc(base, contentType);
   return (
     <div className={Styles.card}>
       <div className={Styles.container}>

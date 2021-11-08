@@ -12,6 +12,8 @@ import ProfileButton from './ProfileButton';
 import ScrollToTop from '../../functions/ScrollToTop';
 import stopScroll from '../../functions/stopScroll';
 
+import convertSrc from '../../functions/convertSrc.js';
+
 //+ graphql
 import { FIND_USER_PROFILE } from '../../graphql/queries/userQueries';
 import { useQuery } from '@apollo/client';
@@ -134,6 +136,17 @@ const Profile = (props) => {
     );
   }
 
+  const avatar = convertSrc(
+    currentProfile.avatar.image,
+    currentProfile.avatar.contentType
+  );
+  const banner = convertSrc(
+    currentProfile.banner.image,
+    currentProfile.banner.contentType
+  );
+
+  console.log(currentProfile);
+
   return (
     <>
       <div className={Styles.profile}>
@@ -146,7 +159,7 @@ const Profile = (props) => {
           />
           <img
             className={Styles.hero}
-            src={currentProfile.banner}
+            src={banner}
             alt="banner"
             onLoad={handleLoad}
             style={!loaded ? { display: 'none' } : null}
@@ -163,14 +176,14 @@ const Profile = (props) => {
               <img
                 onClick={getAvatarModal}
                 className={Styles.avatar}
-                src={currentProfile.avatar}
+                src={avatar}
                 alt="avatar"
                 onLoad={handleLoad}
                 style={!loaded ? { display: 'none' } : null}
               />
               <img
                 className={Styles.avatarBlur}
-                src={currentProfile.avatar}
+                src={avatar}
                 alt=""
                 style={!loaded ? { display: 'none' } : null}
               />
@@ -178,7 +191,7 @@ const Profile = (props) => {
             {avatarModal && (
               <ProfileAvatarModal
                 getAvatarModal={getAvatarModal}
-                src={currentProfile.avatar}
+                src={avatar}
               />
             )}
             <div className={Styles.topRight}>

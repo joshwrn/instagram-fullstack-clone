@@ -2,27 +2,31 @@ import { gql } from '@apollo/client';
 
 export const FIND_ALL_USERS = gql`
   query {
-    allUsers {
-      id
-      username
-    }
+    findAllUsers
   }
 `;
 
 export const FIND_USER_PROFILE = gql`
-  query Query($id: ID) {
+  query Query($id: ID!) {
     findUser(id: $id) {
       displayName
       username
       bio
-      avatar
+      avatar {
+        image
+        contentType
+      }
       id
-      banner
+      banner {
+        image
+        contentType
+      }
       posts {
         id
         image
         commentCount
         likeCount
+        contentType
       }
       followingCount
       followerCount
