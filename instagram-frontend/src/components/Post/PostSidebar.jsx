@@ -19,17 +19,21 @@ import PostLikeButton from './PostLikeButton';
 import PostCommentBox from './PostCommentBox';
 import convertTime from '../../functions/convertTime';
 
+import convertSrc from '../../functions/convertSrc';
+import useBuffer from '../../hooks/useBuffer';
+
 const PostSidebar = ({
   match,
   loaded,
   handleLoad,
   postUser,
+  postUserAvatar,
   currentPost,
   ownPost,
-  getCurrentPost,
 }) => {
   let history = useHistory();
   const [addTime, setAddTime] = useState('');
+  const [avatar, setAvatar] = useBuffer(postUserAvatar);
 
   useEffect(() => {
     if (currentPost) {
@@ -37,6 +41,8 @@ const PostSidebar = ({
       setAddTime(getCur);
     }
   }, [currentPost]);
+
+  if (!currentPost || !postUser) return <div>not loaded</div>;
 
   return (
     <div className={Styles.sidebar}>
@@ -51,14 +57,14 @@ const PostSidebar = ({
               <img
                 style={!loaded ? { display: 'none' } : null}
                 onLoad={handleLoad}
-                src={postUser?.avatar}
+                src={avatar}
                 alt="avatar"
                 className={Styles.profileImg}
               />
               <img
                 className={Styles.profileImgBlur}
                 style={!loaded ? { display: 'none' } : null}
-                src={postUser?.avatar}
+                src={avatar}
                 alt=""
               />
             </div>
@@ -73,13 +79,13 @@ const PostSidebar = ({
               className={Styles.nameContainer}
               style={!loaded ? { display: 'none' } : null}
             >
-              <h2 className={Styles.displayName}>{postUser?.displayName}</h2>
-              <p className={Styles.username}>@{postUser?.username}</p>
+              <h2 className={Styles.displayName}>{postUser.displayName}</h2>
+              <p className={Styles.username}>@{postUser.username}</p>
             </div>
           </div>
         </Link>
         <div className={Styles.captionContainer}>
-          <p className={Styles.caption}>{currentPost?.caption}</p>
+          <p className={Styles.caption}>{currentPost.caption}</p>
         </div>
       </div>
       {/*//+ comments */}
@@ -95,7 +101,6 @@ const PostSidebar = ({
               IoHeartOutline={IoHeartOutline}
               firestore={firestore}
               firestoreFieldValue={firestoreFieldValue}
-              getCurrentPost={getCurrentPost}
             />
             <IoChatbubbleOutline className={Styles.postIcon} />
             <IoShareOutline className={Styles.postIcon} />
@@ -110,7 +115,7 @@ const PostSidebar = ({
           />
         </div>
         <div className={Styles.infoContainer}>
-          <p className={Styles.likes}>{currentPost?.likes.length} likes</p>
+          <p className={Styles.likes}>{currentPost.likes.length} likes</p>
           <p className={Styles.time}>{addTime}</p>
         </div>
         {/*//+ comment box */}
@@ -120,7 +125,6 @@ const PostSidebar = ({
           firestoreFieldValue={firestoreFieldValue}
           IoSendOutline={IoSendOutline}
           Styles={Styles}
-          getCurrentPost={getCurrentPost}
         />
       </div>
     </div>

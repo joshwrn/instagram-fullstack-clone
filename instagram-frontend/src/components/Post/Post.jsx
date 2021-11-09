@@ -7,12 +7,16 @@ import PostSidebar from './PostSidebar';
 import { useAuth } from '../../contexts/AuthContext';
 import ScrollToTop from '../../functions/ScrollToTop';
 
+import convertSrc from '../../functions/convertSrc';
+import useBuffer from '../../hooks/useBuffer';
+
 //$ graphql
 import { FIND_POST_BY_ID } from '../../graphql/queries/postQueries';
 import { useQuery } from '@apollo/client';
 
 const Post = ({ match }) => {
   const [currentPost, setCurrentPost] = useState();
+  const [postImage, setPostImage] = useBuffer(currentPost);
   const [postUser, setPostUser] = useState();
   const [ownPost, setOwnPost] = useState(false);
   const [loading, setLoading] = useState([
@@ -30,18 +34,18 @@ const Post = ({ match }) => {
   }, [postUser]);
 
   //+ get the current post
-  const getCurrentPost = async () => {
-    const thisPost = await firestore
-      .collection('users')
-      .doc(match.params.uid)
-      .collection('posts')
-      .doc(match.params.postid)
-      .get();
-    if (thisPost.exists) {
-      setCurrentPost(thisPost.data());
-    } else {
-    }
-  };
+  // const getCurrentPost = async () => {
+  //   const thisPost = await firestore
+  //     .collection('users')
+  //     .doc(match.params.uid)
+  //     .collection('posts')
+  //     .doc(match.params.postid)
+  //     .get();
+  //   if (thisPost.exists) {
+  //     setCurrentPost(thisPost.data());
+  //   } else {
+  //   }
+  // };
 
   //$ graphql query for the current post
   const {
@@ -55,6 +59,7 @@ const Post = ({ match }) => {
   });
 
   useEffect(() => {
+    console.log(postData);
     if (postData && !postLoading && !postError) {
       setCurrentPost(postData.findPost);
       setPostUser(postData.findPost.user);
@@ -63,22 +68,22 @@ const Post = ({ match }) => {
   }, [postData]);
 
   //+ get the profile of the current post
-  const getPostUser = async () => {
-    const getUser = await firestore
-      .collection('users')
-      .doc(match.params.uid)
-      .get();
-    if (getUser.exists) {
-      setPostUser(getUser.data());
-    } else {
-    }
-  };
+  // const getPostUser = async () => {
+  //   const getUser = await firestore
+  //     .collection('users')
+  //     .doc(match.params.uid)
+  //     .get();
+  //   if (getUser.exists) {
+  //     setPostUser(getUser.data());
+  //   } else {
+  //   }
+  // };
 
   //+ get the current post and user on page load
-  useEffect(() => {
-    getCurrentPost();
-    getPostUser();
-  }, [match]);
+  // useEffect(() => {
+  //   getCurrentPost();
+  //   getPostUser();
+  // }, [match]);
 
   //+ check if postUser and currentUser are defined then set loading false
   useEffect(() => {
@@ -100,6 +105,10 @@ const Post = ({ match }) => {
 
   let postState;
 
+  if (!currentPost || !postUser) {
+    return <div>not loaded</div>;
+  }
+
   //+ if finished loading
   postState = (
     <div className={Styles.post}>
@@ -112,7 +121,7 @@ const Post = ({ match }) => {
         <img
           style={!loaded ? { display: 'none' } : null}
           onLoad={handleLoad}
-          src={currentPost?.image}
+          src={postImage}
           alt="post"
           className={Styles.image}
         />
@@ -121,11 +130,11 @@ const Post = ({ match }) => {
           loaded={loaded}
           handleLoad={handleLoad}
           postUser={postUser}
+          postUserAvatar={postUser.avatar}
           ownPost={ownPost}
           currentPost={currentPost}
           currentUser={currentUser}
           userProfile={userProfile}
-          getCurrentPost={getCurrentPost}
         />
       </div>
     </div>

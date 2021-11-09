@@ -17,6 +17,8 @@ const schema = new mongoose.Schema({
   },
   theme: {
     type: String,
+    required: true,
+    default: 'light',
   },
   bio: {
     type: String,
@@ -28,7 +30,6 @@ const schema = new mongoose.Schema({
     type: String,
     required: true,
     minlength: 6,
-    maxlength: 16,
   },
   notifications: [
     {

@@ -5,25 +5,28 @@ export const FIND_POST_BY_ID = gql`
     findPost(id: $id) {
       id
       image
+      contentType
       caption
-      user {
-        id
-        username
-        displayName
-        avatar
-      }
       likes {
         id
       }
       comments {
-        id
         comment
         user {
-          id
-          avatar
-          displayName
+          username
+          avatar {
+            image
+            contentType
+          }
         }
         date
+      }
+      user {
+        username
+        avatar {
+          image
+          contentType
+        }
       }
     }
   }

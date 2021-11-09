@@ -6,6 +6,7 @@ import Home from './Home/Home';
 import Profile from './Profile/Profile';
 import Post from './Post/Post';
 import SignUp from './SignUp/SignUp';
+import Login from './SignUp/Login';
 import Settings from './Settings/Settings';
 import Messages from './Messages/Messages';
 import { AuthProvider } from '../contexts/AuthContext';
@@ -29,6 +30,10 @@ function App() {
           {/*//+ Sign up */}
           <Route exact path="/sign-up">
             <SignUp />
+          </Route>
+          {/*//+ Login */}
+          <Route exact path="/login">
+            <Login />
           </Route>
           {/*//+ Profile */}
           <Route exact path="/profile/:uid" component={Profile} />

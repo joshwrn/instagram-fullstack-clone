@@ -17,7 +17,7 @@ const resolvers = {
       const comment = new Comment({ ...args });
       const result = await comment.save();
       const post = await Post.findOneAndUpdate(
-        { id: args.post },
+        { _id: args.post },
         { $push: { comments: result._id } },
         { new: true }
       );
