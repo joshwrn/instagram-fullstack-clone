@@ -8,14 +8,17 @@ import ProfileUpload from '../Profile/ProfileUpload';
 import stopScroll from '../../functions/stopScroll';
 import ImageLoader from '../reusable/ImageLoader';
 import Styles from '../../styles/home/home__sidebar.module.css';
+import convertSrc from '../../functions/convertSrc';
 
-import Users from '../reusable/Users';
+// import Users from '../reusable/Users';
 
 const Sidebar = ({ setNewPost }) => {
-  const { userProfile } = useAuth();
+  const { currentUser } = useAuth();
   const [openFollowers, setOpenFollowers] = useState(false);
-  const [currentTab, setCurrentTab] = useState();
+  const [currentTab, setCurrentTab] = useState('followers');
   const [renderModal, setRenderModal] = useState(false);
+
+  const userProfile = currentUser;
 
   const handleFollowers = (e) => {
     e.preventDefault();
@@ -34,25 +37,28 @@ const Sidebar = ({ setNewPost }) => {
 
   return (
     <div className={Styles.sidebar}>
-      <ProfileFollowersModal
-        currentProfile={userProfile}
-        handleFollowers={handleFollowers}
-        setOpenFollowers={setOpenFollowers}
-        openFollowers={openFollowers}
-        currentTab={currentTab}
-        setCurrentTab={setCurrentTab}
-        currentUser={userProfile}
-      />
+      {currentUser && openFollowers && (
+        <ProfileFollowersModal
+          currentProfile={currentUser}
+          handleFollowers={handleFollowers}
+          setOpenFollowers={setOpenFollowers}
+          openFollowers={openFollowers}
+          currentTab={currentTab}
+          setCurrentTab={setCurrentTab}
+          currentUser={currentUser}
+        />
+      )}
+
       {renderModal && (
         <ProfileUpload setNewPost={setNewPost} getModal={getModal} />
       )}
       <div className={Styles.container}>
         {userProfile && (
-          <Link to={`/profile/${userProfile.userID}`}>
+          <Link to={`/profile/${userProfile.id}`}>
             <div className={Styles.profileContainer}>
               <div className={Styles.imageContainer}>
                 <ImageLoader
-                  src={userProfile.profilePhoto}
+                  src={`data:${userProfile.avatar.contentType};base64,${userProfile.avatar.image}`}
                   position="absolute"
                   width="80px"
                   height="80px"
@@ -61,7 +67,7 @@ const Sidebar = ({ setNewPost }) => {
                 />
                 <img
                   className={Styles.profileImgBlur}
-                  src={userProfile.profilePhoto}
+                  src={`data:${userProfile.avatar.contentType};base64,${userProfile.avatar.image}`}
                   alt=""
                 />
               </div>
@@ -83,7 +89,7 @@ const Sidebar = ({ setNewPost }) => {
             >
               <div data-type="following" className={Styles.stat}>
                 <p data-type="following" className={Styles.number}>
-                  {userProfile.following.length}
+                  {userProfile.followingCount}
                 </p>
               </div>
               <p data-type="following">Following</p>
@@ -95,18 +101,18 @@ const Sidebar = ({ setNewPost }) => {
             >
               <div data-type="followers" className={Styles.stat}>
                 <p data-type="followers" className={Styles.number}>
-                  {userProfile.followers.length}
+                  {userProfile.followerCount}
                 </p>
               </div>
               <p data-type="followers">Followers</p>
             </div>
             <Link
               className={Styles.postsLink}
-              to={`/profile/${userProfile.userID}`}
+              to={`/profile/${userProfile.id}`}
             >
               <div className={Styles.statContainer}>
                 <div className={Styles.stat}>
-                  <p className={Styles.number}>{userProfile.postsCounter}</p>
+                  <p className={Styles.number}>{userProfile.postCount}</p>
                 </div>
                 <p>Posts</p>
               </div>
@@ -120,7 +126,6 @@ const Sidebar = ({ setNewPost }) => {
           </div>
         )}
         <LoginButton />
-        <Users />
       </div>
     </div>
   );

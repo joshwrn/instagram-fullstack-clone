@@ -20,7 +20,7 @@ import { firestore } from '../../services/firebase';
 import { useAuth } from '../../contexts/AuthContext';
 
 const Nav = () => {
-  const { currentUser, logout, userProfile } = useAuth();
+  const { currentUser, logout } = useAuth();
   const [theme, setTheme] = useState('light');
   const [openMenu, setOpenMenu] = useState(false);
   const [openNoti, setOpenNoti] = useState(false);
@@ -34,7 +34,7 @@ const Nav = () => {
 
   const getModal = (e) => {
     e.preventDefault();
-    if (!userProfile) return history.push('/sign-up');
+    if (!currentUser) return history.push('/sign-up');
     renderModal ? setRenderModal(false) : setRenderModal(true);
     stopScroll(renderModal);
   };
@@ -45,14 +45,14 @@ const Nav = () => {
   };
 
   const handleNoti = async () => {
-    if (!userProfile) return history.push('/sign-up');
+    if (!currentUser) return history.push('/sign-up');
     if (openNoti) {
       setOpenNoti(false);
     } else {
-      setNotiArray(userProfile.notifications);
+      setNotiArray(currentUser.notifications);
       setCurrentNotis(0);
       setOpenNoti(true);
-      const userRef = firestore.collection('users').doc(userProfile.userID);
+      const userRef = firestore.collection('users').doc(currentUser.userID);
       await userRef.set(
         {
           notifications: [],
@@ -83,20 +83,21 @@ const Nav = () => {
   }, []);
 
   useEffect(() => {
-    if (userProfile && userProfile.notifications) {
-      const unseen = userProfile.notifications.length;
+    if (currentUser && currentUser.notifications) {
+      const unseen = currentUser.notifications.length;
       setCurrentNotis(unseen);
     }
-    if (userProfile && userProfile.theme) {
-      if (userProfile.theme === 'dark') {
+    if (currentUser && currentUser.theme) {
+      if (currentUser.theme === 'dark') {
         dark();
         setTheme('dark');
-      } else if (userProfile.theme === 'light') {
+      } else if (currentUser.theme === 'light') {
         light();
         setTheme('light');
       }
     }
-  }, [userProfile]);
+    console.log(currentUser);
+  }, [currentUser]);
 
   const debounceChange = useCallback(
     debounce((nextValue) => setSearchInput(nextValue), 500),
@@ -154,14 +155,25 @@ const Nav = () => {
               <NavLink exact to="/">
                 <IoHomeOutline className={Styles.icon + ' ' + Styles.home} />
               </NavLink>
-              <NavLink exact to={userProfile ? '/messages' : '/sign-up'}>
-                <IoChatbubbleOutline className={Styles.icon + ' ' + Styles.chat} />
+              <NavLink exact to={currentUser ? '/messages' : '/sign-up'}>
+                <IoChatbubbleOutline
+                  className={Styles.icon + ' ' + Styles.chat}
+                />
               </NavLink>
-              <IoAddCircleOutline onClick={getModal} className={Styles.icon + ' ' + Styles.add} />
+              <IoAddCircleOutline
+                onClick={getModal}
+                className={Styles.icon + ' ' + Styles.add}
+              />
               {/*//+ notifications */}
-              <div onClick={handleNoti} className={Styles.notiContainer} ref={notiRef}>
+              <div
+                onClick={handleNoti}
+                className={Styles.notiContainer}
+                ref={notiRef}
+              >
                 <IoHeartOutline className={Styles.icon + ' ' + Styles.heart} />
-                {currentNotis > 0 ? <div className={Styles.notiBadge}>{currentNotis}</div> : null}
+                {currentNotis > 0 ? (
+                  <div className={Styles.notiBadge}>{currentNotis}</div>
+                ) : null}
                 {openNoti && (
                   <Notifications
                     notiArray={notiArray}
@@ -176,7 +188,7 @@ const Nav = () => {
                   className={Styles.profileLink}
                   onClick={(e) => e.preventDefault()}
                   exact
-                  to={`/profile/${currentUser?.uid}`}
+                  to={`/profile/${currentUser?.id}`}
                 >
                   <IoPersonOutline
                     onClick={handleUserIcon}
@@ -188,8 +200,6 @@ const Nav = () => {
                     theme={theme}
                     setTheme={setTheme}
                     setOpenMenu={setOpenMenu}
-                    logout={logout}
-                    currentUser={currentUser}
                   />
                 )}
               </div>

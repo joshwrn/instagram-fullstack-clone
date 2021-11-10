@@ -29,8 +29,18 @@ const Login = () => {
   }, [result.data]); // eslint-disable-line
 
   useEffect(() => {
+    console.log(error, loading);
+  }, [error, loading]);
+
+  useEffect(() => {
+    if (token) {
+      getUser();
+    }
+  }, [token]);
+
+  useEffect(() => {
+    console.log('data:', data);
     if (data) {
-      console.log(data);
       setCurrentUser(data.getCurrentUser);
     }
   }, [data]);
@@ -50,6 +60,7 @@ const Login = () => {
 
   const submit = async (event) => {
     event.preventDefault();
+    console.log('sign in');
     login({ variables: { username, password } });
   };
 
@@ -71,7 +82,7 @@ const Login = () => {
       <div>{currentUser?.username}</div>
       <button onClick={submit}>login</button>
       <button onClick={() => logout()}>logout</button>
-      <button onClick={() => console.log(token)}>check</button>
+      <button onClick={() => console.log(data)}>check</button>
     </div>
   );
 };

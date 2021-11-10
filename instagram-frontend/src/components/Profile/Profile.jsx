@@ -136,17 +136,6 @@ const Profile = (props) => {
     );
   }
 
-  const avatar = convertSrc(
-    currentProfile.avatar.image,
-    currentProfile.avatar.contentType
-  );
-  const banner = convertSrc(
-    currentProfile.banner.image,
-    currentProfile.banner.contentType
-  );
-
-  console.log(currentProfile);
-
   return (
     <>
       <div className={Styles.profile}>
@@ -159,7 +148,7 @@ const Profile = (props) => {
           />
           <img
             className={Styles.hero}
-            src={banner}
+            src={`data:${currentProfile.banner.contentType};base64,${currentProfile.banner.image}`}
             alt="banner"
             onLoad={handleLoad}
             style={!loaded ? { display: 'none' } : null}
@@ -176,22 +165,22 @@ const Profile = (props) => {
               <img
                 onClick={getAvatarModal}
                 className={Styles.avatar}
-                src={avatar}
+                src={`data:${currentProfile.avatar.contentType};base64,${currentProfile.avatar.image}`}
                 alt="avatar"
                 onLoad={handleLoad}
                 style={!loaded ? { display: 'none' } : null}
               />
               <img
                 className={Styles.avatarBlur}
-                src={avatar}
-                alt=""
+                src={`data:${currentProfile.avatar.contentType};base64,${currentProfile.avatar.image}`}
+                alt="blur"
                 style={!loaded ? { display: 'none' } : null}
               />
             </div>
             {avatarModal && (
               <ProfileAvatarModal
                 getAvatarModal={getAvatarModal}
-                src={avatar}
+                src={`data:${currentProfile.avatar.contentType};base64,${currentProfile.avatar.image}`}
               />
             )}
             <div className={Styles.topRight}>

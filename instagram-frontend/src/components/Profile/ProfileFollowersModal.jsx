@@ -3,6 +3,8 @@ import { IoCloseOutline } from 'react-icons/io5';
 import Styles from '../../styles/profile/profile__followers-modal.module.css';
 import ProfileFollowerListItem from './ProfileFollowerListItem';
 import useIntersect from '../../hooks/useIntersect';
+import { useLazyQuery } from '@apollo/client';
+import { FIND_FOLLOWERS } from '../../graphql/queries/userQueries';
 
 const ProfileFollowers = ({
   openFollowers,
@@ -12,6 +14,12 @@ const ProfileFollowers = ({
   setCurrentTab,
   currentUser,
 }) => {
+  const [getFollow, { loading, error, data }] = useLazyQuery(FIND_FOLLOWERS, {
+    variables: {
+      type: currentTab,
+      id: currentProfile.id,
+    },
+  });
   const [list, setList] = useState([]);
 
   const ref = useRef();
@@ -24,39 +32,39 @@ const ProfileFollowers = ({
   };
 
   useEffect(() => {
-    if (!currentProfile) return;
-    const { followers, following } = currentProfile;
-    //! need to request followers and following
-    if (!followers || !following) return;
-    console.log('followers', followers);
-    let current;
-    currentTab === 'following' ? (current = following) : (current = followers);
+    if (!data) return;
+    console.log(data);
+    setList(data.findFollowers);
+  }, [data]);
 
-    const reverse = current.slice(0).reverse();
-    const slice = reverse.slice(0, 10);
-    setList([...slice]);
-  }, [currentTab]);
+  useEffect(() => {
+    if (!currentProfile || !openFollowers) return;
+    getFollow();
 
-  //+ GET more from storage
-  const createMore = () => {
-    if (!currentProfile) return;
-    const { followers, following } = currentProfile;
-    //! need to request followers and following
-    if (!followers || !following) return;
-    console.log('followers', followers);
-    let current;
-    currentTab === 'following' ? (current = following) : (current = followers);
+    // const reverse = current.slice(0).reverse();
+    // const slice = reverse.slice(0, 10);
+    // setList([...slice]);
+  }, [currentTab, openFollowers]);
 
-    const reverse = current.slice(0).reverse();
-    const sliced = reverse.slice(list.length, list.length + 10);
+  // //+ GET more from storage
+  // const createMore = () => {
+  //   if (!currentProfile) return;
+  //   const { followers, following } = currentProfile;
+  //   if (!followers || !following) return;
+  //   console.log('followers', followers);
+  //   let current;
+  //   currentTab === 'following' ? (current = following) : (current = followers);
 
-    const combine = [...list, ...sliced];
-    setList(combine);
-  };
+  //   const reverse = current.slice(0).reverse();
+  //   const sliced = reverse.slice(list.length, list.length + 10);
+
+  //   const combine = [...list, ...sliced];
+  //   setList(combine);
+  // };
 
   useEffect(() => {
     if (!isFetching) return;
-    createMore();
+    // createMore();
   }, [isFetching]);
 
   useEffect(() => {

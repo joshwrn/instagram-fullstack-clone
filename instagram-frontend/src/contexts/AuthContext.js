@@ -25,7 +25,6 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const auth = localStorage.getItem('instagram-clone-auth');
-    const user = localStorage.getItem('instagram-clone-user');
     if (auth) {
       setToken(auth);
     }
@@ -33,6 +32,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     if (data) {
+      console.log('auth context data:', data, 'token', token);
       setCurrentUser(data.getCurrentUser);
     }
   }, [data]);
@@ -43,10 +43,11 @@ export function AuthProvider({ children }) {
     }
   }, [token]);
 
-  const logout = () => {
+  const logout = async () => {
     setToken(null);
+    setCurrentUser(null);
     localStorage.clear();
-    client.resetStore();
+    await client.clearStore();
   };
 
   const value = {

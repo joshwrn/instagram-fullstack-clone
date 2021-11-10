@@ -13,7 +13,14 @@ const schema = new mongoose.Schema({
     type: String,
     required: true,
     minlength: 3,
-    maxlength: 16,
+    maxlength: 32,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    minlength: 3,
+    maxlength: 64,
   },
   theme: {
     type: String,

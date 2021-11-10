@@ -1,74 +1,92 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import Styles from '../../styles/sign-up/sign-up.module.css';
-import { signIn, firestore } from '../../services/firebase';
+// import { signIn, firestore } from '../../services/firebase';
 import { useAuth } from '../../contexts/AuthContext';
 import logo from '../../assets/img/logo/logo-2.png';
 import debounce from '../../functions/debounce';
 
 const SignUp = () => {
-  const { login, currentUser, firebaseRegister } = useAuth();
-  const [userInput, setUserInput] = useState('');
-  const [userValue, setUserValue] = useState('');
-  const [nameTaken, setNameTaken] = useState(false);
+  const { currentUser } = useAuth();
+  const [formInput, setFormInput] = useState({
+    username: '',
+    fullName: '',
+    email: '',
+    password: '',
+    verifyPassword: '',
+  });
+  const [errors, setErrors] = useState({
+    nameTaken: false,
+    emailTaken: false,
+    passwordMismatch: false,
+  });
+
+  const { nameTaken, emailTaken, passwordMismatch } = errors;
 
   const handleChange = (e) => {
-    e.preventDefault();
-    const { value } = e.target;
+    const value = e;
     const reg = /[^a-zA-Z\d]/gi;
     const newVal = value.replace(reg, '');
     const lower = newVal.toLowerCase();
-    setUserInput(lower);
+    setFormInput({ ...formInput, username: lower });
   };
+
   const debounceChange = useCallback(
     debounce((nextValue) => handleChange(nextValue), 500),
     []
   );
+
   const handleValue = (e) => {
-    setUserValue(e.target.value);
-    debounceChange(e);
+    console.log(formInput);
+    const { name, value } = e.target;
+    if (name === 'username') {
+      handleChange(value);
+    } else {
+      setFormInput({
+        ...formInput,
+        [name]: value,
+      });
+    }
   };
 
-  useEffect(() => {
-    let foundName;
-    const check = async () => {
-      if (userInput.length > 2) {
-        await firestore
-          .collection('users')
-          .where('username', '==', userInput)
-          .get()
-          .then((searchResults) => {
-            return searchResults.forEach((doc) => {
-              foundName = doc.data();
-            });
-          });
-        if (foundName === undefined) {
-          setNameTaken(false);
-        } else {
-          setNameTaken(true);
-        }
-      }
-    };
-    check();
-  }, [userInput]);
-
-  useEffect(() => {
-    return firebaseRegister(userInput);
-  }, [currentUser]);
+  // useEffect(() => {
+  //   let foundName;
+  //   const check = async () => {
+  //     if (userInput.length > 2) {
+  //       await firestore
+  //         .collection('users')
+  //         .where('username', '==', userInput)
+  //         .get()
+  //         .then((searchResults) => {
+  //           return searchResults.forEach((doc) => {
+  //             foundName = doc.data();
+  //           });
+  //         });
+  //       if (foundName === undefined) {
+  //         setNameTaken(false);
+  //       } else {
+  //         setNameTaken(true);
+  //       }
+  //     }
+  //   };
+  //   check();
+  // }, [userInput]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    signIn();
+    // signIn();
   };
 
   const doNothing = (e) => {
     e.preventDefault();
   };
 
-  let nameHelper = <p className={Styles.nameHelper}>Name must be 3-15 characters.</p>;
+  let nameHelper = (
+    <p className={Styles.nameHelper}>Name must be 3-15 characters.</p>
+  );
 
-  if (userInput.length !== 0) {
-    if (userInput.length <= 2) {
+  if (formInput.username.length !== 0) {
+    if (formInput.username.length <= 2) {
       nameHelper = <p className={Styles.nameHelper}>Too Short.</p>;
     } else if (nameTaken === false) {
       nameHelper = (
@@ -98,28 +116,90 @@ const SignUp = () => {
             </div>
             <div className={Styles.formContainer}>
               <form pattern="[0-9a-zA-Z_.-]*" className={Styles.form}>
+                <div className={Styles.inputLabelDiv}>
+                  <p className={Styles.inputLabel}>Username</p>
+                </div>
                 <div className={Styles.input}>
                   <div className={Styles.username}>
                     <p>@</p>
                   </div>
                   <input
                     required
+                    autoComplete="off"
                     onChange={handleValue}
-                    className={Styles.inputBox}
+                    className={Styles.searchInputBox}
                     type="text"
+                    name="username"
                     placeholder="username"
                     maxLength="15"
                     minLength="3"
-                    value={userValue}
+                    value={formInput.username}
                   />
                 </div>
                 <div className={Styles.helperDiv}>{nameHelper}</div>
+                <div className={Styles.input}>
+                  <input
+                    required
+                    autoComplete="off"
+                    onChange={handleValue}
+                    className={Styles.inputBox}
+                    type="text"
+                    name="fullName"
+                    placeholder="full name"
+                    maxLength="15"
+                    minLength="3"
+                    value={formInput.fullName}
+                  />
+                </div>
+
+                <div className={Styles.input}>
+                  <input
+                    required
+                    onChange={handleValue}
+                    className={Styles.inputBox}
+                    type="text"
+                    name="email"
+                    placeholder="email"
+                    minLength="3"
+                    value={formInput.email}
+                  />
+                </div>
+                <div className={Styles.input}>
+                  <input
+                    required
+                    onChange={handleValue}
+                    className={Styles.inputBox}
+                    type="password"
+                    name="password"
+                    placeholder="password"
+                    maxLength="16"
+                    minLength="5"
+                    value={formInput.password}
+                  />
+                </div>
+                <div className={Styles.input}>
+                  <input
+                    required
+                    onChange={handleValue}
+                    className={Styles.inputBox}
+                    type="password"
+                    name="verifyPassword"
+                    placeholder="verify password"
+                    maxLength="16"
+                    minLength="5"
+                    value={formInput.verifyPassword}
+                  />
+                </div>
                 <button
                   type="submit"
-                  onClick={!nameTaken && userInput.length > 2 ? handleSubmit : doNothing}
+                  onClick={
+                    !nameTaken && formInput.username.length > 2
+                      ? handleSubmit
+                      : doNothing
+                  }
                   className={Styles.signUpButton}
                   style={
-                    !nameTaken && userInput.length > 2
+                    !nameTaken && formInput.username.length > 2
                       ? {
                           backgroundColor: 'black',
                           cursor: 'pointer',
@@ -127,13 +207,13 @@ const SignUp = () => {
                       : { backgroundColor: 'gray', cursor: 'not-allowed' }
                   }
                 >
-                  Sign Up With Google
+                  Sign Up
                 </button>
               </form>
               <p className={Styles.or}>Already signed up?</p>
-              <button onClick={login} className={Styles.loginButton}>
-                Login
-              </button>
+              <Link to="/login">
+                <button className={Styles.loginButton}>Login</button>
+              </Link>
             </div>
           </div>
         </div>

@@ -35,8 +35,47 @@ async function startServer() {
       const auth = req ? req.headers.authorization : null;
       if (auth && auth.toLowerCase().startsWith('bearer ')) {
         const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET_KEY);
-        const currentUser = await User.findById(decodedToken.userId);
-        return { currentUser };
+        try {
+          const result = await User.findById(decodedToken.userId).populate({
+            path: 'posts',
+            limit: 9,
+            options: { sort: { date: -1 } },
+          });
+          // convert id to mongoose object, for aggregation
+          const id = mongoose.Types.ObjectId(decodedToken.userId);
+          const stats = await User.aggregate([
+            { $match: { _id: id } },
+            {
+              $project: {
+                id: 1,
+                total_followers: { $size: '$followers' },
+                total_following: { $size: '$following' },
+                total_posts: { $size: '$posts' },
+              },
+            },
+          ]);
+          result.followerCount = stats[0].total_followers;
+          result.followingCount = stats[0].total_following;
+          result.postCount = stats[0].total_posts;
+          for (const post of result.posts) {
+            const id = mongoose.Types.ObjectId(decodedToken.userId);
+            const postStats = await Post.aggregate([
+              { $match: { _id: id } },
+              {
+                $project: {
+                  id: 1,
+                  total_likes: { $size: '$likes' },
+                  total_comments: { $size: '$comments' },
+                },
+              },
+            ]);
+            post.likeCount = postStats[0].total_likes;
+            post.commentCount = postStats[0].total_comments;
+          }
+          return { currentUser: result };
+        } catch (error) {
+          console.log(error);
+        }
       }
     },
   });

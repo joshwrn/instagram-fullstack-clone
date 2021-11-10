@@ -1,12 +1,18 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
-import { IoPersonCircleOutline, IoPersonAddOutline, IoLogOut } from 'react-icons/io5';
+import {
+  IoPersonCircleOutline,
+  IoPersonAddOutline,
+  IoLogOut,
+} from 'react-icons/io5';
 import { CgDarkMode } from 'react-icons/cg';
 import Styles from '../../styles/nav/nav__user-menu.module.css';
 import { light, dark } from '../../functions/theme';
 import { firestore } from '../../services/firebase';
+import { useAuth } from '../../contexts/AuthContext';
 
-const NavUserMenu = ({ setOpenMenu, currentUser, logout, theme, setTheme }) => {
+const NavUserMenu = ({ setOpenMenu, theme, setTheme }) => {
+  const { currentUser, logout } = useAuth();
   const handleClick = (e) => {
     e.preventDefault();
     setOpenMenu(false);
@@ -46,7 +52,10 @@ const NavUserMenu = ({ setOpenMenu, currentUser, logout, theme, setTheme }) => {
       <div className={Styles.inner}>
         {currentUser ? (
           <>
-            <NavLink className={Styles.option} to={`/profile/${currentUser.uid}`}>
+            <NavLink
+              className={Styles.option}
+              to={`/profile/${currentUser.id}`}
+            >
               <IoPersonCircleOutline className={Styles.icon} />
               <div>
                 <p>Profile</p>

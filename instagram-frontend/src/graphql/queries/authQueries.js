@@ -8,6 +8,11 @@ export const GET_CURRENT_USER = gql`
         image
         contentType
       }
+      displayName
+      followerCount
+      followingCount
+      postCount
+      id
     }
   }
 `;

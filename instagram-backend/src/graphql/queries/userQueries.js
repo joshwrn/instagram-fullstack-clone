@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const typeDefs = gql`
   type Query {
     findUser(id: ID!): UserProfile
+    findFollowers(id: ID!, type: String!): [UserProfile]
     findAllUsers: Int
   }
 `;
@@ -15,6 +16,23 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     findAllUsers: async () => User.collection.countDocuments(),
+    findFollowers: async (parent, args, context, info) => {
+      if (args.type === 'followers') {
+        try {
+          const user = await User.findById(args.id).populate('followers');
+          return user.followers;
+        } catch (err) {
+          throw err;
+        }
+      } else if (args.type === 'following') {
+        try {
+          const user = await User.findById(args.id).populate('following');
+          return user.following;
+        } catch (err) {
+          throw err;
+        }
+      }
+    },
     findUser: async (root, args) => {
       try {
         const result = await User.findById(args.id).populate({

@@ -4,23 +4,18 @@ import { useAuth } from '../../contexts/AuthContext';
 import Styles from '../../styles/home/home__login.module.css';
 
 const LoginButton = () => {
-  const { login, currentUser } = useAuth();
-
-  const handleLogin = (e) => {
-    e.preventDefault();
-    login();
-  };
+  const { currentUser } = useAuth();
 
   return (
     <div>
       {!currentUser && (
         <div className={Styles.loginButtons}>
-          <Link id="home__sidebar__sign-up" to="/sign-up">
+          <Link to="/sign-up">
             <button className={Styles.signUp}>Sign Up</button>
           </Link>
-          <button className={Styles.login} onClick={handleLogin}>
-            Login
-          </button>
+          <Link to="/login">
+            <button className={Styles.login}>Login</button>
+          </Link>
         </div>
       )}
     </div>

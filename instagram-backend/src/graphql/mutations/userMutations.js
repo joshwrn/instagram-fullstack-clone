@@ -1,13 +1,10 @@
-const { gql } = require('apollo-server-express');
+const { gql, AuthenticationError } = require('apollo-server-express');
 const User = require('../../models/user');
 const mongoose = require('mongoose');
 const createBuffer = require('../../utils/createBuffer.js');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
 
 const typeDefs = gql`
-  scalar Upload
   type Mutation {
     addUser(
       username: String!
@@ -23,12 +20,14 @@ const typeDefs = gql`
   }
 `;
 
-const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
-
 const resolvers = {
   Mutation: {
-    followUser: async (root, { currentUser, followedUser }) => {
-      console.log(JWT_SECRET_KEY);
+    followUser: async (root, { followedUser }, context) => {
+      const currentUser = context.currentUser.id;
+      if (!currentUser) {
+        throw new AuthenticationError('not authenticated');
+      }
+
       const find = await User.findById(followedUser);
 
       const check = find.followers.includes(currentUser);
@@ -48,7 +47,11 @@ const resolvers = {
       return followed;
     },
 
-    unfollowUser: async (root, { currentUser, followedUser }) => {
+    unfollowUser: async (root, { followedUser }, context) => {
+      const currentUser = context.currentUser.id;
+      if (!currentUser) {
+        throw new AuthenticationError('not authenticated');
+      }
       const find = await User.findById(followedUser);
 
       const check = find.followers.includes(currentUser);

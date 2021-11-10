@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server-express');
+const { gql, AuthenticationError } = require('apollo-server-express');
 
 const mongoose = require('mongoose');
 const { GraphQLUpload } = require('graphql-upload');
@@ -17,7 +17,13 @@ const typeDefs = gql`
 const resolvers = {
   Upload: GraphQLUpload,
   Mutation: {
-    imageUpload: async (parent, { file, caption, user }) => {
+    imageUpload: async (parent, { file, caption, user }, context) => {
+      const currentUser = context.currentUser;
+
+      if (!currentUser) {
+        throw new AuthenticationError('not authenticated');
+      }
+
       const imageBuffer = await createBuffer(file);
 
       const post = new Post({
