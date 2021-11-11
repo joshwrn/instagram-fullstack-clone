@@ -15,6 +15,7 @@
   --menu-hover-color: rgba(0, 0, 0, 0.1);
   --notification-type-color: rgb(75, 75, 75);
   --home-card-overlay: rgba(255, 255, 255, 0.85);
+  --image-filter: initial;
 }
 
 * {

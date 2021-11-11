@@ -1,121 +1,202 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useH } from 'react';
 import { Link } from 'react-router-dom';
 import Styles from '../../styles/sign-up/sign-up.module.css';
 // import { signIn, firestore } from '../../services/firebase';
 import { useAuth } from '../../contexts/AuthContext';
-import logo from '../../assets/img/logo/logo-2.png';
 import debounce from '../../functions/debounce';
+import FormHelper from './FormHelper';
+import SignUpVerify from './SignUpVerify';
+import { SIGN_UP } from '../../graphql/mutations/authMutations';
+import {
+  CHECK_USERNAME_EXIST,
+  CHECK_EMAIL_EXIST,
+} from '../../graphql/queries/authQueries';
+import { useMutation, useQuery } from '@apollo/client';
 
 const SignUp = () => {
   const { currentUser } = useAuth();
+  const [success, setSuccess] = useState(false);
   const [formInput, setFormInput] = useState({
     username: '',
-    fullName: '',
+    displayName: '',
     email: '',
     password: '',
     verifyPassword: '',
   });
+  const [valid, setValid] = useState(false);
   const [errors, setErrors] = useState({
     nameTaken: false,
     emailTaken: false,
     passwordMismatch: false,
+    usernameShort: true,
+    emailEmpty: true,
+    nameEmpty: true,
+    passwordShort: true,
+  });
+  const {
+    data: usernameData,
+    loading: usernameLoading,
+    error: usernameError,
+  } = useQuery(CHECK_USERNAME_EXIST, {
+    variables: { username: formInput.username },
   });
 
-  const { nameTaken, emailTaken, passwordMismatch } = errors;
+  const {
+    data: emailData,
+    loading: emailLoading,
+    error: emailError,
+  } = useQuery(CHECK_EMAIL_EXIST, {
+    variables: { email: formInput.email },
+  });
 
-  const handleChange = (e) => {
+  useEffect(() => {
+    for (const key in errors) {
+      if (errors[key] === true) {
+        setValid(false);
+        return;
+      } else {
+        setValid(true);
+      }
+    }
+  }, [errors]);
+
+  useEffect(() => {
+    if (usernameData) {
+      if (usernameData.checkUsernameExist) {
+        setErrors((prev) => ({ ...prev, nameTaken: true }));
+      } else {
+        setErrors((prev) => ({ ...prev, nameTaken: false }));
+      }
+    }
+  }, [usernameData]);
+
+  useEffect(() => {
+    if (emailData) {
+      if (emailData.checkEmailExist) {
+        setErrors((prev) => ({ ...prev, emailTaken: true }));
+      } else {
+        setErrors((prev) => ({ ...prev, emailTaken: false }));
+      }
+    }
+  }, [emailData]);
+
+  useEffect(() => {
+    //username
+    if (formInput.username.length < 2) {
+      setErrors((prev) => ({ ...prev, usernameShort: true }));
+    }
+    if (formInput.username.length > 2) {
+      setErrors((prev) => ({ ...prev, usernameShort: false }));
+    }
+    // display name
+    if (formInput.displayName.length < 2) {
+      setErrors((prev) => ({ ...prev, nameEmpty: true }));
+    }
+    if (formInput.displayName.length > 2) {
+      setErrors((prev) => ({ ...prev, nameEmpty: false }));
+    }
+    //email
+    if (formInput.email.length < 1) {
+      setErrors((prev) => ({ ...prev, emailEmpty: true }));
+    }
+    if (formInput.email.length > 1) {
+      setErrors((prev) => ({ ...prev, emailEmpty: false }));
+    }
+    //password
+    if (formInput.password.length < 6) {
+      setErrors((prev) => ({ ...prev, passwordShort: true }));
+    }
+    if (formInput.password.length > 6) {
+      setErrors((prev) => ({ ...prev, passwordShort: false }));
+    }
+    //verify password
+    if (formInput.password !== formInput.verifyPassword) {
+      setErrors((prev) => ({ ...prev, passwordMismatch: true }));
+    }
+    if (formInput.password === formInput.verifyPassword) {
+      setErrors((prev) => ({ ...prev, passwordMismatch: false }));
+    }
+  }, [formInput]);
+
+  const [addUser, { loading, error, data }] = useMutation(SIGN_UP, {
+    onError: (err) => {
+      console.log(err);
+    },
+    onCompleted: (data) => {
+      setSuccess(true);
+    },
+  });
+
+  const handleUsernameChange = (e) => {
     const value = e;
-    const reg = /[^a-zA-Z\d]/gi;
+    const reg = /[^a-zA-Z\d\-\_]/gi;
     const newVal = value.replace(reg, '');
     const lower = newVal.toLowerCase();
-    setFormInput({ ...formInput, username: lower });
+    setFormInput((prev) => ({ ...prev, username: lower }));
   };
 
-  const debounceChange = useCallback(
-    debounce((nextValue) => handleChange(nextValue), 500),
-    []
-  );
+  const handleEmail = (value) => {
+    const reg = /[^a-zA-Z\d\-\_\@\.]/gi;
+    const newVal = value.replace(reg, '');
+    const lower = newVal.toLowerCase();
+    setFormInput((prev) => ({ ...prev, email: lower }));
+  };
+
+  const handleDisplayName = (value) => {
+    const reg = /[^a-zA-Z" "]/gi;
+    const ws = /[" *"]/gi;
+    const newVal = value.replace(reg, '');
+    const remove = newVal.replace(ws, ' ');
+    setFormInput((prev) => ({ ...prev, displayName: remove }));
+  };
 
   const handleValue = (e) => {
-    console.log(formInput);
     const { name, value } = e.target;
     if (name === 'username') {
-      handleChange(value);
+      handleUsernameChange(value);
+    } else if (name === 'email') {
+      handleEmail(value);
+    } else if (name === 'displayName') {
+      handleDisplayName(value);
     } else {
-      setFormInput({
-        ...formInput,
-        [name]: value,
-      });
+      setFormInput((prev) => ({ ...prev, [name]: value }));
     }
   };
 
-  // useEffect(() => {
-  //   let foundName;
-  //   const check = async () => {
-  //     if (userInput.length > 2) {
-  //       await firestore
-  //         .collection('users')
-  //         .where('username', '==', userInput)
-  //         .get()
-  //         .then((searchResults) => {
-  //           return searchResults.forEach((doc) => {
-  //             foundName = doc.data();
-  //           });
-  //         });
-  //       if (foundName === undefined) {
-  //         setNameTaken(false);
-  //       } else {
-  //         setNameTaken(true);
-  //       }
-  //     }
-  //   };
-  //   check();
-  // }, [userInput]);
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // signIn();
+    await addUser({
+      variables: {
+        username: formInput.username,
+        displayName: formInput.displayName,
+        email: formInput.email,
+        password: formInput.password,
+      },
+    });
   };
 
-  const doNothing = (e) => {
-    e.preventDefault();
-  };
-
-  let nameHelper = (
-    <p className={Styles.nameHelper}>Name must be 3-15 characters.</p>
-  );
-
-  if (formInput.username.length !== 0) {
-    if (formInput.username.length <= 2) {
-      nameHelper = <p className={Styles.nameHelper}>Too Short.</p>;
-    } else if (nameTaken === false) {
-      nameHelper = (
-        <p style={{ color: '#00C138' }} className={Styles.nameHelper}>
-          Name is available.
-        </p>
-      );
-    } else {
-      nameHelper = (
-        <p style={{ color: '#ff0000' }} className={Styles.nameHelper}>
-          Name has already been taken.
-        </p>
-      );
-    }
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
-  return (
-    <>
-      {!currentUser ? (
-        <div className={Styles.signUp}>
-          <div className={Styles.container}>
-            <div className={Styles.header}>
-              <img className={Styles.logoImg} src={logo} alt="" />
-              <div className={Styles.textContainer}>
-                <h2 className={Styles.headerText}>Sign Up</h2>
-              </div>
-            </div>
-            <div className={Styles.formContainer}>
+  let view;
+
+  if (!currentUser) {
+    view = (
+      <div className={Styles.signUp}>
+        <div className={Styles.container}>
+          <div className={Styles.formContainer}>
+            {success ? (
+              <SignUpVerify email={formInput.email} />
+            ) : (
               <form pattern="[0-9a-zA-Z_.-]*" className={Styles.form}>
+                <div className={Styles.header}>
+                  {/* <img className={Styles.logoImg} src={logo} alt="" /> */}
+                  <div className={Styles.textContainer}>
+                    <h2 className={Styles.headerText}>Sign Up</h2>
+                  </div>
+                </div>
+
                 <div className={Styles.inputLabelDiv}>
                   <p className={Styles.inputLabel}>Username</p>
                 </div>
@@ -136,7 +217,20 @@ const SignUp = () => {
                     value={formInput.username}
                   />
                 </div>
-                <div className={Styles.helperDiv}>{nameHelper}</div>
+
+                <FormHelper
+                  field={formInput.username}
+                  error={errors.nameTaken}
+                  length={2}
+                  neutral="Username must be 3-15 characters."
+                  correct="Username is available"
+                  incorrect="Username already taken"
+                />
+
+                <div className={Styles.inputLabelDiv}>
+                  <p className={Styles.inputLabel}>Full Name</p>
+                </div>
+
                 <div className={Styles.input}>
                   <input
                     required
@@ -144,12 +238,25 @@ const SignUp = () => {
                     onChange={handleValue}
                     className={Styles.inputBox}
                     type="text"
-                    name="fullName"
-                    placeholder="full name"
+                    name="displayName"
+                    placeholder="Full Name"
                     maxLength="15"
                     minLength="3"
-                    value={formInput.fullName}
+                    value={formInput.displayName}
                   />
+                </div>
+
+                <FormHelper
+                  field={formInput.displayName}
+                  error={false}
+                  length={2}
+                  neutral="Enter your full name."
+                  correct="Success"
+                  incorrect="Name too short"
+                />
+
+                <div className={Styles.inputLabelDiv}>
+                  <p className={Styles.inputLabel}>Email</p>
                 </div>
 
                 <div className={Styles.input}>
@@ -159,11 +266,25 @@ const SignUp = () => {
                     className={Styles.inputBox}
                     type="text"
                     name="email"
-                    placeholder="email"
+                    placeholder="email@example.com"
                     minLength="3"
                     value={formInput.email}
                   />
                 </div>
+
+                <FormHelper
+                  field={formInput.email}
+                  error={errors.emailTaken}
+                  length={0}
+                  neutral="Enter valid email."
+                  correct="Valid"
+                  incorrect="Email already exists."
+                />
+
+                <div className={Styles.inputLabelDiv}>
+                  <p className={Styles.inputLabel}>Password</p>
+                </div>
+
                 <div className={Styles.input}>
                   <input
                     required
@@ -171,12 +292,26 @@ const SignUp = () => {
                     className={Styles.inputBox}
                     type="password"
                     name="password"
-                    placeholder="password"
+                    placeholder="********"
                     maxLength="16"
                     minLength="5"
                     value={formInput.password}
                   />
                 </div>
+
+                <FormHelper
+                  field={formInput.email}
+                  error={errors.passwordMismatch}
+                  length={0}
+                  neutral=""
+                  correct=""
+                  incorrect=""
+                />
+
+                <div className={Styles.inputLabelDiv}>
+                  <p className={Styles.inputLabel}>Verify Password</p>
+                </div>
+
                 <div className={Styles.input}>
                   <input
                     required
@@ -184,22 +319,28 @@ const SignUp = () => {
                     className={Styles.inputBox}
                     type="password"
                     name="verifyPassword"
-                    placeholder="verify password"
+                    placeholder="********"
                     maxLength="16"
                     minLength="5"
                     value={formInput.verifyPassword}
                   />
                 </div>
+
+                <FormHelper
+                  field={formInput.email}
+                  error={errors.passwordMismatch}
+                  length={0}
+                  neutral="‎"
+                  correct="‎"
+                  incorrect="Passwords don't match."
+                />
+
                 <button
                   type="submit"
-                  onClick={
-                    !nameTaken && formInput.username.length > 2
-                      ? handleSubmit
-                      : doNothing
-                  }
+                  onClick={valid ? handleSubmit : (e) => e.preventDefault()}
                   className={Styles.signUpButton}
                   style={
-                    !nameTaken && formInput.username.length > 2
+                    valid
                       ? {
                           backgroundColor: 'black',
                           cursor: 'pointer',
@@ -209,26 +350,35 @@ const SignUp = () => {
                 >
                   Sign Up
                 </button>
+                <p className={Styles.loginText}>
+                  Already have an account?{' '}
+                  <Link to="/login" className={Styles.signInLink}>
+                    Sign In
+                  </Link>
+                </p>
               </form>
-              <p className={Styles.or}>Already signed up?</p>
-              <Link to="/login">
-                <button className={Styles.loginButton}>Login</button>
-              </Link>
-            </div>
+            )}
           </div>
         </div>
-      ) : (
-        <div className={Styles.signUp}>
-          <div className={Styles.notFoundContainer}>
-            <h3>Already Logged In</h3>
-            <Link to="/">
-              <button className={Styles.returnButton}>Return Home</button>
-            </Link>
-          </div>
+        <div className={Styles.image}></div>
+      </div>
+    );
+  }
+
+  if (currentUser) {
+    view = (
+      <div className={Styles.signUp}>
+        <div className={Styles.notFoundContainer}>
+          <h3>Already Logged In</h3>
+          <Link to="/">
+            <button className={Styles.returnButton}>Return Home</button>
+          </Link>
         </div>
-      )}
-    </>
-  );
+      </div>
+    );
+  }
+
+  return <>{view}</>;
 };
 
 export default SignUp;

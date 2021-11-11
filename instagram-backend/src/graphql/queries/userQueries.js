@@ -2,6 +2,7 @@ const { gql } = require('apollo-server-express');
 const User = require('../../models/user');
 const Post = require('../../models/post');
 const mongoose = require('mongoose');
+const avatar = require('../../assets/img/avatar');
 
 // returns userProfile type which uses profilePost type
 
@@ -15,7 +16,10 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    findAllUsers: async () => User.collection.countDocuments(),
+    findAllUsers: async (root, args) => {
+      console.log('avi', avatar);
+      return User.collection.countDocuments();
+    },
     findFollowers: async (parent, args, context, info) => {
       if (args.type === 'followers') {
         try {

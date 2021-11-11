@@ -8,6 +8,7 @@ const typeDefs = gql`
   type User {
     username: String!
     displayName: String!
+    email: String!
     password: String!
     theme: String
     bio: String

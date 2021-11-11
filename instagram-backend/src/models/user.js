@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
+const banner = require('../assets/img/banner');
+const avatar = require('../assets/img/avatar');
 
 const schema = new mongoose.Schema({
   username: {
@@ -31,8 +33,20 @@ const schema = new mongoose.Schema({
     type: String,
     maxlength: 300,
   },
-  avatar: mongoose.Schema.Types.Mixed,
-  banner: mongoose.Schema.Types.Mixed,
+  avatar: {
+    type: mongoose.Schema.Types.Mixed,
+    default: {
+      image: avatar.avatar,
+      contentType: 'image/jpg',
+    },
+  },
+  banner: {
+    type: mongoose.Schema.Types.Mixed,
+    default: {
+      image: banner.banner,
+      contentType: 'image/jpg',
+    },
+  },
   password: {
     type: String,
     required: true,

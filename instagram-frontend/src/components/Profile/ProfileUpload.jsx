@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IoCloseOutline, IoCloudUploadOutline } from 'react-icons/io5';
 import { firestore, storageRef } from '../../services/firebase';
 import resizeImage from '../../functions/resizeImage';
@@ -21,6 +21,10 @@ const ProfileUpload = ({ getModal, setNewPost }) => {
       setPostFile(null);
     }
   };
+
+  useEffect(() => {
+    console.log(imageFile, postFile);
+  }, [imageFile, postFile]);
 
   //+ set the caption
   const handleTextChange = (e) => {
@@ -94,7 +98,10 @@ const ProfileUpload = ({ getModal, setNewPost }) => {
             alt=""
           />
 
-          <div style={imageFile && { display: 'none' }} className={Styles.uploadContainer}>
+          <div
+            style={imageFile && { display: 'none' }}
+            className={Styles.uploadContainer}
+          >
             <label className={Styles.buttonContainer}>
               <input
                 onChange={handleFileChange}
@@ -103,7 +110,9 @@ const ProfileUpload = ({ getModal, setNewPost }) => {
                 className={Styles.fileInput}
               />
               <IoCloudUploadOutline className={Styles.upload} />
-              <p>{postFile === null ? 'File size limit 5 mb.' : 'ready to post'}</p>
+              <p>
+                {postFile === null ? 'File size limit 5 mb.' : 'ready to post'}
+              </p>
             </label>
           </div>
           <div>

@@ -1,16 +1,9 @@
 .signUp {
-  display: grid;
-  justify-content: center;
-  text-align: center;
-  width: 100%;
-  padding-top: 54px;
-  margin: 0;
-  position: absolute;
-  top: 50%;
-  left: 0;
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-  box-sizing: border-box;
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--primary-background-color);
+  position: relative;
 }
 
 .container {
@@ -18,53 +11,56 @@
   align-items: center;
   grid-template-rows: 1fr 3fr;
   flex-direction: column;
-  box-shadow: 0px 0px 16px 1px rgba(0, 0, 0, 0.103);
+  /* box-shadow: 0px 0px 16px 1px rgba(0, 0, 0, 0.103); */
   overflow: hidden;
   overflow-y: scroll;
-  border-radius: 16px;
-  border: var(--primary-border);
-  width: 400px;
-  height: 672px;
+  /* border-radius: 16px;
+  border: var(--primary-border); */
+  width: 100%;
+  /* padding-top: 54px; */
+  box-sizing: border-box;
+  height: 100vh;
 }
 
 .header {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-}
-
-.logoImg {
-  height: 64px;
-  width: 64px;
-  margin: 48px 0 16px 0;
+  align-items: flex-start;
+  width: 100%;
+  margin-left: 16px;
 }
 
 .headerText {
   color: rgb(104, 104, 104);
+  font-size: 38px;
+  font-weight: bold;
   cursor: default;
 }
 
 .formContainer {
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .form {
   margin-top: 24px;
-  width: 100%;
+  width: 60%;
   display: flex;
   flex-direction: column;
-  align-items: center;
   box-sizing: border-box;
 }
 
 .input {
   display: flex;
-  width: 60%;
+  width: 100%;
   justify-content: center;
   align-items: center;
   border: var(--secondary-border);
-  border-radius: 16px;
+  border-radius: 8px;
   height: 32px;
   margin: 8px 0 4px 0;
 }
@@ -100,20 +96,20 @@
 
 .inputLabelDiv {
   display: flex;
-  width: 60%;
+  width: 100%;
   justify-content: flex-start;
+  margin-top: 16px;
 }
 
 .inputLabel {
   font-size: 12px;
   margin-left: 16px;
   color: var(--primary-font-color);
-  font-weight: bold;
 }
 
 .helperDiv {
   display: flex;
-  width: 60%;
+  width: 100%;
   justify-content: flex-start;
 }
 
@@ -127,7 +123,7 @@
   background-color: black;
   padding: 0 32px;
   height: 36px;
-  width: 240px;
+  width: 140px;
   font-size: 16px;
   border-radius: 16px;
   cursor: pointer;
@@ -139,25 +135,30 @@
   margin: 24px 0 16px 0;
 }
 
-.or {
-  color: var(--primary-font-color);
-  font-size: 13px;
-  margin: 8px 0 8px 0;
+.loginText {
+  font-size: 12px;
+  color: var(--secondary-font-color);
 }
 
-.loginButton {
-  background-color: rgba(0, 0, 0, 0);
-  color: var(--secondary-font-color);
-  padding: 0 32px;
-  height: 32px;
-  width: 208px;
-  font-size: 14px;
-  border-radius: 16px;
-  cursor: pointer;
-  font-weight: bold;
+.signInLink {
+  color: var(--primary-font-color);
+}
+
+/*$ Image side */
+
+.image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
   box-sizing: border-box;
-  transition: box-shadow 0.25s;
-  border: 1px solid var(--secondary-font-color);
+  position: relative;
+  height: 100vh;
+  background-image: url('https://image.freepik.com/free-vector/verification-technologies-abstract-concept-illustration_335657-3894.jpg');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: var(--image-filter);
 }
 
 /*! already logged in */

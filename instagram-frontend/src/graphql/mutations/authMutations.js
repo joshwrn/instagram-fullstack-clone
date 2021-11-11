@@ -7,3 +7,21 @@ export const LOGIN = gql`
     }
   }
 `;
+
+export const SIGN_UP = gql`
+  mutation addUser(
+    $username: String!
+    $displayName: String!
+    $password: String!
+    $email: String!
+  ) {
+    addUser(
+      username: $username
+      displayName: $displayName
+      password: $password
+      email: $email
+    ) {
+      email
+    }
+  }
+`;

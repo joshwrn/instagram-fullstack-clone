@@ -16,3 +16,15 @@ export const GET_CURRENT_USER = gql`
     }
   }
 `;
+
+export const CHECK_USERNAME_EXIST = gql`
+  query Query($username: String!) {
+    checkUsernameExist(username: $username)
+  }
+`;
+
+export const CHECK_EMAIL_EXIST = gql`
+  query Query($email: String!) {
+    checkEmailExist(email: $email)
+  }
+`;

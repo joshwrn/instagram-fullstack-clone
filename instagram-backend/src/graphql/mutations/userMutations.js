@@ -9,11 +9,8 @@ const typeDefs = gql`
     addUser(
       username: String!
       displayName: String!
+      email: String!
       password: String!
-      theme: String!
-      bio: String!
-      avatar: Upload!
-      banner: Upload!
     ): User
     followUser(currentUser: ID!, followedUser: ID!): User
     unfollowUser(currentUser: ID!, followedUser: ID!): User
@@ -69,24 +66,23 @@ const resolvers = {
       return unFollowed;
     },
 
-    addUser: async (
-      root,
-      { avatar, banner, bio, theme, password, displayName, username }
-    ) => {
-      const avatarBuffer = await createBuffer(avatar);
-      const bannerBuffer = await createBuffer(banner);
+    addUser: async (root, { password, displayName, username, email }) => {
+      //const avatarBuffer = await createBuffer(avatar);
+      //const bannerBuffer = await createBuffer(banner);
 
       const saltRounds = 10;
       const passwordHash = await bcrypt.hash(password, saltRounds);
 
+      console.log(password, displayName, username, email);
+
       const user = new User({
-        bio,
-        theme,
         password: passwordHash,
+        bio: `Hi i'm ${displayName}`,
         displayName,
         username,
-        avatar: avatarBuffer,
-        banner: bannerBuffer,
+        email,
+        //avatar: avatarBuffer,
+        //banner: bannerBuffer,
       });
       return user.save();
     },
