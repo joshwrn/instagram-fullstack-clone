@@ -44,7 +44,10 @@ const HomeFeed = ({ newPost }) => {
         .limit(5)
         .get();
     } else if (type === 'none') {
-      const me = await firestore.collection('users').doc('e9x1NbFsE8VqLAqAKfbpHkH0QS93').get();
+      const me = await firestore
+        .collection('users')
+        .doc('e9x1NbFsE8VqLAqAKfbpHkH0QS93')
+        .get();
       following.push(me.data());
       // get people i follow
       userRef = await firestore

@@ -23,6 +23,7 @@ export const FIND_POST_BY_ID = gql`
       }
       user {
         username
+        displayName
         avatar {
           image
           contentType

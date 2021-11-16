@@ -3,8 +3,8 @@ import { IoAddCircleOutline } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import LoginButton from './LoginButton';
-import ProfileFollowersModal from '../Profile/ProfileFollowersModal';
-import ProfileUpload from '../Profile/ProfileUpload';
+import FollowersModal from '../reusable/FollowersModal';
+import UploadModal from '../reusable/UploadModal';
 import stopScroll from '../../functions/stopScroll';
 import ImageLoader from '../reusable/ImageLoader';
 import Styles from '../../styles/home/home__sidebar.module.css';
@@ -38,7 +38,7 @@ const Sidebar = ({ setNewPost }) => {
   return (
     <div className={Styles.sidebar}>
       {currentUser && openFollowers && (
-        <ProfileFollowersModal
+        <FollowersModal
           currentProfile={currentUser}
           handleFollowers={handleFollowers}
           setOpenFollowers={setOpenFollowers}
@@ -50,7 +50,7 @@ const Sidebar = ({ setNewPost }) => {
       )}
 
       {renderModal && (
-        <ProfileUpload setNewPost={setNewPost} getModal={getModal} />
+        <UploadModal setNewPost={setNewPost} getModal={getModal} />
       )}
       <div className={Styles.container}>
         {userProfile && (

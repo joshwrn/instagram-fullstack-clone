@@ -1,9 +1,9 @@
 const { ApolloServer } = require('apollo-server-express');
 const mongoose = require('mongoose');
 const express = require('express');
-const cors = require(`cors`);
 const jwt = require('jsonwebtoken');
 const User = require('./src/models/user');
+const Post = require('./src/models/post');
 require('dotenv').config();
 
 const { makeExecutableSchema } = require('@graphql-tools/schema');
@@ -58,21 +58,6 @@ async function startServer() {
           result.followerCount = stats[0].total_followers;
           result.followingCount = stats[0].total_following;
           result.postCount = stats[0].total_posts;
-          for (const post of result.posts) {
-            const id = mongoose.Types.ObjectId(decodedToken.userId);
-            const postStats = await Post.aggregate([
-              { $match: { _id: id } },
-              {
-                $project: {
-                  id: 1,
-                  total_likes: { $size: '$likes' },
-                  total_comments: { $size: '$comments' },
-                },
-              },
-            ]);
-            post.likeCount = postStats[0].total_likes;
-            post.commentCount = postStats[0].total_comments;
-          }
           return { currentUser: result };
         } catch (error) {
           console.log(error);
@@ -81,6 +66,8 @@ async function startServer() {
     },
   });
   app.use(graphqlUploadExpress());
+  app.use(express.json({ limit: '50mb' }));
+  app.use(express.urlencoded({ limit: '50mb' }));
 
   await server.start();
   server.applyMiddleware({ app, path: '/' });

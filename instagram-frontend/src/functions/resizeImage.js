@@ -7,7 +7,7 @@ const resizeImage = (e, setImageFile, setPostFile, width) => {
       const imgEl = document.createElement('img');
       imgEl.src = event.target.result;
 
-      imgEl.onload = (img) => {
+      imgEl.onload = async (img) => {
         const canvas = document.createElement('canvas');
         const MAX_WIDTH = width;
         const scaleSize = MAX_WIDTH / img.target.width;
@@ -22,8 +22,17 @@ const resizeImage = (e, setImageFile, setPostFile, width) => {
           setImageFile(srcEncoded);
         }
         ctx.canvas.toBlob(
-          (blob) => {
-            setPostFile(blob);
+          async (blob) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(blob);
+            const p = await new Promise((resolve) => {
+              reader.onloadend = () => {
+                resolve(reader.result);
+              };
+            });
+            // remove beginning of base64 string
+            const split = p.split(',');
+            setPostFile(split[1]);
           },
           'image/jpeg',
           0.7

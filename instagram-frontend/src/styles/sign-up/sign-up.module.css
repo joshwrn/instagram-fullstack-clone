@@ -32,7 +32,7 @@
 }
 
 .headerText {
-  color: rgb(104, 104, 104);
+  color: var(--primary-font-color);
   font-size: 38px;
   font-weight: bold;
   cursor: default;

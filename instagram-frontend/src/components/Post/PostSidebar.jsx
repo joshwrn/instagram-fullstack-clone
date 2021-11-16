@@ -19,9 +19,6 @@ import PostLikeButton from './PostLikeButton';
 import PostCommentBox from './PostCommentBox';
 import convertTime from '../../functions/convertTime';
 
-import convertSrc from '../../functions/convertSrc';
-import useBuffer from '../../hooks/useBuffer';
-
 const PostSidebar = ({
   match,
   loaded,
@@ -31,14 +28,14 @@ const PostSidebar = ({
   currentPost,
   ownPost,
 }) => {
-  let history = useHistory();
   const [addTime, setAddTime] = useState('');
-  const [avatar, setAvatar] = useBuffer(postUserAvatar);
+  const [totalLikes, setTotalLikes] = useState(0);
 
   useEffect(() => {
     if (currentPost) {
       const getCur = convertTime(currentPost.date, Date.now());
       setAddTime(getCur);
+      setTotalLikes(currentPost.likes.length);
     }
   }, [currentPost]);
 
@@ -57,14 +54,14 @@ const PostSidebar = ({
               <img
                 style={!loaded ? { display: 'none' } : null}
                 onLoad={handleLoad}
-                src={avatar}
+                src={`data:${postUserAvatar.contentType};base64,${postUserAvatar.image}`}
                 alt="avatar"
                 className={Styles.profileImg}
               />
               <img
                 className={Styles.profileImgBlur}
                 style={!loaded ? { display: 'none' } : null}
-                src={avatar}
+                src={`data:${postUserAvatar.contentType};base64,${postUserAvatar.image}`}
                 alt=""
               />
             </div>
@@ -97,10 +94,9 @@ const PostSidebar = ({
             <PostLikeButton
               Styles={Styles}
               match={match}
-              history={history}
+              currentPost={currentPost}
               IoHeartOutline={IoHeartOutline}
-              firestore={firestore}
-              firestoreFieldValue={firestoreFieldValue}
+              setTotalLikes={setTotalLikes}
             />
             <IoChatbubbleOutline className={Styles.postIcon} />
             <IoShareOutline className={Styles.postIcon} />
@@ -115,7 +111,7 @@ const PostSidebar = ({
           />
         </div>
         <div className={Styles.infoContainer}>
-          <p className={Styles.likes}>{currentPost.likes.length} likes</p>
+          <p className={Styles.likes}>{totalLikes} likes</p>
           <p className={Styles.time}>{addTime}</p>
         </div>
         {/*//+ comment box */}

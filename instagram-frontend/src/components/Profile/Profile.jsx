@@ -4,15 +4,13 @@ import { useHistory } from 'react-router';
 import { firestore } from '../../services/firebase';
 import ProfileSidebar from './ProfileSidebar';
 import ProfileFeed from './ProfileFeed';
-import ProfileUpload from './ProfileUpload';
+import UploadModal from '../reusable/UploadModal';
 import ProfileAvatarModal from './ProfileAvatarModal';
 import Styles from '../../styles/profile/profile.module.css';
 import { useAuth } from '../../contexts/AuthContext';
-import ProfileButton from './ProfileButton';
+import FollowButton from '../reusable/FollowButton';
 import ScrollToTop from '../../functions/ScrollToTop';
 import stopScroll from '../../functions/stopScroll';
-
-import convertSrc from '../../functions/convertSrc.js';
 
 //+ graphql
 import { FIND_USER_PROFILE } from '../../graphql/queries/userQueries';
@@ -49,19 +47,6 @@ const Profile = (props) => {
       [loading[imgIndex]]: (loading[imgIndex].loading = false),
     });
   };
-
-  //+ get the current profiles data
-  // const getUserObject = () => {
-  //   firestore
-  //     .collection('users')
-  //     .doc(match.params.uid)
-  //     .get()
-  //     .then((userData) => {
-  //       if (userData.exists) {
-  //         setCurrentProfile(userData.data());
-  //       }
-  //     });
-  // };
 
   //$ graphql get profile data
   const {
@@ -118,7 +103,7 @@ const Profile = (props) => {
       <IoSendOutline className="action-icon" />
     </button>
   );
-  if (currentUser?.uid === match.params.uid) {
+  if (currentUser?.id === match.params.uid) {
     actionButton = (
       <button onClick={getModal} className={Styles.actionBtn}>
         <IoAddOutline className="action-icon" />
@@ -186,17 +171,15 @@ const Profile = (props) => {
             <div className={Styles.topRight}>
               <div className={Styles.topIconRow}>
                 {/*//+ following button */}
-                <ProfileButton
-                  firestore={firestore}
+                <FollowButton
                   Styles={Styles}
-                  currentUser={currentUser}
                   match={match.params.uid}
                   currentProfile={currentProfile}
                 />
                 {actionButton}
               </div>
               {renderModal && (
-                <ProfileUpload setNewPost={setNewPost} getModal={getModal} />
+                <UploadModal setNewPost={setNewPost} getModal={getModal} />
               )}
             </div>
           </div>

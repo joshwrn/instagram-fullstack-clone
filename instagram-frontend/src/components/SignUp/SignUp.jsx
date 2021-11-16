@@ -1,9 +1,7 @@
-import React, { useEffect, useState, useCallback, useH } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Styles from '../../styles/sign-up/sign-up.module.css';
-// import { signIn, firestore } from '../../services/firebase';
 import { useAuth } from '../../contexts/AuthContext';
-import debounce from '../../functions/debounce';
 import FormHelper from './FormHelper';
 import SignUpVerify from './SignUpVerify';
 import { SIGN_UP } from '../../graphql/mutations/authMutations';
@@ -33,6 +31,7 @@ const SignUp = () => {
     nameEmpty: true,
     passwordShort: true,
   });
+
   const {
     data: usernameData,
     loading: usernameLoading,
@@ -47,6 +46,15 @@ const SignUp = () => {
     error: emailError,
   } = useQuery(CHECK_EMAIL_EXIST, {
     variables: { email: formInput.email },
+  });
+
+  const [addUser, { loading, error, data }] = useMutation(SIGN_UP, {
+    onError: (err) => {
+      console.log(err);
+    },
+    onCompleted: (data) => {
+      setSuccess(true);
+    },
   });
 
   useEffect(() => {
@@ -117,15 +125,6 @@ const SignUp = () => {
       setErrors((prev) => ({ ...prev, passwordMismatch: false }));
     }
   }, [formInput]);
-
-  const [addUser, { loading, error, data }] = useMutation(SIGN_UP, {
-    onError: (err) => {
-      console.log(err);
-    },
-    onCompleted: (data) => {
-      setSuccess(true);
-    },
-  });
 
   const handleUsernameChange = (e) => {
     const value = e;
@@ -300,12 +299,12 @@ const SignUp = () => {
                 </div>
 
                 <FormHelper
-                  field={formInput.email}
-                  error={errors.passwordMismatch}
-                  length={0}
-                  neutral=""
-                  correct=""
-                  incorrect=""
+                  field={formInput.password}
+                  error={false}
+                  length={5}
+                  neutral="Password must be at least 6 characters."
+                  correct="Strong password."
+                  incorrect="‎"
                 />
 
                 <div className={Styles.inputLabelDiv}>
@@ -327,11 +326,11 @@ const SignUp = () => {
                 </div>
 
                 <FormHelper
-                  field={formInput.email}
+                  field={formInput.verifyPassword}
                   error={errors.passwordMismatch}
                   length={0}
                   neutral="‎"
-                  correct="‎"
+                  correct="Good to go."
                   incorrect="Passwords don't match."
                 />
 

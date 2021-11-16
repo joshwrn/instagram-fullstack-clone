@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { IoCloseOutline } from 'react-icons/io5';
 import Styles from '../../styles/profile/profile__followers-modal.module.css';
-import ProfileFollowerListItem from './ProfileFollowerListItem';
+import FollowerListItem from './FollowerListItem';
 import useIntersect from '../../hooks/useIntersect';
 import { useLazyQuery } from '@apollo/client';
 import { FIND_FOLLOWERS } from '../../graphql/queries/userQueries';
 
-const ProfileFollowers = ({
+const FollowersModal = ({
   openFollowers,
   handleFollowers,
   currentProfile,
@@ -14,12 +14,7 @@ const ProfileFollowers = ({
   setCurrentTab,
   currentUser,
 }) => {
-  const [getFollow, { loading, error, data }] = useLazyQuery(FIND_FOLLOWERS, {
-    variables: {
-      type: currentTab,
-      id: currentProfile.id,
-    },
-  });
+  const [getFollow, { loading, error, data }] = useLazyQuery(FIND_FOLLOWERS);
   const [list, setList] = useState([]);
 
   const ref = useRef();
@@ -39,7 +34,12 @@ const ProfileFollowers = ({
 
   useEffect(() => {
     if (!currentProfile || !openFollowers) return;
-    getFollow();
+    getFollow({
+      variables: {
+        type: currentTab,
+        id: currentProfile.id,
+      },
+    });
 
     // const reverse = current.slice(0).reverse();
     // const slice = reverse.slice(0, 10);
@@ -76,7 +76,7 @@ const ProfileFollowers = ({
   if (currentTab === 'following') {
     map = list.map((item) => {
       return (
-        <ProfileFollowerListItem
+        <FollowerListItem
           currentTab={currentTab}
           handleFollowers={handleFollowers}
           item={item}
@@ -91,7 +91,7 @@ const ProfileFollowers = ({
   if (currentTab === 'followers') {
     map = list.map((item) => {
       return (
-        <ProfileFollowerListItem
+        <FollowerListItem
           currentTab={currentTab}
           handleFollowers={handleFollowers}
           item={item}
@@ -150,4 +150,4 @@ const ProfileFollowers = ({
   );
 };
 
-export default ProfileFollowers;
+export default FollowersModal;

@@ -4,40 +4,25 @@ import { IoShareSocialOutline, IoTrashOutline } from 'react-icons/io5';
 import Styles from '../../styles/post/post__menu.module.css';
 import { useHistory } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { DELETE_POST } from '../../graphql/mutations/postMutations';
+import { useMutation } from '@apollo/client';
 
-const PostMenu = ({ ownPost, match, currentPost, firestore, storage }) => {
+const PostMenu = ({ ownPost, match, currentPost }) => {
   const [menuStatus, setMenuStatus] = useState(false);
-  const { getUserProfile } = useAuth();
   let history = useHistory();
   let menuRef = useRef();
+  const [deletePost] = useMutation(DELETE_POST);
 
-  const handleMenu = (e) => {
-    e.preventDefault();
+  const handleMenu = () => {
     menuStatus ? setMenuStatus(false) : setMenuStatus(true);
   };
 
-  const handleDelete = async (e) => {
-    e.preventDefault();
-    await firestore
-      .collection('users')
-      .doc(match.params.uid)
-      .collection('posts')
-      .doc(match.params.postid)
-      .delete();
-    let pictureRef = storage.refFromURL(currentPost.src);
-    await pictureRef.delete();
-    const userDoc = await firestore.collection('users').doc(match.params.uid).get();
-    const userData = userDoc.data();
-    await firestore
-      .collection('users')
-      .doc(match.params.uid)
-      .set(
-        {
-          postsCounter: userData.postsCounter - 1,
-        },
-        { merge: true }
-      );
-    await getUserProfile();
+  const handleDelete = async () => {
+    await deletePost({
+      variables: {
+        id: currentPost.id,
+      },
+    });
     history.push(`/profile/${match.params.uid}`);
   };
 
@@ -71,7 +56,10 @@ const PostMenu = ({ ownPost, match, currentPost, firestore, storage }) => {
   let menu;
 
   menu = (
-    <div ref={menuRef} className={ownPost ? Styles.containerOwn : Styles.container}>
+    <div
+      ref={menuRef}
+      className={ownPost ? Styles.containerOwn : Styles.container}
+    >
       <div className={Styles.inner}>
         <div onClick={handleShare} className={Styles.option}>
           <IoShareSocialOutline className={Styles.icon} />

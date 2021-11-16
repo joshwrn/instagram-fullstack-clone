@@ -6,6 +6,14 @@ export const FIND_ALL_USERS = gql`
   }
 `;
 
+export const CHECK_FOLLOWING = gql`
+  query Query($id: ID!, $type: String!) {
+    findFollowers(id: $id, type: $type) {
+      id
+    }
+  }
+`;
+
 export const FIND_FOLLOWERS = gql`
   query Query($id: ID!, $type: String!) {
     findFollowers(id: $id, type: $type) {

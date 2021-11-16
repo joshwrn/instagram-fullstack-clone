@@ -1,7 +1,7 @@
 // import mutations
 const userMutations = require('./mutations/userMutations');
 const commentMutations = require('./mutations/commentMutations');
-const imageMutations = require('./mutations/imageMutations');
+const postMutations = require('./mutations/postMutations');
 const authMutations = require('./mutations/authMutations');
 
 // import queries
@@ -20,6 +20,7 @@ const typeDefs = [
   userMutations.typeDefs,
   commentMutations.typeDefs,
   authMutations.typeDefs,
+  postMutations.typeDefs,
 
   postQueries.typeDefs,
   userQueries.typeDefs,
@@ -30,14 +31,12 @@ const typeDefs = [
   notificationTypes.typeDefs,
   commentTypes.typeDefs,
   messageTypes.typeDefs,
-
-  imageMutations.typeDefs,
 ];
 
 const resolvers = [
   userMutations.resolvers,
   commentMutations.resolvers,
-  imageMutations.resolvers,
+  postMutations.resolvers,
   authMutations.resolvers,
 
   postQueries.resolvers,

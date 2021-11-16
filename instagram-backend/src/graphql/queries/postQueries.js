@@ -13,6 +13,7 @@ const resolvers = {
     findPost: async (root, args) => {
       const result = await Post.findOne({ id: args.id })
         .populate('user')
+        .populate('likes')
         .populate({
           path: 'comments',
           limit: 10,

@@ -2,14 +2,23 @@ import React, { useEffect, useState } from 'react';
 import { IoHeartOutline } from 'react-icons/io5';
 import Styles from '../../styles/post/post__sidebar.module.css';
 import { useAuth } from '../../contexts/AuthContext';
+import { LIKE_POST } from '../../graphql/mutations/postMutations';
+import { useMutation } from '@apollo/client';
+import { useHistory } from 'react-router-dom';
 
-const PostLikeButton = ({ match, history, firestore, firestoreFieldValue, getCurrentPost }) => {
+const PostLikeButton = ({ match, currentPost, setTotalLikes }) => {
   const [liked, setLiked] = useState(false);
-  const { userProfile, getUserProfile } = useAuth();
+  const [likePost] = useMutation(LIKE_POST, {
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+  const { currentUser } = useAuth();
+  const history = useHistory();
 
   const updateLikes = async () => {
-    if (userProfile && userProfile.likedPosts) {
-      if (userProfile.likedPosts.includes(match.params.postid)) {
+    if (currentPost.likes) {
+      if (currentPost.likes.some((like) => like.id === currentUser.id)) {
         setLiked(true);
       } else {
         setLiked(false);
@@ -18,70 +27,35 @@ const PostLikeButton = ({ match, history, firestore, firestoreFieldValue, getCur
   };
 
   useEffect(() => {
+    if (!currentUser || !currentPost) return;
     updateLikes();
-  }, [userProfile]);
+  }, [currentUser, currentPost]);
 
-  //! handle like
-  const handleLike = async (e) => {
-    e.preventDefault();
-    if (userProfile) {
-      const thisPost = firestore
-        .collection('users')
-        .doc(match.params.uid)
-        .collection('posts')
-        .doc(match.params.postid);
-      const thisUser = firestore.collection('users').doc(userProfile.userID);
-      const postUser = firestore.collection('users').doc(match.params.uid);
-
-      //@ add this post to likes
-      if (!liked) {
+  const handleLike = async () => {
+    if (currentUser) {
+      if (liked === false) {
+        setTotalLikes((prev) => prev + 1);
         setLiked(true);
-        const addPost = () => {
-          thisPost.update({
-            likes: firestoreFieldValue.arrayUnion(userProfile.userID),
-          });
-        };
-        const addUser = () => {
-          thisUser.update({
-            likedPosts: firestoreFieldValue.arrayUnion(match.params.postid),
-          });
-        };
-        const notify = () => {
-          postUser.update({
-            notifications: firestoreFieldValue.arrayUnion({
-              user: userProfile.userID,
-              type: 'liked',
-              post: match.params.postid,
-              time: Date.now(),
-            }),
-          });
-        };
-        await Promise.all([notify(), addPost(), addUser()]);
-        getUserProfile();
-        getCurrentPost();
-      } else {
-        //@ remove post from likes
-        const removePost = () => {
-          setLiked(false);
-          thisPost.update({
-            likes: firestoreFieldValue.arrayRemove(userProfile.userID),
-          });
-        };
-        const removeUser = () => {
-          thisUser.update({
-            likedPosts: firestoreFieldValue.arrayRemove(match.params.postid),
-          });
-        };
-        await Promise.all([removePost(), removeUser()]);
-        getUserProfile();
-        getCurrentPost();
+      } else if (liked === true) {
+        setLiked(false);
+        setTotalLikes((prev) => prev - 1);
       }
+      await likePost({
+        variables: {
+          id: match.params.postid,
+          type: liked ? 'unlike' : 'like',
+        },
+      });
     } else {
       history.push('/sign-up');
     }
   };
+
   return (
-    <IoHeartOutline onClick={handleLike} className={liked ? Styles.likedIcon : Styles.likeIcon} />
+    <IoHeartOutline
+      onClick={handleLike}
+      className={liked ? Styles.likedIcon : Styles.likeIcon}
+    />
   );
 };
 

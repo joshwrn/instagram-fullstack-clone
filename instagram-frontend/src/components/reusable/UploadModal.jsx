@@ -1,16 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { IoCloseOutline, IoCloudUploadOutline } from 'react-icons/io5';
-import { firestore, storageRef } from '../../services/firebase';
 import resizeImage from '../../functions/resizeImage';
-import { useAuth } from '../../contexts/AuthContext';
 import Styles from '../../styles/profile/profile__upload.module.css';
+import { UPLOAD_POST } from '../../graphql/mutations/postMutations';
+import { useMutation } from '@apollo/client';
 
-const ProfileUpload = ({ getModal, setNewPost }) => {
+const UploadModal = ({ getModal, setNewPost }) => {
   const [postFile, setPostFile] = useState(null);
   const [caption, setCaption] = useState('');
-  const [uploading, setUploading] = useState(false);
   const [imageFile, setImageFile] = useState();
-  const { userProfile, getUserProfile } = useAuth();
+
+  const [uploadPost, { data, loading: uploading, error }] = useMutation(
+    UPLOAD_POST,
+    {
+      onError(err) {
+        console.log(err);
+      },
+    }
+  );
 
   //+ after choosing a file store it in state
   const handleFileChange = (e) => {
@@ -22,65 +29,14 @@ const ProfileUpload = ({ getModal, setNewPost }) => {
     }
   };
 
-  useEffect(() => {
-    console.log(imageFile, postFile);
-  }, [imageFile, postFile]);
-
-  //+ set the caption
-  const handleTextChange = (e) => {
-    e.preventDefault();
-    setCaption(e.target.value);
-  };
-
-  //+ submit the post
   const handleSubmit = async (e) => {
-    const timestamp = Date.now();
     e.preventDefault();
-    setUploading(true);
-    //+ create post info
-    const createPost = await firestore
-      .collection('users')
-      .doc(userProfile.userID)
-      .collection('posts')
-      .add({
-        date: timestamp,
-        likes: [],
-        comments: [],
+    await uploadPost({
+      variables: {
         caption: caption,
-        userID: userProfile.userID,
-      });
-    //+ upload image to storage
-    const fileRef = storageRef.child(`${userProfile.userID}/${createPost.id}`);
-    await fileRef.put(postFile);
-    const fileUrl = await fileRef.getDownloadURL();
-    //+ set src to image url
-    await createPost.set(
-      {
-        src: fileUrl,
+        file: postFile,
       },
-      { merge: true }
-    );
-    //+ update post count
-    await firestore
-      .collection('users')
-      .doc(userProfile.userID)
-      .set(
-        {
-          postsCounter: userProfile.postsCounter + 1,
-          lastPostDate: timestamp,
-        },
-        { merge: true }
-      );
-    //+ close modal and update state with new post
-    getModal(e);
-    setUploading(false);
-    getUserProfile();
-    if (!setNewPost) return;
-    setNewPost((prev) => prev + 1);
-  };
-
-  const doNothing = (e) => {
-    e.preventDefault();
+    });
   };
 
   return (
@@ -122,7 +78,7 @@ const ProfileUpload = ({ getModal, setNewPost }) => {
                 name="caption"
                 maxLength="150"
                 placeholder="Enter Caption..."
-                onChange={handleTextChange}
+                onChange={(e) => setCaption(e.target.value)}
               />
             </div>
           </div>
@@ -131,7 +87,9 @@ const ProfileUpload = ({ getModal, setNewPost }) => {
           <div className={`${Styles.loader} loader`} />
         ) : (
           <button
-            onClick={postFile !== null ? handleSubmit : doNothing}
+            onClick={
+              postFile !== null ? handleSubmit : (e) => e.preventDefault()
+            }
             type="submit"
             className={postFile === null ? Styles.postButton : Styles.saveBtn}
           >
@@ -143,4 +101,4 @@ const ProfileUpload = ({ getModal, setNewPost }) => {
   );
 };
 
-export default ProfileUpload;
+export default UploadModal;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Styles from '../../styles/profile/profile__sidebar.module.css';
-import ProfileFollowersModal from './ProfileFollowersModal';
+import FollowersModal from '../reusable/FollowersModal';
 import stopScroll from '../../functions/stopScroll';
 
 const ProfileSidebar = ({ currentProfile, loaded, currentUser }) => {
@@ -47,7 +47,7 @@ const ProfileSidebar = ({ currentProfile, loaded, currentUser }) => {
           </div>
           {/*//+ followers / following */}
           {openFollowers && (
-            <ProfileFollowersModal
+            <FollowersModal
               currentProfile={currentProfile}
               handleFollowers={handleFollowers}
               setOpenFollowers={setOpenFollowers}

@@ -15,7 +15,7 @@ import NavSearch from './NavSearch';
 import { light, dark } from '../../functions/theme';
 import debounce from '../../functions/debounce';
 import stopScroll from '../../functions/stopScroll';
-import ProfileUpload from '../Profile/ProfileUpload';
+import UploadModal from '../reusable/UploadModal';
 import { firestore } from '../../services/firebase';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -119,7 +119,7 @@ const Nav = () => {
   return (
     <>
       {renderModal ? (
-        <ProfileUpload getModal={getModal} />
+        <UploadModal getModal={getModal} />
       ) : (
         <div className={Styles.nav}>
           <div className={Styles.inner}>

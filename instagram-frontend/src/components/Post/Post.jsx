@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { firestore } from '../../services/firebase';
 import Styles from '../../styles/post/post.module.css';
 import Loading from '../../styles/post/post__loading.module.css';
 import PostSidebar from './PostSidebar';
 import { useAuth } from '../../contexts/AuthContext';
 import ScrollToTop from '../../functions/ScrollToTop';
 
-import convertSrc from '../../functions/convertSrc';
 import useBuffer from '../../hooks/useBuffer';
 
 //$ graphql
@@ -28,24 +26,10 @@ const Post = ({ match }) => {
 
   //+ determine if this is the user's post
   useEffect(() => {
-    if (currentUser && match.params.uid === currentUser.uid) {
+    if (currentUser && match.params.uid === currentUser.id) {
       setOwnPost(true);
     }
   }, [postUser]);
-
-  //+ get the current post
-  // const getCurrentPost = async () => {
-  //   const thisPost = await firestore
-  //     .collection('users')
-  //     .doc(match.params.uid)
-  //     .collection('posts')
-  //     .doc(match.params.postid)
-  //     .get();
-  //   if (thisPost.exists) {
-  //     setCurrentPost(thisPost.data());
-  //   } else {
-  //   }
-  // };
 
   //$ graphql query for the current post
   const {
@@ -66,24 +50,6 @@ const Post = ({ match }) => {
       console.log(postData);
     }
   }, [postData]);
-
-  //+ get the profile of the current post
-  // const getPostUser = async () => {
-  //   const getUser = await firestore
-  //     .collection('users')
-  //     .doc(match.params.uid)
-  //     .get();
-  //   if (getUser.exists) {
-  //     setPostUser(getUser.data());
-  //   } else {
-  //   }
-  // };
-
-  //+ get the current post and user on page load
-  // useEffect(() => {
-  //   getCurrentPost();
-  //   getPostUser();
-  // }, [match]);
 
   //+ check if postUser and currentUser are defined then set loading false
   useEffect(() => {
