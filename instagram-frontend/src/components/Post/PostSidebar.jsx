@@ -5,16 +5,11 @@ import {
   IoChatbubbleOutline,
   IoSendOutline,
 } from 'react-icons/io5';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import PostCommentSection from './PostCommentSection';
 import PostMenu from './PostMenu';
 import Styles from '../../styles/post/post__sidebar.module.css';
 import Loading from '../../styles/post/post__loading.module.css';
-import {
-  firestore,
-  storage,
-  firestoreFieldValue,
-} from '../../services/firebase';
 import PostLikeButton from './PostLikeButton';
 import PostCommentBox from './PostCommentBox';
 import convertTime from '../../functions/convertTime';
@@ -30,12 +25,14 @@ const PostSidebar = ({
 }) => {
   const [addTime, setAddTime] = useState('');
   const [totalLikes, setTotalLikes] = useState(0);
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
     if (currentPost) {
       const getCur = convertTime(currentPost.date, Date.now());
       setAddTime(getCur);
       setTotalLikes(currentPost.likes.length);
+      setComments(currentPost.comments);
     }
   }, [currentPost]);
 
@@ -86,7 +83,12 @@ const PostSidebar = ({
         </div>
       </div>
       {/*//+ comments */}
-      <PostCommentSection currentPost={currentPost} loaded={loaded} />
+      <PostCommentSection
+        comments={comments}
+        setComments={setComments}
+        currentPost={currentPost}
+        loaded={loaded}
+      />
       <div className={Styles.footer}>
         <div className={Styles.firstChild}>
           <div className={Styles.left}>
@@ -102,13 +104,7 @@ const PostSidebar = ({
             <IoShareOutline className={Styles.postIcon} />
           </div>
           {/*//+ delete menu */}
-          <PostMenu
-            storage={storage}
-            firestore={firestore}
-            match={match}
-            ownPost={ownPost}
-            currentPost={currentPost}
-          />
+          <PostMenu match={match} ownPost={ownPost} currentPost={currentPost} />
         </div>
         <div className={Styles.infoContainer}>
           <p className={Styles.likes}>{totalLikes} likes</p>
@@ -116,9 +112,9 @@ const PostSidebar = ({
         </div>
         {/*//+ comment box */}
         <PostCommentBox
-          firestore={firestore}
           match={match}
-          firestoreFieldValue={firestoreFieldValue}
+          comments={comments}
+          setComments={setComments}
           IoSendOutline={IoSendOutline}
           Styles={Styles}
         />

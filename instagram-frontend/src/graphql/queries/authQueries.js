@@ -4,6 +4,10 @@ export const GET_CURRENT_USER = gql`
   query Query {
     getCurrentUser {
       username
+      banner {
+        image
+        contentType
+      }
       avatar {
         image
         contentType

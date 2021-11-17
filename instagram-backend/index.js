@@ -33,7 +33,6 @@ async function startServer() {
     schema,
     context: async ({ req }) => {
       const auth = req ? req.headers.authorization : null;
-      console.log('auth attempt', auth);
       if (auth && auth.toLowerCase().startsWith('bearer ')) {
         const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET_KEY);
         try {

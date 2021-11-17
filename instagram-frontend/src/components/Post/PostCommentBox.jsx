@@ -1,64 +1,43 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { ADD_COMMENT } from '../../graphql/mutations/commentMutations';
+import { useMutation } from '@apollo/client';
 
-const PostCommentBox = ({
-  Styles,
-  IoSendOutline,
-  firestore,
-  match,
-  firestoreFieldValue,
-  getCurrentPost,
-}) => {
+const PostCommentBox = ({ Styles, IoSendOutline, match, setComments }) => {
   const [input, setInput] = useState('');
   let history = useHistory();
+  const { currentUser } = useAuth();
+  const [addComment] = useMutation(ADD_COMMENT, {
+    onError: (error) => {
+      console.log(error);
+    },
+  });
 
-  const { userProfile, getUserProfile } = useAuth();
-
-  const handleChange = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const { value } = e.target;
-    setInput(value);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const time = Date.now();
-    if (userProfile) {
-      if (input.length > 0 && input.length < 100) {
-        const thisPost = firestore
-          .collection('users')
-          .doc(match.params.uid)
-          .collection('posts')
-          .doc(match.params.postid);
-        const thisUser = firestore.collection('users').doc(match.params.uid);
-        //@ add comment to post
-        const addPost = () => {
-          thisPost.update({
-            comments: firestoreFieldValue.arrayUnion({
-              user: userProfile.userID,
-              comment: input,
-              time: time,
-            }),
-          });
-        };
-        const notify = () => {
-          thisUser.update({
-            notifications: firestoreFieldValue.arrayUnion({
-              user: userProfile.userID,
-              type: 'comment',
-              comment: input,
-              post: match.params.postid,
-              time: time,
-            }),
-          });
-        };
-        await Promise.all([notify(), addPost()]);
-        getUserProfile();
-        getCurrentPost();
-        setInput('');
-      }
-    } else {
+    if (currentUser && input.trim() !== '') {
+      setComments((prev) => [
+        {
+          post: match.params.id,
+          comment: input,
+          user: {
+            id: currentUser.id,
+            displayName: currentUser.displayName,
+            avatar: currentUser.avatar,
+          },
+          date: Date.now(),
+        },
+        ...prev,
+      ]);
+      setInput('');
+      addComment({
+        variables: {
+          comment: input,
+          post: match.params.postid,
+        },
+      });
+    } else if (!currentUser) {
       history.push('/sign-up');
     }
   };
@@ -67,7 +46,7 @@ const PostCommentBox = ({
     <div className={Styles.commentBox}>
       <form className={Styles.commentForm} onSubmit={handleSubmit}>
         <input
-          onChange={handleChange}
+          onChange={(e) => setInput(e.target.value)}
           className={Styles.input}
           type="text"
           value={input}
@@ -76,7 +55,11 @@ const PostCommentBox = ({
           placeholder="Add a comment..."
         />
       </form>
-      <IoSendOutline type="submit" onClick={handleSubmit} className={Styles.send} />
+      <IoSendOutline
+        type="submit"
+        onClick={handleSubmit}
+        className={Styles.send}
+      />
     </div>
   );
 };

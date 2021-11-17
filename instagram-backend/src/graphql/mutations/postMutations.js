@@ -57,6 +57,7 @@ const resolvers = {
       );
       return 'success';
     },
+
     likePost: async (parent, { id, type }, context) => {
       const currentUser = context.currentUser;
       if (!currentUser) {

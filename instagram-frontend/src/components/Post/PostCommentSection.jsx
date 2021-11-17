@@ -4,18 +4,9 @@ import Styles from '../../styles/post/post__comment-section.module.css';
 import Loading from '../../styles/post/post__loading.module.css';
 import useIntersect from '../../hooks/useIntersect';
 
-const PostCommentSection = ({ loaded, currentPost }) => {
-  const [comments, setComments] = useState([]);
-
+const PostCommentSection = ({ loaded, currentPost, comments, setComments }) => {
   const ref = useRef();
   const [isFetching, setIsFetching] = useIntersect(ref);
-
-  const getComments = () => {
-    if (!currentPost) return;
-    const reverse = currentPost.comments.slice(0).reverse();
-    const sliced = reverse.slice(0, 10);
-    setComments(sliced);
-  };
 
   const getMore = () => {
     console.log('get more');
@@ -30,10 +21,6 @@ const PostCommentSection = ({ loaded, currentPost }) => {
     if (!isFetching) return;
     getMore();
   }, [isFetching]);
-
-  useEffect(() => {
-    getComments();
-  }, [currentPost]);
 
   useEffect(() => {
     setIsFetching(false);

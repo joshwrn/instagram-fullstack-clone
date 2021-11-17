@@ -6,7 +6,6 @@ import convertTime from '../../functions/convertTime';
 import ImageLoader from '../reusable/ImageLoader';
 
 const PostComment = ({ comment, user, time }) => {
-  const [current, setCurrent] = useState(null);
   const [addTime, setAddTime] = useState();
 
   const getTime = () => {
@@ -19,26 +18,12 @@ const PostComment = ({ comment, user, time }) => {
     getTime();
   }, [time]);
 
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
-
-  // useEffect(() => {
-  //   const getUser = async () => {
-  //     const userRef = firestore.collection('users').doc(user);
-  //     const thisUser = await userRef.get();
-  //     setCurrent(thisUser.data());
-  //   };
-  //   getUser();
-  //   getTime();
-  // }, []);
-
   return (
     <div className={Styles.commentContainer}>
       <div className={Styles.start}>
         <Link to={`/profile/${user.id}`}>
           <ImageLoader
-            src={user.avatar}
+            src={`data:${user.avatar?.contentType};base64,${user.avatar?.image}`}
             width="27px"
             height="27px"
             borderRadius="100%"
