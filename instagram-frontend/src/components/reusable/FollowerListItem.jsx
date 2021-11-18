@@ -1,5 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+
 import FollowButton from './FollowButton';
 import ImageLoader from './ImageLoader';
 

@@ -13,6 +13,7 @@ export const GET_CURRENT_USER = gql`
         contentType
       }
       displayName
+      bio
       followerCount
       followingCount
       postCount

@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { IoCloseOutline } from 'react-icons/io5';
-import Styles from '../../styles/profile/profile__followers-modal.module.css';
+
 import FollowerListItem from './FollowerListItem';
 import useIntersect from '../../hooks/useIntersect';
+
 import { useLazyQuery } from '@apollo/client';
 import { FIND_FOLLOWERS } from '../../graphql/queries/userQueries';
+
+import { IoCloseOutline } from 'react-icons/io5';
+import Styles from '../../styles/profile/profile__followers-modal.module.css';
 
 const FollowersModal = ({
   openFollowers,

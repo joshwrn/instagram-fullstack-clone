@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Styles from '../../styles/post/post__comment-section.module.css';
-import { firestore } from '../../services/firebase';
+
 import convertTime from '../../functions/convertTime';
 import ImageLoader from '../reusable/ImageLoader';
+
+import Styles from '../../styles/post/post__comment-section.module.css';
 
 const PostComment = ({ comment, user, time }) => {
   const [addTime, setAddTime] = useState();

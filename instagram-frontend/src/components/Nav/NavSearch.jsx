@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from 'react';
+
 import NavSearchItem from './NavSearchItem';
-import { firestore } from '../../services/firebase';
+
+import { useLazyQuery } from '@apollo/client';
+import { SEARCH_USERS } from '../../graphql/queries/userQueries';
+
 import Styles from '../../styles/nav/nav__search.module.css';
 
-const NavSearch = ({ searchInput, setOpenSearch, setSearchInput, searchRef }) => {
+const NavSearch = ({
+  searchInput,
+  setOpenSearch,
+  setSearchInput,
+  searchRef,
+}) => {
   const [searchResults, setSearchResults] = useState([]);
 
-  const [loading, setLoading] = useState(true);
+  const [searchUsers, { data, loading }] = useLazyQuery(SEARCH_USERS);
 
   useEffect(() => {
     let handler = (e) => {
@@ -14,7 +23,6 @@ const NavSearch = ({ searchInput, setOpenSearch, setSearchInput, searchRef }) =>
         setOpenSearch(false);
       }
     };
-
     document.addEventListener('mousedown', handler);
     return () => {
       document.removeEventListener('mousedown', handler);
@@ -22,23 +30,19 @@ const NavSearch = ({ searchInput, setOpenSearch, setSearchInput, searchRef }) =>
   }, []);
 
   useEffect(() => {
+    if (data) {
+      setSearchResults(data.searchUsers);
+    }
+  }, [data]);
+
+  useEffect(() => {
     const search = async () => {
       if (searchInput !== '') {
-        setLoading(true);
-        let temp = [];
-        await firestore
-          .collection('users')
-          .where('searchName', '>=', searchInput.toLowerCase())
-          .where('searchName', '<=', searchInput.toLowerCase() + '\uf8ff')
-          .limit(5)
-          .get()
-          .then((results) => {
-            return results.forEach((doc) => {
-              temp.push(doc.data());
-            });
-          });
-        setSearchResults(temp);
-        setLoading(false);
+        searchUsers({
+          variables: {
+            search: searchInput,
+          },
+        });
       }
     };
     search();
@@ -53,7 +57,9 @@ const NavSearch = ({ searchInput, setOpenSearch, setSearchInput, searchRef }) =>
   if (!loading) {
     searchInner = (
       <>
-        {searchResults.length === 0 && <p className={Styles.noResults}>No Results</p>}
+        {searchResults.length === 0 && (
+          <p className={Styles.noResults}>No Results</p>
+        )}
         {searchResults.map((item) => (
           <NavSearchItem
             key={item.username}

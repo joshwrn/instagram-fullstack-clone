@@ -1,8 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
+
 import PostComment from './PostComment';
+
+import useIntersect from '../../hooks/useIntersect';
+
 import Styles from '../../styles/post/post__comment-section.module.css';
 import Loading from '../../styles/post/post__loading.module.css';
-import useIntersect from '../../hooks/useIntersect';
 
 const PostCommentSection = ({ loaded, currentPost, comments, setComments }) => {
   const ref = useRef();

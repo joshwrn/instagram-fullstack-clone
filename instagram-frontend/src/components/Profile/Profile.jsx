@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { IoSendOutline, IoAddOutline } from 'react-icons/io5';
 import { useHistory } from 'react-router';
-import { firestore } from '../../services/firebase';
+
 import ProfileSidebar from './ProfileSidebar';
 import ProfileFeed from './ProfileFeed';
 import UploadModal from '../reusable/UploadModal';
 import ProfileAvatarModal from './ProfileAvatarModal';
-import Styles from '../../styles/profile/profile.module.css';
-import { useAuth } from '../../contexts/AuthContext';
 import FollowButton from '../reusable/FollowButton';
+
 import ScrollToTop from '../../functions/ScrollToTop';
 import stopScroll from '../../functions/stopScroll';
 
-//+ graphql
 import { FIND_USER_PROFILE } from '../../graphql/queries/userQueries';
 import { useQuery } from '@apollo/client';
+import { useAuth } from '../../contexts/AuthContext';
+
+import { IoSendOutline, IoAddOutline } from 'react-icons/io5';
+import Styles from '../../styles/profile/profile.module.css';
 
 const Profile = (props) => {
   const [currentProfile, setCurrentProfile] = useState(null);
@@ -114,8 +115,59 @@ const Profile = (props) => {
   if (!currentProfile) {
     return (
       <div className={Styles.profile}>
-        <div style={{ display: 'flex', height: '100vh', alignItems: 'center' }}>
-          <h1 style={{ color: 'white' }}>error</h1>
+        <ScrollToTop />
+        {/*//+ banner */}
+        <div className={Styles.header}>
+          <div
+            className={`${Styles.heroLoading} gradientLoad`}
+            style={loaded ? { display: 'none' } : null}
+          />
+        </div>
+        <div className={Styles.outer}>
+          {/*//+ top bar*/}
+          <div className={Styles.topSection}>
+            <div className={Styles.imgContainer}>
+              <div
+                style={loaded ? { display: 'none' } : null}
+                className={`${Styles.avatarLoading} gradientLoad`}
+              />
+            </div>
+            <div className={Styles.topRight}>
+              <div className={Styles.topIconRow}>
+                {/*//+ following button */}
+                <FollowButton
+                  Styles={Styles}
+                  match={match.params.uid}
+                  currentProfile={currentProfile}
+                />
+                {actionButton}
+              </div>
+              {renderModal && (
+                <UploadModal setNewPost={setNewPost} getModal={getModal} />
+              )}
+            </div>
+          </div>
+        </div>
+        <div className={Styles.inner}>
+          {/*//+ sidebar */}
+          <ProfileSidebar
+            loaded={loaded}
+            match={match}
+            currentProfile={currentProfile}
+            currentUser={currentUser}
+          />
+          {/*//+ posts */}
+          <ProfileFeed
+            posts={[]}
+            newPost={newPost}
+            setLoading={setLoading}
+            loading={loading}
+            loaded={loaded}
+            match={match}
+            currentProfile={currentProfile}
+            noPosts={noPosts}
+            setNoPosts={setNoPosts}
+          />
         </div>
       </div>
     );
@@ -188,7 +240,6 @@ const Profile = (props) => {
           {/*//+ sidebar */}
           <ProfileSidebar
             loaded={loaded}
-            firestore={firestore}
             match={match}
             currentProfile={currentProfile}
             currentUser={currentUser}
@@ -200,7 +251,6 @@ const Profile = (props) => {
             setLoading={setLoading}
             loading={loading}
             loaded={loaded}
-            firestore={firestore}
             match={match}
             currentProfile={currentProfile}
             noPosts={noPosts}

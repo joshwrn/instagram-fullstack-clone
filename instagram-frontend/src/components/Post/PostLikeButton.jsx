@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { IoHeartOutline } from 'react-icons/io5';
-import Styles from '../../styles/post/post__sidebar.module.css';
+import { useHistory } from 'react-router-dom';
+
 import { useAuth } from '../../contexts/AuthContext';
 import { LIKE_POST } from '../../graphql/mutations/postMutations';
 import { useMutation } from '@apollo/client';
-import { useHistory } from 'react-router-dom';
+
+import { IoHeartOutline } from 'react-icons/io5';
+import Styles from '../../styles/post/post__sidebar.module.css';
 
 const PostLikeButton = ({ match, currentPost, setTotalLikes }) => {
   const [liked, setLiked] = useState(false);

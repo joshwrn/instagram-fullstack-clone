@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+
 import { useAuth } from '../../contexts/AuthContext';
 import { useMutation, useLazyQuery } from '@apollo/client';
+import { CHECK_FOLLOWING } from '../../graphql/queries/userQueries';
 import {
   FOLLOW_USER,
   UNFOLLOW_USER,
 } from '../../graphql/mutations/userMutations';
-import { CHECK_FOLLOWING } from '../../graphql/queries/userQueries';
 
 const FollowButton = ({ Styles, match, currentProfile, handleFollowers }) => {
   const [following, setFollowing] = useState(false);
@@ -38,7 +39,6 @@ const FollowButton = ({ Styles, match, currentProfile, handleFollowers }) => {
     if (!currentUser) return history.push('/sign-up');
     followUser({
       variables: {
-        currentUser: currentUser.id,
         followedUser: currentProfile.id,
       },
     });
@@ -50,7 +50,6 @@ const FollowButton = ({ Styles, match, currentProfile, handleFollowers }) => {
     e.preventDefault();
     unfollowUser({
       variables: {
-        currentUser: currentUser.id,
         followedUser: currentProfile.id,
       },
     });

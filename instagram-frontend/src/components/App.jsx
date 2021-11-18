@@ -1,6 +1,6 @@
-import '../styles/app.css';
 import React from 'react';
 import { HashRouter, Route } from 'react-router-dom';
+
 import Nav from './Nav/Nav';
 import Home from './Home/Home';
 import Profile from './Profile/Profile';
@@ -9,7 +9,10 @@ import SignUp from './SignUp/SignUp';
 import Login from './SignUp/Login';
 import Settings from './Settings/Settings';
 import Messages from './Messages/Messages';
+
 import { AuthProvider } from '../contexts/AuthContext';
+
+import '../styles/app.css';
 
 function App() {
   return (

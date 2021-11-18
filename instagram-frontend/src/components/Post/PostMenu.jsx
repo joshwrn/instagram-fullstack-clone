@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useHistory } from 'react-router-dom';
+
+import { DELETE_POST } from '../../graphql/mutations/postMutations';
+import { useMutation } from '@apollo/client';
+
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { IoShareSocialOutline, IoTrashOutline } from 'react-icons/io5';
 import Styles from '../../styles/post/post__menu.module.css';
-import { useHistory } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { DELETE_POST } from '../../graphql/mutations/postMutations';
-import { useMutation } from '@apollo/client';
 
 const PostMenu = ({ ownPost, match, currentPost }) => {
   const [menuStatus, setMenuStatus] = useState(false);

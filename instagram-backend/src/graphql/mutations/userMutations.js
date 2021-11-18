@@ -6,14 +6,14 @@ const bcrypt = require('bcrypt');
 
 const typeDefs = gql`
   type Mutation {
-    addUser(
-      username: String!
-      displayName: String!
-      email: String!
-      password: String!
+    followUser(followedUser: ID!): User
+    unfollowUser(followedUser: ID!): User
+    editSettings(
+      avatar: String
+      banner: String
+      displayName: String
+      bio: String
     ): User
-    followUser(currentUser: ID!, followedUser: ID!): User
-    unfollowUser(currentUser: ID!, followedUser: ID!): User
   }
 `;
 
@@ -65,26 +65,29 @@ const resolvers = {
       );
       return unFollowed;
     },
-
-    addUser: async (root, { password, displayName, username, email }) => {
-      //const avatarBuffer = await createBuffer(avatar);
-      //const bannerBuffer = await createBuffer(banner);
-
-      const saltRounds = 10;
-      const passwordHash = await bcrypt.hash(password, saltRounds);
-
-      console.log(password, displayName, username, email);
-
-      const user = new User({
-        password: passwordHash,
-        bio: `Hi i'm ${displayName}`,
-        displayName,
-        username,
-        email,
-        //avatar: avatarBuffer,
-        //banner: bannerBuffer,
-      });
-      return user.save();
+    editSettings: async (
+      root,
+      { avatar, banner, displayName, bio },
+      context
+    ) => {
+      if (!context.currentUser) {
+        throw new AuthenticationError('not authenticated');
+      }
+      const user = await User.findById(context.currentUser.id);
+      if (avatar) {
+        user.avatar = { image: avatar, contentType: 'image/jpeg' };
+      }
+      if (banner) {
+        user.banner = { image: banner, contentType: 'image/jpeg' };
+      }
+      if (displayName) {
+        user.displayName = displayName;
+      }
+      if (bio) {
+        user.bio = bio;
+      }
+      await user.save();
+      return user;
     },
   },
 };

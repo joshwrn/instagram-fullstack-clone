@@ -7,7 +7,7 @@ const NavSearchItem = ({ item, setOpenSearch, setSearchInput }) => {
   let history = useHistory();
 
   const handleClick = () => {
-    history.push(`/profile/${item.userID}`);
+    history.push(`/profile/${item.id}`);
     setOpenSearch(false);
     setSearchInput('');
   };
@@ -16,7 +16,12 @@ const NavSearchItem = ({ item, setOpenSearch, setSearchInput }) => {
       <div className={Styles.container}>
         <div className={Styles.start}>
           <div className={Styles.avatarContainer}>
-            <ImageLoader borderRadius="100%" width="25px" height="25px" src={item.profilePhoto} />
+            <ImageLoader
+              borderRadius="100%"
+              width="25px"
+              height="25px"
+              src={`data:${item.avatar.contentType};base64,${item.avatar.image}`}
+            />
           </div>
           <div className={Styles.displayName}>{item.displayName}</div>
           <div className={Styles.type}>@{item.username}</div>

@@ -1,41 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { IoImage, IoPencil } from 'react-icons/io5';
-import Styles from '../../styles/settings/settings.module.css';
-import { useAuth } from '../../contexts/AuthContext';
 
-import resizeImage from '../../functions/resizeImage';
 import ImageLoader from '../reusable/ImageLoader';
 
+import resizeImage from '../../functions/resizeImage';
+
+import { useAuth } from '../../contexts/AuthContext';
+import { useMutation } from '@apollo/client';
+import { EDIT_SETTINGS } from '../../graphql/mutations/userMutations';
+import { GET_CURRENT_USER } from '../../graphql/queries/authQueries';
+
+import Styles from '../../styles/settings/settings.module.css';
+import { IoImage, IoPencil } from 'react-icons/io5';
+
 const Settings = () => {
-  const { currentUser } = useAuth();
   const [userInput, setUserInput] = useState('');
   const [userBio, setUserBio] = useState('');
+  const [avatarPreview, setAvatarPreview] = useState(null);
+  const [bannerPreview, setBannerPreview] = useState(null);
   const [uploading, setUploading] = useState(false);
+
+  const { currentUser } = useAuth();
+  const [editSettings] = useMutation(EDIT_SETTINGS, {
+    onError(err) {
+      console.log(err);
+    },
+    refetchQueries: [{ query: GET_CURRENT_USER }],
+  });
 
   useEffect(() => {
     if (!currentUser) return;
     setUserInput(currentUser.displayName);
     setUserBio(currentUser.bio);
+    setAvatarPreview(currentUser.avatar.image);
+    setBannerPreview(currentUser.banner.image);
   }, [currentUser]);
 
   //+ updates on account sign up
 
   useEffect(() => {}, [currentUser]);
-
-  //+ upload profile photo
-  const handleAvatar = async (file) => {
-    setUploading(true);
-
-    setUploading(false);
-  };
-
-  //+ upload banner
-  const handleBanner = async (file) => {
-    setUploading(true);
-
-    setUploading(false);
-  };
 
   //! handle photo uploads
   //@ add file to state
@@ -44,9 +47,9 @@ const Settings = () => {
     const file = e.target.files[0];
     if (file && file.size < 5000000) {
       if (e.target.name === 'profilePhoto') {
-        resizeImage(e, 'none', handleAvatar, 1000);
+        resizeImage(e, 'none', setAvatarPreview, 1000);
       } else if (e.target.name === 'banner') {
-        resizeImage(e, 'none', handleBanner, 2000);
+        resizeImage(e, 'none', setBannerPreview, 2000);
       }
     }
   };
@@ -54,7 +57,6 @@ const Settings = () => {
   //! handle text input changes
   //@ handle display name change
   const handleChange = (e) => {
-    e.preventDefault();
     const { value } = e.target;
     const reg = /[^a-zA-Z' ']/gi; //replace all but these characters
     const newVal = value.replace(reg, '');
@@ -63,25 +65,32 @@ const Settings = () => {
 
   //@ handle bio change
   const handleBioChange = (e) => {
-    e.preventDefault();
     const { value } = e.target;
     setUserBio(value);
   };
 
-  //+ handle save text
-  const handleTextUpload = async (e) => {
+  //+ handle save
+  const handleSave = async (e) => {
     e.preventDefault();
-    if (userBio !== userProfile.bio) {
-      setUploading(true);
-
-      setUploading(false);
+    setUploading(true);
+    let settings = {};
+    if (userBio !== currentUser.bio) {
+      settings.bio = userBio.trim();
     }
-    if (userInput !== userProfile.displayName && userInput.trim() !== '') {
+    if (userInput !== currentUser.displayName && userInput.trim() !== '') {
       const lower = userInput.trim().toLowerCase();
-      setUploading(true);
-
-      setUploading(false);
+      settings.displayName = lower;
     }
+    if (avatarPreview !== currentUser.avatar.image) {
+      settings.avatar = avatarPreview;
+    }
+    if (bannerPreview !== currentUser.banner.image) {
+      settings.banner = bannerPreview;
+    }
+    await editSettings({
+      variables: { ...settings },
+    });
+    setUploading(false);
   };
 
   return (
@@ -102,7 +111,7 @@ const Settings = () => {
                   />
                   <div className={Styles.bannerContainer}>
                     <ImageLoader
-                      src={`data:${currentUser.banner.contentType};base64,${currentUser.banner.image}`}
+                      src={`data:${'image/jpeg'};base64,${bannerPreview}`}
                       zIndex={'0'}
                     />
                   </div>
@@ -121,7 +130,7 @@ const Settings = () => {
                         name="profilePhoto"
                       />
                       <ImageLoader
-                        src={`data:${currentUser.avatar.contentType};base64,${currentUser.avatar.image}`}
+                        src={`data:${'image/jpeg'};base64,${avatarPreview}`}
                         position="relative"
                         borderRadius="100%"
                         width="112px"
@@ -173,7 +182,7 @@ const Settings = () => {
                 <div className="loader"></div>
               ) : (
                 <button
-                  onClick={handleTextUpload}
+                  onClick={handleSave}
                   type="submit"
                   className={Styles.textBtn}
                 >
@@ -189,7 +198,7 @@ const Settings = () => {
             </div>
           </div>
         </div>
-      )}{' '}
+      )}
     </>
   );
 };

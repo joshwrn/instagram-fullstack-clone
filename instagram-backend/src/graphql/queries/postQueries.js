@@ -11,7 +11,7 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     findPost: async (root, args) => {
-      const result = await Post.findOne({ id: args.id })
+      const result = await Post.findById(args.id)
         .populate('user')
         .populate('likes')
         .populate({

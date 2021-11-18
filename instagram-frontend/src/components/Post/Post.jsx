@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Styles from '../../styles/post/post.module.css';
-import Loading from '../../styles/post/post__loading.module.css';
-import PostSidebar from './PostSidebar';
-import { useAuth } from '../../contexts/AuthContext';
-import ScrollToTop from '../../functions/ScrollToTop';
 
+import PostSidebar from './PostSidebar';
+
+import ScrollToTop from '../../functions/ScrollToTop';
 import useBuffer from '../../hooks/useBuffer';
 
-//$ graphql
+import { useAuth } from '../../contexts/AuthContext';
 import { FIND_POST_BY_ID } from '../../graphql/queries/postQueries';
 import { useQuery } from '@apollo/client';
+
+import Styles from '../../styles/post/post.module.css';
+import Loading from '../../styles/post/post__loading.module.css';
 
 const Post = ({ match }) => {
   const [currentPost, setCurrentPost] = useState();
@@ -72,39 +73,62 @@ const Post = ({ match }) => {
   let postState;
 
   if (!currentPost || !postUser) {
-    return <div>not loaded</div>;
+    postState = (
+      <div className={Styles.post}>
+        <ScrollToTop />
+        <div className={Styles.container}>
+          <div
+            className={Loading.image + ' ' + 'gradientLoad'}
+            style={loaded ? { display: 'none' } : null}
+          />
+          <PostSidebar
+            match={match}
+            loaded={loaded}
+            handleLoad={handleLoad}
+            postUser={postUser}
+            postUserAvatar={postUser}
+            ownPost={ownPost}
+            currentPost={currentPost}
+            currentUser={currentUser}
+            userProfile={userProfile}
+          />
+        </div>
+      </div>
+    );
   }
 
   //+ if finished loading
-  postState = (
-    <div className={Styles.post}>
-      <ScrollToTop />
-      <div className={Styles.container}>
-        <div
-          className={Loading.image + ' ' + 'gradientLoad'}
-          style={loaded ? { display: 'none' } : null}
-        />
-        <img
-          style={!loaded ? { display: 'none' } : null}
-          onLoad={handleLoad}
-          src={postImage}
-          alt="post"
-          className={Styles.image}
-        />
-        <PostSidebar
-          match={match}
-          loaded={loaded}
-          handleLoad={handleLoad}
-          postUser={postUser}
-          postUserAvatar={postUser.avatar}
-          ownPost={ownPost}
-          currentPost={currentPost}
-          currentUser={currentUser}
-          userProfile={userProfile}
-        />
+  if (postUser && currentPost) {
+    postState = (
+      <div className={Styles.post}>
+        <ScrollToTop />
+        <div className={Styles.container}>
+          <div
+            className={Loading.image + ' ' + 'gradientLoad'}
+            style={loaded ? { display: 'none' } : null}
+          />
+          <img
+            style={!loaded ? { display: 'none' } : null}
+            onLoad={handleLoad}
+            src={postImage}
+            alt="post"
+            className={Styles.image}
+          />
+          <PostSidebar
+            match={match}
+            loaded={loaded}
+            handleLoad={handleLoad}
+            postUser={postUser}
+            postUserAvatar={postUser.avatar}
+            ownPost={ownPost}
+            currentPost={currentPost}
+            currentUser={currentUser}
+            userProfile={userProfile}
+          />
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 
   //+ if there was an error
   if (loaded === 'error') {

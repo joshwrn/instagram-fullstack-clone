@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Styles from '../../styles/sign-up/sign-up.module.css';
-import { useAuth } from '../../contexts/AuthContext';
+
 import FormHelper from './FormHelper';
 import SignUpVerify from './SignUpVerify';
+
+import { useAuth } from '../../contexts/AuthContext';
+import { useMutation, useQuery } from '@apollo/client';
 import { SIGN_UP } from '../../graphql/mutations/authMutations';
 import {
   CHECK_USERNAME_EXIST,
   CHECK_EMAIL_EXIST,
 } from '../../graphql/queries/authQueries';
-import { useMutation, useQuery } from '@apollo/client';
+
+import Styles from '../../styles/sign-up/sign-up.module.css';
 
 const SignUp = () => {
   const { currentUser } = useAuth();

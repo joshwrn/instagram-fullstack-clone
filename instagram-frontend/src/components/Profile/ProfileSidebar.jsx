@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import Styles from '../../styles/profile/profile__sidebar.module.css';
+
 import FollowersModal from '../reusable/FollowersModal';
+
 import stopScroll from '../../functions/stopScroll';
+
+import Styles from '../../styles/profile/profile__sidebar.module.css';
 
 const ProfileSidebar = ({ currentProfile, loaded, currentUser }) => {
   const [openFollowers, setOpenFollowers] = useState(false);

@@ -11,6 +11,12 @@ const typeDefs = gql`
   }
   type Mutation {
     login(username: String!, password: String!): Token
+    addUser(
+      username: String!
+      displayName: String!
+      email: String!
+      password: String!
+    ): User
   }
 `;
 
@@ -29,6 +35,26 @@ const resolvers = {
         expiresIn: 60 * 60 * 24 * 7 * 4,
       });
       return { value: token };
+    },
+    addUser: async (root, { password, displayName, username, email }) => {
+      //const avatarBuffer = await createBuffer(avatar);
+      //const bannerBuffer = await createBuffer(banner);
+
+      const saltRounds = 10;
+      const passwordHash = await bcrypt.hash(password, saltRounds);
+
+      console.log(password, displayName, username, email);
+
+      const user = new User({
+        password: passwordHash,
+        bio: `Hi i'm ${displayName}`,
+        displayName,
+        username,
+        email,
+        //avatar: avatarBuffer,
+        //banner: bannerBuffer,
+      });
+      return user.save();
     },
   },
 };

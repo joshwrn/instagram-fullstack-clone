@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { IoCloseOutline, IoCloudUploadOutline } from 'react-icons/io5';
+
 import resizeImage from '../../functions/resizeImage';
-import Styles from '../../styles/profile/profile__upload.module.css';
+
 import { UPLOAD_POST } from '../../graphql/mutations/postMutations';
 import { useMutation } from '@apollo/client';
+
+import { IoCloseOutline, IoCloudUploadOutline } from 'react-icons/io5';
+import Styles from '../../styles/profile/profile__upload.module.css';
 
 const UploadModal = ({ getModal, setNewPost }) => {
   const [postFile, setPostFile] = useState(null);

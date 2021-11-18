@@ -1,4 +1,5 @@
 import React from 'react';
+
 import Styles from '../../styles/profile/profile__avatar__modal.module.css';
 
 const ProfileAvatarModal = ({ src, getAvatarModal }) => {

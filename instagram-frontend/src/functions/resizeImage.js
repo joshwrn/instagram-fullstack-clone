@@ -17,10 +17,6 @@ const resizeImage = (e, setImageFile, setPostFile, width) => {
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img.target, 0, 0, canvas.width, canvas.height);
 
-        const srcEncoded = ctx.canvas.toDataURL(img.target, 'image/jpeg');
-        if (setImageFile !== 'none') {
-          setImageFile(srcEncoded);
-        }
         ctx.canvas.toBlob(
           async (blob) => {
             const reader = new FileReader();
@@ -33,6 +29,11 @@ const resizeImage = (e, setImageFile, setPostFile, width) => {
             // remove beginning of base64 string
             const split = p.split(',');
             setPostFile(split[1]);
+            // set preview image
+            if (setImageFile !== 'none') {
+              const srcEncoded = ctx.canvas.toDataURL(split[1], 'image/jpeg');
+              setImageFile(srcEncoded);
+            }
           },
           'image/jpeg',
           0.7

@@ -28,6 +28,20 @@ export const FIND_FOLLOWERS = gql`
   }
 `;
 
+export const SEARCH_USERS = gql`
+  query Query($search: String!) {
+    searchUsers(search: $search) {
+      id
+      username
+      displayName
+      avatar {
+        image
+        contentType
+      }
+    }
+  }
+`;
+
 export const FIND_USER_PROFILE = gql`
   query Query($id: ID!) {
     findUser(id: $id) {

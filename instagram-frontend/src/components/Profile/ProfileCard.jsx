@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { IoHeartOutline, IoChatbubbleOutline } from 'react-icons/io5';
-import Styles from '../../styles/profile/profile__card.module.css';
+
 import ImageLoader from '../reusable/ImageLoader';
 import convertSrc from '../../functions/convertSrc.js';
+
+import { IoHeartOutline, IoChatbubbleOutline } from 'react-icons/io5';
+import Styles from '../../styles/profile/profile__card.module.css';
 
 const ProfileCard = ({
   src: base,

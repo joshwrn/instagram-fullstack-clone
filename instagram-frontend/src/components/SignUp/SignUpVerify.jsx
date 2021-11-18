@@ -1,4 +1,5 @@
 import React from 'react';
+
 import icon from '../../assets/img/icons/envelope-free/Envelope_perspective_matte_s.png';
 import Styles from '../../styles/sign-up/sign-up__verify.module.css';
 

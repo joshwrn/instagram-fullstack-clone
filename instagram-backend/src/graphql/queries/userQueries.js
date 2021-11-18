@@ -10,6 +10,7 @@ const typeDefs = gql`
   type Query {
     findUser(id: ID!): UserProfile
     findFollowers(id: ID!, type: String!): [UserProfile]
+    searchUsers(search: String!): [UserProfile]
     findAllUsers: Int
   }
 `;
@@ -35,6 +36,17 @@ const resolvers = {
         } catch (err) {
           throw err;
         }
+      }
+    },
+    searchUsers: async (parent, { search }) => {
+      try {
+        const users = await User.find().or([
+          { displayName: { $regex: search, $options: 'i' } },
+          { username: { $regex: search, $options: 'i' } },
+        ]);
+        return users;
+      } catch (err) {
+        throw err;
       }
     },
     findUser: async (root, args) => {

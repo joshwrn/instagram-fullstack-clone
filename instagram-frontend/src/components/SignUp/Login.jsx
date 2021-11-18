@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+
 import { useAuth } from '../../contexts/AuthContext';
-import Styles from '../../styles/sign-up/login.module.css';
 import { LOGIN } from '../../graphql/mutations/authMutations';
 import { GET_CURRENT_USER } from '../../graphql/queries/authQueries';
 import { useMutation, useLazyQuery } from '@apollo/client';
-import convertSrc from '../../functions/convertSrc';
+
+import Styles from '../../styles/sign-up/login.module.css';
 
 const Login = () => {
   const { setToken, token, logout, currentUser, setCurrentUser } = useAuth();
@@ -44,19 +45,6 @@ const Login = () => {
       setCurrentUser(data.getCurrentUser);
     }
   }, [data]);
-
-  useEffect(() => {
-    if (currentUser) {
-      const src = convertSrc(
-        currentUser.avatar.image,
-        currentUser.avatar.contentType
-      );
-      setAvatar(src);
-    }
-    if (!currentUser) {
-      setAvatar('');
-    }
-  }, [currentUser]);
 
   const submit = async (event) => {
     event.preventDefault();

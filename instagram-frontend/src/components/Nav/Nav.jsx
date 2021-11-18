@@ -1,5 +1,20 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { NavLink, Link, useHistory } from 'react-router-dom';
+
+import logo from '../../assets/img/logo/logo-2.png';
+import NavUserMenu from './NavUserMenu';
+import Notifications from '../Notifications/Notifications';
+import NavSearch from './NavSearch';
+import UploadModal from '../reusable/UploadModal';
+
+import { light, dark } from '../../functions/theme';
+import debounce from '../../functions/debounce';
+import stopScroll from '../../functions/stopScroll';
+import jc from '../../functions/joinClasses';
+
+import { useAuth } from '../../contexts/AuthContext';
+
+import Styles from '../../styles/nav/nav.module.css';
 import {
   IoHomeOutline,
   IoChatbubbleOutline,
@@ -7,20 +22,9 @@ import {
   IoPersonOutline,
   IoAddCircleOutline,
 } from 'react-icons/io5';
-import logo from '../../assets/img/logo/logo-2.png';
-import NavUserMenu from './NavUserMenu';
-import Styles from '../../styles/nav/nav.module.css';
-import Notifications from '../Notifications/Notifications';
-import NavSearch from './NavSearch';
-import { light, dark } from '../../functions/theme';
-import debounce from '../../functions/debounce';
-import stopScroll from '../../functions/stopScroll';
-import UploadModal from '../reusable/UploadModal';
-import { firestore } from '../../services/firebase';
-import { useAuth } from '../../contexts/AuthContext';
 
 const Nav = () => {
-  const { currentUser, logout } = useAuth();
+  const { currentUser } = useAuth();
   const [theme, setTheme] = useState('light');
   const [openMenu, setOpenMenu] = useState(false);
   const [openNoti, setOpenNoti] = useState(false);
@@ -52,13 +56,7 @@ const Nav = () => {
       setNotiArray(currentUser.notifications);
       setCurrentNotis(0);
       setOpenNoti(true);
-      const userRef = firestore.collection('users').doc(currentUser.userID);
-      await userRef.set(
-        {
-          notifications: [],
-        },
-        { merge: true }
-      );
+      // remove notifications here
     }
   };
 
@@ -153,16 +151,14 @@ const Nav = () => {
             </div>
             <div className={Styles.icons}>
               <NavLink exact to="/">
-                <IoHomeOutline className={Styles.icon + ' ' + Styles.home} />
+                <IoHomeOutline className={jc(Styles.icon, Styles.home)} />
               </NavLink>
               <NavLink exact to={currentUser ? '/messages' : '/sign-up'}>
-                <IoChatbubbleOutline
-                  className={Styles.icon + ' ' + Styles.chat}
-                />
+                <IoChatbubbleOutline className={jc(Styles.icon, Styles.chat)} />
               </NavLink>
               <IoAddCircleOutline
                 onClick={getModal}
-                className={Styles.icon + ' ' + Styles.add}
+                className={jc(Styles.icon, Styles.add)}
               />
               {/*//+ notifications */}
               <div
@@ -170,7 +166,7 @@ const Nav = () => {
                 className={Styles.notiContainer}
                 ref={notiRef}
               >
-                <IoHeartOutline className={Styles.icon + ' ' + Styles.heart} />
+                <IoHeartOutline className={jc(Styles.icon, Styles.heart)} />
                 {currentNotis > 0 ? (
                   <div className={Styles.notiBadge}>{currentNotis}</div>
                 ) : null}
@@ -192,7 +188,7 @@ const Nav = () => {
                 >
                   <IoPersonOutline
                     onClick={handleUserIcon}
-                    className={Styles.icon + ' ' + Styles.person}
+                    className={jc(Styles.icon, Styles.person)}
                   />
                 </NavLink>
                 {openMenu && (
