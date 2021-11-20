@@ -4,6 +4,7 @@ const schema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
+    required: true,
   },
   type: {
     type: String,
@@ -13,6 +14,24 @@ const schema = new mongoose.Schema({
   post: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Post',
+    required: true,
+  },
+  content: {
+    type: String,
+  },
+  from: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  seen: {
+    type: Boolean,
+    required: true,
+  },
+  date: {
+    type: Date,
+    required: true,
+    default: Date.now,
   },
 });
 

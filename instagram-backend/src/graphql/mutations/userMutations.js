@@ -1,8 +1,6 @@
 const { gql, AuthenticationError } = require('apollo-server-express');
 const User = require('../../models/user');
 const mongoose = require('mongoose');
-const createBuffer = require('../../utils/createBuffer.js');
-const bcrypt = require('bcrypt');
 
 const typeDefs = gql`
   type Mutation {
@@ -65,6 +63,7 @@ const resolvers = {
       );
       return unFollowed;
     },
+
     editSettings: async (
       root,
       { avatar, banner, displayName, bio },

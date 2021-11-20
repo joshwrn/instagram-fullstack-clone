@@ -13,6 +13,7 @@ const PostCommentBox = ({ Styles, IoSendOutline, match, setComments }) => {
     onError: (error) => {
       console.log(error);
     },
+    refetchQueries: [`findPost`],
   });
 
   const handleSubmit = (e) => {

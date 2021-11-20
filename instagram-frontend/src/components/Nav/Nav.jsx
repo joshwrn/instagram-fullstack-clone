@@ -23,6 +23,19 @@ import {
   IoAddCircleOutline,
 } from 'react-icons/io5';
 
+const classLister = (styleObject) => (l) => {
+  const classList = l.split(' ');
+  return classList.reduce((list, myClass) => {
+    let output = list;
+    if (styleObject[myClass]) {
+      if (list) output += ' '; // appends a space if list is not empty
+      output += styleObject[myClass];
+      //Above: append 'myClass' from styleObject to the list if it is defined
+    }
+    return output;
+  }, '');
+};
+
 const Nav = () => {
   const { currentUser } = useAuth();
   const [theme, setTheme] = useState('light');
@@ -35,6 +48,8 @@ const Nav = () => {
   const [searchValue, setSearchValue] = useState('');
   const [renderModal, setRenderModal] = useState(false);
   let history = useHistory();
+
+  const classes = classLister(Styles); //creates a function that takes in a styleObject and returns a function that takes in a classList and returns a className
 
   const getModal = (e) => {
     e.preventDefault();
@@ -52,8 +67,8 @@ const Nav = () => {
     if (!currentUser) return history.push('/sign-up');
     if (openNoti) {
       setOpenNoti(false);
+      setNotiArray([]);
     } else {
-      setNotiArray(currentUser.notifications);
       setCurrentNotis(0);
       setOpenNoti(true);
       // remove notifications here
@@ -82,8 +97,9 @@ const Nav = () => {
 
   useEffect(() => {
     if (currentUser && currentUser.notifications) {
-      const unseen = currentUser.notifications.length;
-      setCurrentNotis(unseen);
+      console.log('cur user noti', currentUser.notifications);
+      const unseen = currentUser.notifications.filter((n) => n.seen === false);
+      setCurrentNotis(unseen.length);
     }
     if (currentUser && currentUser.theme) {
       if (currentUser.theme === 'dark') {
@@ -94,7 +110,6 @@ const Nav = () => {
         setTheme('light');
       }
     }
-    console.log(currentUser);
   }, [currentUser]);
 
   const debounceChange = useCallback(
@@ -151,7 +166,7 @@ const Nav = () => {
             </div>
             <div className={Styles.icons}>
               <NavLink exact to="/">
-                <IoHomeOutline className={jc(Styles.icon, Styles.home)} />
+                <IoHomeOutline className={classes('icon home')} />
               </NavLink>
               <NavLink exact to={currentUser ? '/messages' : '/sign-up'}>
                 <IoChatbubbleOutline className={jc(Styles.icon, Styles.chat)} />
@@ -173,6 +188,7 @@ const Nav = () => {
                 {openNoti && (
                   <Notifications
                     notiArray={notiArray}
+                    setNotiArray={setNotiArray}
                     setCurrentNotis={setCurrentNotis}
                     handleNoti={handleNoti}
                   />

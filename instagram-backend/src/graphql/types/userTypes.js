@@ -33,6 +33,18 @@ const typeDefs = gql`
     postCount: Int
     posts: [ProfilePost]
   }
+  type CurrentUser {
+    username: String!
+    displayName: String!
+    bio: String
+    avatar: UserImage
+    banner: UserImage
+    id: ID!
+    followerCount: Int
+    followingCount: Int
+    postCount: Int
+    notifications: [Notification]
+  }
 `;
 
 module.exports = { typeDefs };

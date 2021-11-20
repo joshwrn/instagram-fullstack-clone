@@ -3,6 +3,7 @@ const userMutations = require('./mutations/userMutations');
 const commentMutations = require('./mutations/commentMutations');
 const postMutations = require('./mutations/postMutations');
 const authMutations = require('./mutations/authMutations');
+const notificationMutations = require('./mutations/notificationMutations');
 
 // import queries
 const userQueries = require('./queries/userQueries');
@@ -21,6 +22,7 @@ const typeDefs = [
   commentMutations.typeDefs,
   authMutations.typeDefs,
   postMutations.typeDefs,
+  notificationMutations.typeDefs,
 
   postQueries.typeDefs,
   userQueries.typeDefs,
@@ -38,6 +40,7 @@ const resolvers = [
   commentMutations.resolvers,
   postMutations.resolvers,
   authMutations.resolvers,
+  notificationMutations.resolvers,
 
   postQueries.resolvers,
   userQueries.resolvers,

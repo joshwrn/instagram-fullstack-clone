@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+
 import Sidebar from './HomeSidebar';
 import HomeFeed from './HomeFeed';
-import Styles from '../../styles/home/home.module.css';
+
 import ScrollToTop from '../../functions/ScrollToTop';
+
+import Styles from '../../styles/home/home.module.css';
 
 const Home = () => {
   const [newPost, setNewPost] = useState(0);

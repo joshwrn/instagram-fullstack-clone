@@ -43,32 +43,7 @@ const FollowersModal = ({
         id: currentProfile.id,
       },
     });
-
-    // const reverse = current.slice(0).reverse();
-    // const slice = reverse.slice(0, 10);
-    // setList([...slice]);
   }, [currentTab, openFollowers]);
-
-  // //+ GET more from storage
-  // const createMore = () => {
-  //   if (!currentProfile) return;
-  //   const { followers, following } = currentProfile;
-  //   if (!followers || !following) return;
-  //   console.log('followers', followers);
-  //   let current;
-  //   currentTab === 'following' ? (current = following) : (current = followers);
-
-  //   const reverse = current.slice(0).reverse();
-  //   const sliced = reverse.slice(list.length, list.length + 10);
-
-  //   const combine = [...list, ...sliced];
-  //   setList(combine);
-  // };
-
-  useEffect(() => {
-    if (!isFetching) return;
-    // createMore();
-  }, [isFetching]);
 
   useEffect(() => {
     setIsFetching(false);
@@ -85,7 +60,7 @@ const FollowersModal = ({
           item={item}
           Styles={Styles}
           currentUser={currentUser}
-          key={item}
+          key={item.id}
         />
       );
     });
@@ -100,7 +75,7 @@ const FollowersModal = ({
           item={item}
           Styles={Styles}
           currentUser={currentUser}
-          key={item}
+          key={item.id}
         />
       );
     });

@@ -36,11 +36,9 @@ async function startServer() {
       if (auth && auth.toLowerCase().startsWith('bearer ')) {
         const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET_KEY);
         try {
-          const result = await User.findById(decodedToken.userId).populate({
-            path: 'posts',
-            limit: 9,
-            options: { sort: { date: -1 } },
-          });
+          const result = await User.findById(decodedToken.userId).populate(
+            'notifications'
+          );
           // convert id to mongoose object, for aggregation
           const id = mongoose.Types.ObjectId(decodedToken.userId);
           const stats = await User.aggregate([

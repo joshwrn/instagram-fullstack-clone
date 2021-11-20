@@ -1,28 +1,39 @@
 import React, { useState, useEffect } from 'react';
+
 import NotificationsItem from './NotificationsItem';
+
 import { useAuth } from '../../contexts/AuthContext';
-import { useHistory } from 'react-router';
+import { useMutation } from '@apollo/client';
+import { READ_NOTIFICATIONS } from '../../graphql/mutations/notificationMutations';
+
 import Styles from '../../styles/notifications/notifications.module.css';
 
-const Notifications = ({ handleNoti, setCurrentNotis, notiArray }) => {
-  const { userProfile, getUserProfile } = useAuth();
-  const [loading, setLoading] = useState(true);
-  let history = useHistory();
+const Notifications = ({
+  handleNoti,
+  setCurrentNotis,
+  notiArray,
+  setNotiArray,
+}) => {
+  const { currentUser } = useAuth();
+  const [readNotifications, { data, loading, error }] = useMutation(
+    READ_NOTIFICATIONS,
+    {
+      onError: (err) => console.log(err),
+      refetchQueries: [`getCurrentUser`],
+    }
+  );
 
   useEffect(() => {
-    if (userProfile) {
-      getUserProfile();
-    } else {
-      history.push('/sign-up');
-      handleNoti();
+    if (currentUser) {
+      readNotifications();
     }
   }, []);
 
   useEffect(() => {
-    if (userProfile) {
-      setLoading(false);
+    if (data) {
+      setNotiArray(data.readNotifications);
     }
-  }, [userProfile]);
+  }, [data]);
 
   useEffect(() => {
     if (loading) return;
@@ -38,9 +49,7 @@ const Notifications = ({ handleNoti, setCurrentNotis, notiArray }) => {
   if (!loading) {
     notiFragment =
       notiArray && notiArray.length > 0 ? (
-        notiArray.map((item) => (
-          <NotificationsItem key={item.time} userProfile={userProfile} item={item} />
-        ))
+        notiArray.map((item) => <NotificationsItem key={item.id} item={item} />)
       ) : (
         <p className={Styles.none}>No Notifications</p>
       );

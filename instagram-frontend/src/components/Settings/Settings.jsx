@@ -8,7 +8,6 @@ import resizeImage from '../../functions/resizeImage';
 import { useAuth } from '../../contexts/AuthContext';
 import { useMutation } from '@apollo/client';
 import { EDIT_SETTINGS } from '../../graphql/mutations/userMutations';
-import { GET_CURRENT_USER } from '../../graphql/queries/authQueries';
 
 import Styles from '../../styles/settings/settings.module.css';
 import { IoImage, IoPencil } from 'react-icons/io5';
@@ -25,7 +24,7 @@ const Settings = () => {
     onError(err) {
       console.log(err);
     },
-    refetchQueries: [{ query: GET_CURRENT_USER }],
+    refetchQueries: [`getCurrentUser`],
   });
 
   useEffect(() => {

@@ -14,7 +14,9 @@ const PostLikeButton = ({ match, currentPost, setTotalLikes }) => {
     onError: (err) => {
       console.log(err);
     },
+    refetchQueries: [`findPost`],
   });
+
   const { currentUser } = useAuth();
   const history = useHistory();
 

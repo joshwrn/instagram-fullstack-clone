@@ -3,7 +3,7 @@ const User = require('../../models/user');
 
 const typeDefs = gql`
   type Query {
-    getCurrentUser: UserProfile
+    getCurrentUser: CurrentUser
     checkUsernameExist(username: String!): Boolean
     checkEmailExist(email: String!): Boolean
   }

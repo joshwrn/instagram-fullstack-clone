@@ -18,6 +18,10 @@ export const GET_CURRENT_USER = gql`
       followingCount
       postCount
       id
+      notifications {
+        id
+        seen
+      }
     }
   }
 `;

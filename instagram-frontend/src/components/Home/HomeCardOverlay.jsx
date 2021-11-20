@@ -1,9 +1,11 @@
 import React from 'react';
-import { IoCloseOutline } from 'react-icons/io5';
 import { useHistory } from 'react-router';
+
 import { firestore, firestoreFieldValue } from '../../services/firebase';
 import { useAuth } from '../../contexts/AuthContext';
+
 import Styles from '../../styles/home/home__card__overlay.module.css';
+import { IoCloseOutline } from 'react-icons/io5';
 
 const HomeCardOverlay = ({ getModal, type, userID, post }) => {
   const { userProfile } = useAuth();
