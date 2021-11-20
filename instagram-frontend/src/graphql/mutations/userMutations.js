@@ -33,3 +33,9 @@ export const EDIT_SETTINGS = gql`
     }
   }
 `;
+
+export const CHANGE_THEME = gql`
+  mutation changeTheme {
+    changeTheme
+  }
+`;

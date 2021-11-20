@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import HomeCardLike from './HomeCardLike';
@@ -15,7 +15,6 @@ import {
 } from 'react-icons/io5';
 
 const Card = ({ post }) => {
-  const [user, setUser] = useState();
   const [likeState, setLikeState] = useState(post?.likes.length);
 
   const [modal, setModal] = useState(false);

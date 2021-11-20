@@ -1,48 +1,40 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
+
+import { useAuth } from '../../contexts/AuthContext';
+import { useMutation } from '@apollo/client';
+import { CHANGE_THEME } from '../../graphql/mutations/userMutations';
+
+import Styles from '../../styles/nav/nav__user-menu.module.css';
+import { light, dark } from '../../functions/theme';
+import { CgDarkMode } from 'react-icons/cg';
 import {
   IoPersonCircleOutline,
   IoPersonAddOutline,
   IoLogOut,
 } from 'react-icons/io5';
-import { CgDarkMode } from 'react-icons/cg';
-import Styles from '../../styles/nav/nav__user-menu.module.css';
-import { light, dark } from '../../functions/theme';
-import { firestore } from '../../services/firebase';
-import { useAuth } from '../../contexts/AuthContext';
 
 const NavUserMenu = ({ setOpenMenu, theme, setTheme }) => {
   const { currentUser, logout } = useAuth();
+  const [changeTheme] = useMutation(CHANGE_THEME);
   const handleClick = (e) => {
     e.preventDefault();
     setOpenMenu(false);
   };
 
-  const changeTheme = (e) => {
+  const handleTheme = async (e) => {
     e.preventDefault();
     if (theme === 'light') {
       dark();
       setTheme('dark');
       if (currentUser) {
-        const userRef = firestore.collection('users').doc(currentUser.uid);
-        userRef.set(
-          {
-            theme: 'dark',
-          },
-          { merge: true }
-        );
+        await changeTheme();
       }
     } else if (theme === 'dark') {
       light();
       setTheme('light');
       if (currentUser) {
-        const userRef = firestore.collection('users').doc(currentUser.uid);
-        userRef.set(
-          {
-            theme: 'light',
-          },
-          { merge: true }
-        );
+        await changeTheme();
       }
     }
   };
@@ -61,7 +53,7 @@ const NavUserMenu = ({ setOpenMenu, theme, setTheme }) => {
                 <p>Profile</p>
               </div>
             </NavLink>
-            <div onClick={changeTheme} className={Styles.option}>
+            <div onClick={handleTheme} className={Styles.option}>
               <CgDarkMode className={Styles.icon} />
               <p>Change Theme</p>
             </div>

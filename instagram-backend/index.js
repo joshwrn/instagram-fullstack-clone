@@ -4,6 +4,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const User = require('./src/models/user');
 const Post = require('./src/models/post');
+const Notification = require('./src/models/notification');
 require('dotenv').config();
 
 const { makeExecutableSchema } = require('@graphql-tools/schema');
@@ -36,9 +37,12 @@ async function startServer() {
       if (auth && auth.toLowerCase().startsWith('bearer ')) {
         const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET_KEY);
         try {
-          const result = await User.findById(decodedToken.userId).populate(
-            'notifications'
-          );
+          const result = await User.findById(decodedToken.userId);
+          // get noti
+          const noti = await Notification.find({
+            user: result._id,
+            seen: false,
+          });
           // convert id to mongoose object, for aggregation
           const id = mongoose.Types.ObjectId(decodedToken.userId);
           const stats = await User.aggregate([
@@ -55,6 +59,7 @@ async function startServer() {
           result.followerCount = stats[0].total_followers;
           result.followingCount = stats[0].total_following;
           result.postCount = stats[0].total_posts;
+          result.notiCount = noti.length;
           return { currentUser: result };
         } catch (error) {
           console.log(error);

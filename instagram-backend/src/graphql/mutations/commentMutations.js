@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server-express');
+const { gql, AuthenticationError } = require('apollo-server-express');
 const Post = require('../../models/post');
 const Comment = require('../../models/comment');
 const User = require('../../models/user');
@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 const typeDefs = gql`
   type Mutation {
     addComment(comment: String!, post: ID!): Comment
-    deleteComment(commentId: ID!, postId: ID!): Comment
+    deleteComment(commentId: ID!, post: ID!): String
   }
 `;
 
@@ -16,7 +16,7 @@ const resolvers = {
   Mutation: {
     addComment: async (root, { post, comment }, context) => {
       if (!context.currentUser) {
-        throw new Error('You must be logged in to comment');
+        throw new AuthenticationError('You must be logged in to comment');
       }
       if (comment.trim() === '') {
         throw new Error('You must enter a comment');
@@ -33,7 +33,7 @@ const resolvers = {
           { $push: { comments: result._id } },
           { new: true }
         );
-        const noti = new Notification({
+        const notify = new Notification({
           user: updatedPost.user,
           post: updatedPost._id,
           type: 'comment',
@@ -41,21 +41,30 @@ const resolvers = {
           from: context.currentUser.id,
           seen: false,
         });
-        const saveNoti = await noti.save();
-        await User.findByIdAndUpdate(updatedPost.user, {
-          $push: { notifications: saveNoti._id },
-        });
+        await notify.save();
         return result;
       } catch (err) {
         throw new Error(err);
       }
     },
-    deleteComment: async (root, args) => {
-      const result = await Comment.findByIdAndDelete(args.commentId);
-      const user = await Post.findOneAndUpdate(
-        { _id: args.postId },
-        { $pull: { comments: args.commentId } }
-      );
+    deleteComment: async (root, args, context) => {
+      if (context.currentUser) {
+        try {
+          const check = await Post.findById(args.post);
+          if (check.user._id === context.currentUser.id) {
+            await Comment.findByIdAndDelete(args.commentId);
+            await Post.findOneAndUpdate(
+              { _id: args.post },
+              { $pull: { comments: args.commentId } }
+            );
+          } else {
+            throw new AuthenticationError('Not your comment');
+          }
+        } catch (e) {
+          throw new Error(e);
+        }
+        return 'success';
+      }
     },
   },
 };

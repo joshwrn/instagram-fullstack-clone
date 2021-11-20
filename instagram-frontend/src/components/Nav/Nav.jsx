@@ -23,33 +23,22 @@ import {
   IoAddCircleOutline,
 } from 'react-icons/io5';
 
-const classLister = (styleObject) => (l) => {
-  const classList = l.split(' ');
-  return classList.reduce((list, myClass) => {
-    let output = list;
-    if (styleObject[myClass]) {
-      if (list) output += ' '; // appends a space if list is not empty
-      output += styleObject[myClass];
-      //Above: append 'myClass' from styleObject to the list if it is defined
-    }
-    return output;
-  }, '');
-};
-
 const Nav = () => {
   const { currentUser } = useAuth();
+
   const [theme, setTheme] = useState('light');
   const [openMenu, setOpenMenu] = useState(false);
-  const [openNoti, setOpenNoti] = useState(false);
-  const [openSearch, setOpenSearch] = useState(false);
+
   const [currentNotis, setCurrentNotis] = useState(0);
+  const [openNoti, setOpenNoti] = useState(false);
   const [notiArray, setNotiArray] = useState([]);
+
+  const [openSearch, setOpenSearch] = useState(false);
   const [searchInput, setSearchInput] = useState('');
   const [searchValue, setSearchValue] = useState('');
+
   const [renderModal, setRenderModal] = useState(false);
   let history = useHistory();
-
-  const classes = classLister(Styles); //creates a function that takes in a styleObject and returns a function that takes in a classList and returns a className
 
   const getModal = (e) => {
     e.preventDefault();
@@ -96,10 +85,8 @@ const Nav = () => {
   }, []);
 
   useEffect(() => {
-    if (currentUser && currentUser.notifications) {
-      console.log('cur user noti', currentUser.notifications);
-      const unseen = currentUser.notifications.filter((n) => n.seen === false);
-      setCurrentNotis(unseen.length);
+    if (currentUser && currentUser.notiCount) {
+      setCurrentNotis(currentUser.notiCount);
     }
     if (currentUser && currentUser.theme) {
       if (currentUser.theme === 'dark') {
@@ -166,7 +153,7 @@ const Nav = () => {
             </div>
             <div className={Styles.icons}>
               <NavLink exact to="/">
-                <IoHomeOutline className={classes('icon home')} />
+                <IoHomeOutline className={jc(Styles.icon, Styles.home)} />
               </NavLink>
               <NavLink exact to={currentUser ? '/messages' : '/sign-up'}>
                 <IoChatbubbleOutline className={jc(Styles.icon, Styles.chat)} />

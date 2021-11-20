@@ -83,10 +83,7 @@ const resolvers = {
             from: currentUser.id,
             seen: false,
           });
-          const saveNoti = await noti.save();
-          await User.findByIdAndUpdate(curPost.user, {
-            $push: { notifications: saveNoti._id },
-          });
+          await noti.save();
         } else if (type === 'unlike') {
           await Post.findByIdAndUpdate(id, {
             $pull: { likes: currentUser.id },

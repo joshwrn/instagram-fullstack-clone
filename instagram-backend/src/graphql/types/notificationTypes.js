@@ -7,7 +7,7 @@ const typeDefs = gql`
     content: String
     user: User!
     from: User!
-    post: Post!
+    post: Post
     seen: Boolean!
     date: String
   }

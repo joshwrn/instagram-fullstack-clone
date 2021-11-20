@@ -1,7 +1,9 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import Styles from '../../styles/nav/nav__search__item.module.css';
+
 import ImageLoader from '../reusable/ImageLoader';
+
+import Styles from '../../styles/nav/nav__search__item.module.css';
 
 const NavSearchItem = ({ item, setOpenSearch, setSearchInput }) => {
   let history = useHistory();

@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const GET_CURRENT_USER = gql`
-  query Query {
+  query getCurrentUser {
     getCurrentUser {
       username
       banner {
@@ -17,23 +17,21 @@ export const GET_CURRENT_USER = gql`
       followerCount
       followingCount
       postCount
+      notiCount
+      theme
       id
-      notifications {
-        id
-        seen
-      }
     }
   }
 `;
 
 export const CHECK_USERNAME_EXIST = gql`
-  query Query($username: String!) {
+  query checkUsernameExist($username: String!) {
     checkUsernameExist(username: $username)
   }
 `;
 
 export const CHECK_EMAIL_EXIST = gql`
-  query Query($email: String!) {
+  query checkEmailExist($email: String!) {
     checkEmailExist(email: $email)
   }
 `;

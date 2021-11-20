@@ -37,13 +37,14 @@ const typeDefs = gql`
     username: String!
     displayName: String!
     bio: String
+    theme: String
     avatar: UserImage
     banner: UserImage
     id: ID!
     followerCount: Int
     followingCount: Int
     postCount: Int
-    notifications: [Notification]
+    notiCount: Int
   }
 `;
 

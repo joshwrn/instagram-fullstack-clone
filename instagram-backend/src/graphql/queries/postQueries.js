@@ -27,6 +27,7 @@ const resolvers = {
       return result;
     },
     findFeed: async (root, args, context) => {
+      if (!context.currentUser) return [];
       const result = await Post.find({
         user: { $in: context.currentUser.following },
       })
