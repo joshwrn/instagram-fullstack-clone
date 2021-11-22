@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import Styles from '../../styles/messages/messagesContact.module.css';
-import { firestore } from '../../services/firebase';
-import convertTime from '../../functions/convertTime';
+
 import ImageLoader from '../reusable/ImageLoader';
 
+import convertTime from '../../functions/convertTime';
+
+import Styles from '../../styles/messages/messagesContact.module.css';
+
 const MessagesContact = ({
-  user,
+  otherUser,
   time,
   last,
   getCurrentMessage,
@@ -13,7 +15,6 @@ const MessagesContact = ({
   currentIndex,
   handleSidebar,
 }) => {
-  const [currentUser, setCurrentUser] = useState();
   const [addTime, setAddTime] = useState('');
 
   const getTime = () => {
@@ -22,20 +23,7 @@ const MessagesContact = ({
     setAddTime(converted);
   };
 
-  const getUserObject = () => {
-    firestore
-      .collection('users')
-      .doc(user)
-      .get()
-      .then((userData) => {
-        if (userData.exists) {
-          setCurrentUser(userData.data());
-        }
-      });
-  };
-
   useEffect(() => {
-    getUserObject();
     getTime();
   }, []);
 
@@ -52,7 +40,7 @@ const MessagesContact = ({
     >
       <div className={Styles.avatarContainer}>
         <ImageLoader
-          src={currentUser?.profilePhoto}
+          src={`data:${otherUser?.avatar.contentType};base64,${otherUser?.avatar.image}`}
           width="65px"
           height="65px"
           borderRadius="100%"
@@ -60,10 +48,12 @@ const MessagesContact = ({
       </div>
 
       <div className={Styles.contactInfo}>
-        <p className={Styles.name}>{currentUser?.displayName}</p>
+        <p className={Styles.name}>{otherUser?.displayName}</p>
         <div className={Styles.infoContainer}>
           <p className={Styles.message}>
-            {last?.message.length >= 15 ? last?.message.substring(0, 15) + '...' : last?.message}
+            {last?.message.length >= 15
+              ? last?.message.substring(0, 15) + '...'
+              : last?.message}
           </p>
           <p className={Styles.time}>{addTime}</p>
         </div>

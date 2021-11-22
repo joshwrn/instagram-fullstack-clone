@@ -1,29 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Styles from '../../styles/messages/message__item.module.css';
-import ImageLoader from '../reusable/ImageLoader';
 
-const MessageItem = ({ user, message, userProfile, currentProfile, thread, index }) => {
+import ImageLoader from '../reusable/ImageLoader';
+import { useAuth } from '../../contexts/AuthContext';
+
+import Styles from '../../styles/messages/message__item.module.css';
+
+const MessageItem = ({ recipient, sender, message, thread, index }) => {
   const [sent, setSent] = useState(false);
   const [group, setGroup] = useState('false');
+  const { currentUser } = useAuth();
 
   const getStatus = () => {
-    if (user === userProfile?.userID) {
+    if (!currentUser || !sender) return;
+    if (sender.id === currentUser.id) {
       setSent(true);
     }
   };
 
   useEffect(() => {
     getStatus();
-  }, [currentProfile]);
+  }, [currentUser]);
 
   useEffect(() => {
-    if (user === thread[index + 1]?.user) {
+    if (!recipient || !sender || !thread) return;
+    if (recipient.id === thread[index + 1]?.recipient.id) {
       setGroup('true');
-    } else if (user !== thread[index + 1]?.user) {
+    } else if (recipient.id !== thread[index + 1]?.recipient.id) {
+      setGroup('avatar');
+    } else if (sender.id === thread[index + 1]?.sender.id) {
+      setGroup('true');
+    } else if (sender.id !== thread[index + 1]?.sender.id) {
       setGroup('avatar');
     }
-  }, [thread]);
+  }, [recipient, sender, thread]);
 
   let item;
 
@@ -45,12 +55,12 @@ const MessageItem = ({ user, message, userProfile, currentProfile, thread, index
           <p>{message}</p>
         </div>
         <div className={Styles.sideContainer}>
-          <Link to={`/profile/${userProfile.userID}`}>
+          <Link to={`/profile/${currentUser.id}`}>
             <ImageLoader
               height="38px"
               width="38px"
               borderRadius="100%"
-              src={userProfile.profilePhoto}
+              src={`data:${currentUser?.avatar.contentType};base64,${currentUser?.avatar.image}`}
             />
           </Link>
         </div>
@@ -76,12 +86,12 @@ const MessageItem = ({ user, message, userProfile, currentProfile, thread, index
           <p>{message}</p>
         </div>
         <div className={Styles.sideContainer}>
-          <Link to={`/profile/${currentProfile?.userID}`}>
+          <Link to={`/profile/${sender.id}`}>
             <ImageLoader
               height="38px"
               width="38px"
               borderRadius="100%"
-              src={currentProfile?.profilePhoto}
+              src={`data:${sender?.avatar.contentType};base64,${sender?.avatar.image}`}
             />
           </Link>
         </div>

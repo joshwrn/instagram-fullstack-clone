@@ -4,14 +4,17 @@ const typeDefs = gql`
   type Message {
     id: ID!
     message: String!
+    thread: MessageThread!
+    recipient: User!
+    sender: User!
     date: String!
-    user: User!
+    seen: Boolean!
   }
 
   type MessageThread {
     id: ID!
     messages: [Message]
-    user: User!
+    otherUser: User!
     date: String!
   }
 `;

@@ -1,5 +1,4 @@
 const { gql } = require('apollo-server-express');
-const User = require('../../models/user');
 const Notification = require('../../models/notification');
 
 const typeDefs = gql`

@@ -1,77 +1,33 @@
 import React, { useState } from 'react';
-import { IoSendOutline } from 'react-icons/io5';
-import { firestore, firestoreFieldValue } from '../../services/firebase';
+
 import { useAuth } from '../../contexts/AuthContext';
+import { useMutation } from '@apollo/client';
+import { CREATE_MESSAGE } from '../../graphql/mutations/messageMutations';
 
-const MessageInputBox = ({ currentMessage, currentProfile, Styles, setCurrentIndex }) => {
+import { IoSendOutline } from 'react-icons/io5';
+
+const MessageInputBox = ({ currentThread, Styles, setCurrentIndex }) => {
   const [inputBox, setInputBox] = useState('');
-  const { userProfile } = useAuth();
+  const { currentUser } = useAuth();
+  const [createMessage] = useMutation(CREATE_MESSAGE, {
+    onError: (err) => {
+      console.log(err);
+    },
+  });
   //+ send
-
+  // remember to set current index to 0
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const time = Date.now();
-    if (currentProfile) {
-      if (inputBox.length > 0 && inputBox.length < 501) {
-        const contactThread = firestore
-          .collection('users')
-          .doc(currentMessage?.user)
-          .collection('messages')
-          .doc(userProfile?.userID);
-
-        const userThread = firestore
-          .collection('users')
-          .doc(userProfile?.userID)
-          .collection('messages')
-          .doc(currentMessage?.user);
-
-        await userThread.set(
-          {
-            time: time,
-            user: currentProfile.userID,
-          },
-          { merge: true }
-        );
-
-        await contactThread.set(
-          {
-            time: time,
-            user: userProfile?.userID,
-          },
-          { merge: true }
-        );
-        //@ add message to thread
-        const addUserThread = () => {
-          userThread.update({
-            messages: firestoreFieldValue.arrayUnion({
-              user: userProfile?.userID,
-              message: inputBox,
-              time: time,
-            }),
-          });
-        };
-
-        const addContactThread = () => {
-          contactThread.update({
-            messages: firestoreFieldValue.arrayUnion({
-              user: userProfile?.userID,
-              message: inputBox,
-              time: time,
-            }),
-          });
-        };
-
-        await Promise.all([addUserThread(), addContactThread()]);
-        setInputBox('');
-        setCurrentIndex(0);
-      }
-    }
-  };
-
-  const handleChange = (e) => {
-    e.preventDefault();
-    const { value } = e.target;
-    setInputBox(value);
+    const trim = inputBox.trim();
+    if (!currentUser || trim === '') return;
+    await createMessage({
+      variables: {
+        message: trim,
+        recipientId: currentThread.otherUser.id,
+      },
+    });
+    setInputBox('');
+    setCurrentIndex(0);
   };
 
   return (
@@ -84,11 +40,15 @@ const MessageInputBox = ({ currentMessage, currentProfile, Styles, setCurrentInd
           maxLength="500"
           minLength="1"
           placeholder="New Message..."
-          onChange={handleChange}
+          onChange={(e) => setInputBox(e.target.value)}
           value={inputBox}
         />
       </form>
-      <IoSendOutline type="submit" onClick={handleSubmit} className={Styles.send} />
+      <IoSendOutline
+        type="submit"
+        onClick={handleSubmit}
+        className={Styles.send}
+      />
     </div>
   );
 };

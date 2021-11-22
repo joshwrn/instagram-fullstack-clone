@@ -1,14 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
+
+import MessagesCreateMenuItem from './MessagesCreateMenuItem';
+
+import useIntersect from '../../hooks/useIntersect';
+
+import { useAuth } from '../../contexts/AuthContext';
+import { useLazyQuery } from '@apollo/client';
+import { FIND_FOLLOWERS } from '../../graphql/queries/userQueries';
+
 import { IoCloseOutline } from 'react-icons/io5';
 import Styles from '../../styles/messages/messages__create-menu.module.css';
-import MessagesCreateMenuItem from './MessagesCreateMenuItem';
-import useIntersect from '../../hooks/useIntersect';
 
 const MessagesCreateMenu = ({
   handleCreate,
-  userProfile,
-  setMessages,
-  messages,
+  setMessageThreads,
+  messageThreads,
   setCurrentMessage,
   setCurrentIndex,
   getCurrentMessage,
@@ -16,37 +22,24 @@ const MessagesCreateMenu = ({
   const [list, setList] = useState([]);
   const ref = useRef();
   const [isFetching, setIsFetching] = useIntersect(ref);
-
-  const createInitial = () => {
-    if (!userProfile) return;
-    const { following } = userProfile;
-    const reverse = following.slice(0).reverse();
-    const sliced = reverse.slice(0, 10);
-    setList(sliced);
-  };
-
-  //+ GET more from storage
-  const createMore = () => {
-    if (!userProfile) return;
-    const { following } = userProfile;
-    if (following.length === list.length) return;
-
-    const reverse = following.slice(0).reverse();
-    const sliced = reverse.slice(list.length, list.length + 10);
-
-    const combine = [...list, ...sliced];
-    setList(combine);
-  };
+  const [getFollow, { loading, error, data }] = useLazyQuery(FIND_FOLLOWERS);
+  const { currentUser } = useAuth();
 
   useEffect(() => {
-    if (!userProfile) return;
-    createInitial();
-  }, [userProfile]);
+    if (!currentUser) return;
+    getFollow({
+      variables: {
+        type: 'following',
+        id: currentUser.id,
+      },
+    });
+  }, [currentUser]);
 
   useEffect(() => {
-    if (!isFetching) return;
-    createMore();
-  }, [isFetching]);
+    if (!data) return;
+    console.log('data', data);
+    setList(data.findFollowers);
+  }, [data]);
 
   useEffect(() => {
     setIsFetching(false);
@@ -65,15 +58,15 @@ const MessagesCreateMenu = ({
           {list.map((item) => {
             return (
               <MessagesCreateMenuItem
-                messages={messages}
-                setMessages={setMessages}
+                messageThreads={messageThreads}
+                setMessageThreads={setMessageThreads}
                 Styles={Styles}
-                contactID={item}
+                contact={item}
                 setCurrentMessage={setCurrentMessage}
                 handleCreate={handleCreate}
                 setCurrentIndex={setCurrentIndex}
                 getCurrentMessage={getCurrentMessage}
-                key={item}
+                key={item.id}
               />
             );
           })}

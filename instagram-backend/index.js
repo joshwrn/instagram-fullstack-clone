@@ -11,6 +11,10 @@ const { makeExecutableSchema } = require('@graphql-tools/schema');
 const { createServer } = require('http');
 const { graphqlUploadExpress } = require('graphql-upload');
 
+const { execute, subscribe } = require('graphql');
+const { SubscriptionServer } = require('subscriptions-transport-ws');
+const { ApolloServerPluginDrainHttpServer } = require('apollo-server-core');
+
 const { typeDefs, resolvers } = require('./src/graphql/schema');
 
 const MONGO_URI = process.env.MONGO_URI;
@@ -32,6 +36,18 @@ async function startServer() {
 
   const server = new ApolloServer({
     schema,
+    plugins: [
+      ApolloServerPluginDrainHttpServer({ httpServer }),
+      {
+        async serverWillStart() {
+          return {
+            async drainServer() {
+              subscriptionServer.close();
+            },
+          };
+        },
+      },
+    ],
     context: async ({ req }) => {
       const auth = req ? req.headers.authorization : null;
       if (auth && auth.toLowerCase().startsWith('bearer ')) {
@@ -62,12 +78,39 @@ async function startServer() {
           result.notiCount = noti.length;
           return { currentUser: result };
         } catch (error) {
-          console.log(error);
+          throw new Error(error);
         }
       }
     },
   });
-  app.use(graphqlUploadExpress());
+
+  //$ subscription
+  const subscriptionServer = SubscriptionServer.create(
+    {
+      schema,
+      execute,
+      subscribe,
+      async onConnect(connectionParams, webSocket) {
+        console.log('decode', connectionParams);
+        if (connectionParams.authorization) {
+          const decodedToken = jwt.verify(
+            connectionParams.authorization.substring(7),
+            JWT_SECRET_KEY
+          );
+          const userId = mongoose.Types.ObjectId(decodedToken.userId);
+          return { userId };
+        }
+      },
+      onDisconnect: () => console.log('Websocket CONNECTED'),
+    },
+
+    {
+      server: httpServer,
+      // This `server` is the instance returned from `new ApolloServer`.
+      path: server.graphqlPath,
+    }
+  );
+
   app.use(express.json({ limit: '50mb' }));
   app.use(express.urlencoded({ limit: '50mb' }));
 

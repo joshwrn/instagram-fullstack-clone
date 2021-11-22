@@ -12,9 +12,7 @@ import Styles from '../../styles/home/home__feed.module.css';
 
 const HomeFeed = ({ newPost }) => {
   const { currentUser } = useAuth();
-  const [stored, setStored] = useState([]);
   const [feed, setFeed] = useState([]);
-  const [lastUser, setLastUser] = useState();
 
   const [noPosts, setNoPosts] = useState(false);
   const noPostsRef = useRef(false);
@@ -26,10 +24,10 @@ const HomeFeed = ({ newPost }) => {
   //# after feed updates set load to false
   useEffect(() => {
     setIsFetching(false);
-    console.log('data', data);
+    console.log('set feed', data);
     if (!data) return;
     setFeed(data.findFeed);
-  }, [data]);
+  }, [data, currentUser]);
 
   return (
     <div className={Styles.container}>

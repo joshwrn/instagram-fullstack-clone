@@ -70,7 +70,7 @@ const NavUserMenu = ({ setOpenMenu, theme, setTheme }) => {
                 <p>Sign Up</p>
               </div>
             </Link>
-            <div onClick={changeTheme} className={Styles.option}>
+            <div onClick={handleTheme} className={Styles.option}>
               <CgDarkMode className={Styles.icon} />
               <p>Change Theme</p>
             </div>

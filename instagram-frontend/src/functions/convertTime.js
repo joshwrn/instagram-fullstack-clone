@@ -25,11 +25,11 @@ const convertTime = (start, end) => {
   }
   if (total >= 2592000 && total < 31536000) {
     const converted = Math.floor(total / 2592000);
-    return `${converted}${converted === 1 ? 'mth' : 'mths'}`;
+    return `${converted}${converted === 1 ? 'month' : 'months'}`;
   }
   if (total >= 31536000) {
     const converted = Math.floor(total / 31536000);
-    return `${converted}${converted === 1 ? 'yr' : 'yrs'}`;
+    return `${converted}${converted === 1 ? 'year' : 'years'}`;
   }
 };
 

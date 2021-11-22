@@ -6,11 +6,13 @@ const schema = new mongoose.Schema({
     default: Date.now,
     required: true,
   },
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
+  participants: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+  ],
   messages: [
     {
       type: mongoose.Schema.Types.ObjectId,
