@@ -13,6 +13,8 @@ import stopScroll from '../../functions/stopScroll';
 import jc from '../../functions/joinClasses';
 
 import { useAuth } from '../../contexts/AuthContext';
+import { useQuery, useSubscription } from '@apollo/client';
+import { NEW_NOTIFICATION } from '../../graphql/subscriptions/notificationSubscriptions';
 
 import Styles from '../../styles/nav/nav.module.css';
 import {
@@ -32,6 +34,11 @@ const Nav = () => {
   const [currentNotis, setCurrentNotis] = useState(0);
   const [openNoti, setOpenNoti] = useState(false);
   const [notiArray, setNotiArray] = useState([]);
+  const {
+    data: notiData,
+    loading: notiLoading,
+    error: notiError,
+  } = useSubscription(NEW_NOTIFICATION);
 
   const [openSearch, setOpenSearch] = useState(false);
   const [searchInput, setSearchInput] = useState('');
@@ -39,6 +46,11 @@ const Nav = () => {
 
   const [renderModal, setRenderModal] = useState(false);
   let history = useHistory();
+
+  useEffect(() => {
+    console.log('notiData', notiData);
+    setCurrentNotis((prev) => prev + 1);
+  }, [notiData]);
 
   const getModal = (e) => {
     e.preventDefault();

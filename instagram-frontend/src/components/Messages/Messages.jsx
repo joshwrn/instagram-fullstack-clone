@@ -128,6 +128,7 @@ const Messages = ({ match }) => {
         {/*//+ messages section */}
         <MessageArea
           currentThread={currentThread}
+          threadId={currentThread?.id}
           Styles={Styles}
           dummyRef={dummyRef}
         />

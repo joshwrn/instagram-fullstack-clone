@@ -1,17 +1,32 @@
 import React, { useState } from 'react';
 
+import updateCacheWith from '../../functions/updateCache';
+
 import { useAuth } from '../../contexts/AuthContext';
-import { useMutation } from '@apollo/client';
-import { CREATE_MESSAGE } from '../../graphql/mutations/messageMutations';
+import { useMutation, useApolloClient } from '@apollo/client';
+import {
+  CREATE_MESSAGE,
+  READ_MESSAGES,
+} from '../../graphql/mutations/messageMutations';
 
 import { IoSendOutline } from 'react-icons/io5';
 
 const MessageInputBox = ({ currentThread, Styles, setCurrentIndex }) => {
   const [inputBox, setInputBox] = useState('');
   const { currentUser } = useAuth();
+  const client = useApolloClient();
   const [createMessage] = useMutation(CREATE_MESSAGE, {
     onError: (err) => {
       console.log(err);
+    },
+    update: (store, response) => {
+      updateCacheWith(
+        client,
+        response.data.createMessage,
+        READ_MESSAGES,
+        { threadId: currentThread.id },
+        'readMessages'
+      );
     },
   });
   //+ send
@@ -20,14 +35,14 @@ const MessageInputBox = ({ currentThread, Styles, setCurrentIndex }) => {
     e.preventDefault();
     const trim = inputBox.trim();
     if (!currentUser || trim === '') return;
+    setInputBox('');
+    setCurrentIndex(0);
     await createMessage({
       variables: {
         message: trim,
         recipientId: currentThread.otherUser.id,
       },
     });
-    setInputBox('');
-    setCurrentIndex(0);
   };
 
   return (

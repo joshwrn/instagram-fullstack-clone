@@ -6,7 +6,7 @@ import { useAuth } from '../../contexts/AuthContext';
 
 import Styles from '../../styles/messages/message__item.module.css';
 
-const MessageItem = ({ recipient, sender, message, thread, index }) => {
+const MessageItem = ({ recipient, sender, message, thread, seen, index }) => {
   const [sent, setSent] = useState(false);
   const [group, setGroup] = useState('false');
   const { currentUser } = useAuth();

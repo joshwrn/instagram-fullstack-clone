@@ -12,6 +12,10 @@ const postQueries = require('./queries/postQueries');
 const authQueries = require('./queries/authQueries');
 const messageQueries = require('./queries/messageQueries');
 
+// import subscriptions
+const messageSubscriptions = require('./subscriptions/messageSubscriptions');
+const notificationSubscriptions = require('./subscriptions/notificationSubscriptions');
+
 // import types
 const userTypes = require('./types/userTypes');
 const postTypes = require('./types/postTypes');
@@ -32,6 +36,9 @@ const typeDefs = [
   authQueries.typeDefs,
   messageQueries.typeDefs,
 
+  messageSubscriptions.typeDefs,
+  notificationSubscriptions.typeDefs,
+
   userTypes.typeDefs,
   postTypes.typeDefs,
   notificationTypes.typeDefs,
@@ -51,6 +58,9 @@ const resolvers = [
   userQueries.resolvers,
   authQueries.resolvers,
   messageQueries.resolvers,
+
+  messageSubscriptions.resolvers,
+  notificationSubscriptions.resolvers,
 ];
 
 module.exports = { typeDefs, resolvers };

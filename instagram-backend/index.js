@@ -9,7 +9,6 @@ require('dotenv').config();
 
 const { makeExecutableSchema } = require('@graphql-tools/schema');
 const { createServer } = require('http');
-const { graphqlUploadExpress } = require('graphql-upload');
 
 const { execute, subscribe } = require('graphql');
 const { SubscriptionServer } = require('subscriptions-transport-ws');
@@ -97,7 +96,7 @@ async function startServer() {
             connectionParams.authorization.substring(7),
             JWT_SECRET_KEY
           );
-          const userId = mongoose.Types.ObjectId(decodedToken.userId);
+          const userId = decodedToken.userId;
           return { userId };
         }
       },

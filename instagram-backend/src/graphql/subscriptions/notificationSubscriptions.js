@@ -4,19 +4,18 @@ const { pubsub } = require('./pubSub');
 
 const typeDefs = gql`
   type Subscription {
-    newMessage(threadId: ID!): Message!
+    newNotification: Notification!
   }
 `;
 
 const resolvers = {
   Subscription: {
-    newMessage: {
+    newNotification: {
       subscribe: withFilter(
-        () => pubsub.asyncIterator(['NEW_MESSAGE']),
+        () => pubsub.asyncIterator(['NEW_NOTIFICATION']),
         (payload, variables, { userId }) => {
-          const { sender, recipient, thread } = payload.newMessage;
-          const check =
-            recipient.id === userId && thread.id === variables.threadId;
+          const { user } = payload.newNotification;
+          const check = user.id === userId;
           return check;
         }
       ),
@@ -24,4 +23,4 @@ const resolvers = {
   },
 };
 
-module.exports = { resolvers, typeDefs };
+module.exports = { typeDefs, resolvers };

@@ -1,7 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router';
 
-import { firestore, firestoreFieldValue } from '../../services/firebase';
 import { useAuth } from '../../contexts/AuthContext';
 
 import Styles from '../../styles/home/home__card__overlay.module.css';
@@ -12,15 +11,6 @@ const HomeCardOverlay = ({ getModal, type, userID, post }) => {
   let history = useHistory();
   //+ unfollow
   const handleUnfollow = async () => {
-    const thisUser = firestore.collection('users').doc(userID);
-    const userRef = firestore.collection('users').doc(userProfile.userID);
-
-    await thisUser.update({
-      followers: firestoreFieldValue.arrayRemove(userProfile.userID),
-    });
-    await userRef.update({
-      following: firestoreFieldValue.arrayRemove(userID),
-    });
     getModal();
   };
 

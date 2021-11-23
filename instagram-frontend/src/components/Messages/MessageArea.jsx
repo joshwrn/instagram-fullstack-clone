@@ -3,17 +3,25 @@ import React, { useRef, useState, useEffect } from 'react';
 import MessageItem from './MessageItem';
 
 import useIntersect from '../../hooks/useIntersect';
+import updateCacheWith from '../../functions/updateCache';
 
 import { useAuth } from '../../contexts/AuthContext';
-import { useMutation, useSubscription } from '@apollo/client';
+import {
+  useMutation,
+  useLazyQuery,
+  useQuery,
+  useSubscription,
+  useApolloClient,
+} from '@apollo/client';
 import { READ_MESSAGES } from '../../graphql/mutations/messageMutations';
 import { NEW_MESSAGE } from '../../graphql/subscriptions/messageSubscriptions';
 
-const MessageArea = ({ currentThread, Styles, dummyRef }) => {
+const MessageArea = ({ currentThread, Styles, dummyRef, threadId }) => {
   const topRef = useRef();
+  const client = useApolloClient();
   const [thread, setThread] = useState([]);
   const [isFetching, setIsFetching] = useIntersect(topRef);
-  const [readMessages, { data, loading, error }] = useMutation(READ_MESSAGES, {
+  const [readMessages, { data, loading, error }] = useLazyQuery(READ_MESSAGES, {
     onError: (err) => console.log(err),
   });
 
@@ -21,68 +29,35 @@ const MessageArea = ({ currentThread, Styles, dummyRef }) => {
     data: subData,
     loading: subLoad,
     error: subError,
-  } = useSubscription(NEW_MESSAGE);
+  } = useSubscription(NEW_MESSAGE, {
+    variables: { threadId: currentThread ? currentThread.id : null },
+  });
 
   useEffect(() => {
-    console.log('sub', subData, subLoad, subError);
+    if (!subData) return;
+    const newMessage = subData.newMessage;
+    updateCacheWith(
+      client,
+      newMessage,
+      READ_MESSAGES,
+      { threadId: currentThread.id },
+      'readMessages'
+    );
   }, [subData, subLoad, subError]);
-
-  // useSubscription(NEW_MESSAGE, {
-  //   onSubscriptionData: ({ subscriptionData }) => {
-  //     console.log('new message');
-  //   },
-  //   onError: (err) => console.log(err),
-  // });
-
-  useEffect(() => {
-    console.log('currentThread', currentThread);
-  }, [currentThread]);
 
   useEffect(() => {
     if (!data) return;
     setThread(data.readMessages);
-    console.log(data.readMessages);
   }, [data]);
 
   useEffect(() => {
     if (!currentThread) return;
-    console.log('currentThread', currentThread);
     readMessages({
       variables: {
-        thread: currentThread.id,
+        threadId: currentThread.id,
       },
     });
   }, [currentThread]);
-
-  // //+ GET more from storage
-  // const createFeed = () => {
-  //   if (!currentThread) return;
-
-  //   const reverse = currentThread.messages.slice(0).reverse();
-  //   const sliced = reverse.slice(thread.length, thread.length + 20);
-  //   const combine = [...thread, ...sliced];
-  //   setThread(combine);
-  // };
-
-  // useEffect(() => {
-  //   if (!isFetching) return;
-  //   createFeed();
-  // }, [isFetching]);
-
-  //# after feed updates set load to false
-  // useEffect(() => {
-  //   setIsFetching(false);
-  // }, [thread]);
-
-  // useEffect(() => {
-  //   if (currentThread?.messages?.length > 0) {
-  //     const reverse = currentThread?.messages.slice(0).reverse();
-  //     const sliced = reverse.slice(0, 20);
-  //     setThread(sliced);
-  //   } else {
-  //     setThread([]);
-  //   }
-  // }, [currentThread]);
 
   return (
     <div id="msg" className={Styles.messageArea}>
@@ -91,6 +66,7 @@ const MessageArea = ({ currentThread, Styles, dummyRef }) => {
         return (
           <MessageItem
             key={item.id}
+            seen={item.seen}
             time={item.date}
             recipient={item.recipient}
             sender={item.sender}
