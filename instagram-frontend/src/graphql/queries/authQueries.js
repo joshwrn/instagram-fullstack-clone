@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export const GET_CURRENT_USER = gql`
-  query getCurrentUser {
-    getCurrentUser {
+  query getCurrentUser($auth: String) {
+    getCurrentUser(auth: $auth) {
       username
       banner {
         image

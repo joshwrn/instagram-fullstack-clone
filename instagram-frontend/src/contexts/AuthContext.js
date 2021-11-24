@@ -13,9 +13,7 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
-  const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(false);
   //const { data, loading: loadingUser } = useQuery(GET_CURRENT_USER);
   const [getUser, { loading: loadingUser, error, data }] =
@@ -24,39 +22,28 @@ export function AuthProvider({ children }) {
   const client = useApolloClient();
 
   useEffect(() => {
-    const auth = localStorage.getItem('instagram-clone-auth');
-    if (auth) {
-      setToken(auth);
-    }
+    // removing this makes me unable to refresh the page
+    // keeping it forces me to refresh the page
+    getUser();
   }, []);
 
   useEffect(() => {
-    if (data) {
-      console.log('auth context data:', data, 'token', token);
+    console.log('auth context data:', data);
+    if (data && data.getCurrentUser) {
       setCurrentUser(data.getCurrentUser);
     }
   }, [data]);
 
-  useEffect(() => {
-    if (token) {
-      getUser();
-    }
-  }, [token]);
-
   const logout = async () => {
-    setToken(null);
     setCurrentUser(null);
     localStorage.clear();
     await client.clearStore();
+    window.location.replace(window.location.origin);
   };
 
   const value = {
-    isAuthenticated,
-    setIsAuthenticated,
     currentUser,
     setCurrentUser,
-    token,
-    setToken,
     loading,
     setLoading,
     logout,

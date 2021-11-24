@@ -1,7 +1,7 @@
 const { gql, AuthenticationError } = require('apollo-server-express');
 
-const mongoose = require('mongoose');
 const { GraphQLUpload } = require('graphql-upload');
+const { pubsub } = require('../subscriptions/pubSub');
 
 const User = require('../../models/user');
 const Post = require('../../models/post');
@@ -83,7 +83,11 @@ const resolvers = {
             from: currentUser.id,
             seen: false,
           });
-          await noti.save();
+          const savedNotification = await noti.save();
+          await savedNotification.populate('user');
+          pubsub.publish('NEW_NOTIFICATION', {
+            newNotification: savedNotification,
+          });
         } else if (type === 'unlike') {
           await Post.findByIdAndUpdate(id, {
             $pull: { likes: currentUser.id },

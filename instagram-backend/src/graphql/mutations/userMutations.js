@@ -1,7 +1,7 @@
 const { gql, AuthenticationError } = require('apollo-server-express');
 const User = require('../../models/user');
 const Notification = require('../../models/notification');
-const mongoose = require('mongoose');
+const { pubsub } = require('../subscriptions/pubSub');
 
 const typeDefs = gql`
   type Mutation {
@@ -45,7 +45,11 @@ const resolvers = {
           from: context.currentUser.id,
           seen: false,
         });
-        await notify.save();
+        const savedNotification = await notify.save();
+        await savedNotification.populate('user');
+        pubsub.publish('NEW_NOTIFICATION', {
+          newNotification: savedNotification,
+        });
         return followed;
       } catch (e) {
         throw new Error(e);

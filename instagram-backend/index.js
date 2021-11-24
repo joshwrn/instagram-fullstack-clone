@@ -90,7 +90,7 @@ async function startServer() {
       execute,
       subscribe,
       async onConnect(connectionParams, webSocket) {
-        console.log('decode', connectionParams);
+        console.log('subscription auth');
         if (connectionParams.authorization) {
           const decodedToken = jwt.verify(
             connectionParams.authorization.substring(7),

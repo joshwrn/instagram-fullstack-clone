@@ -14,14 +14,16 @@ import { setContext } from '@apollo/client/link/context';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { WebSocketLink } from '@apollo/client/link/ws';
 
+// separate token so i can use ueh
 const token = localStorage.getItem('instagram-clone-auth');
 
-const authLink = setContext((_, { headers }) => {
+const authLink = setContext((_, { headers, ...context }) => {
   return {
     headers: {
       ...headers,
-      authorization: token ? `bearer ${token}` : null,
+      ...(token ? { authorization: `bearer ${token}` } : {}),
     },
+    ...context,
   };
 });
 
@@ -32,7 +34,7 @@ const wsLink = new WebSocketLink({
   options: {
     reconnect: true,
     connectionParams: {
-      authorization: token ? `bearer ${token}` : null,
+      ...(token ? { authorization: `bearer ${token}` } : {}),
     },
   },
 });

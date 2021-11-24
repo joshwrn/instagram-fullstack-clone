@@ -36,7 +36,6 @@ const MessageInputBox = ({ currentThread, Styles, setCurrentIndex }) => {
     const trim = inputBox.trim();
     if (!currentUser || trim === '') return;
     setInputBox('');
-    setCurrentIndex(0);
     await createMessage({
       variables: {
         message: trim,

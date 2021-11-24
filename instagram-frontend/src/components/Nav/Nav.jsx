@@ -48,7 +48,7 @@ const Nav = () => {
   let history = useHistory();
 
   useEffect(() => {
-    console.log('notiData', notiData);
+    if (!notiData) return;
     setCurrentNotis((prev) => prev + 1);
   }, [notiData]);
 
