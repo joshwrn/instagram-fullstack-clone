@@ -157,6 +157,7 @@ const Nav = () => {
               {openSearch && searchInput !== '' ? (
                 <NavSearch
                   setSearchInput={setSearchInput}
+                  setSearchValue={setSearchValue}
                   searchInput={searchInput}
                   setOpenSearch={setOpenSearch}
                   searchRef={searchRef}

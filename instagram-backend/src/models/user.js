@@ -26,6 +26,11 @@ const schema = new mongoose.Schema({
     required: true,
     default: 'light',
   },
+  date: {
+    type: Date,
+    default: Date.now,
+    required: true,
+  },
   bio: {
     type: String,
     maxlength: 300,

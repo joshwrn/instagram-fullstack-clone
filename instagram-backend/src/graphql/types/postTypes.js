@@ -16,6 +16,7 @@ const typeDefs = gql`
     likes: [User]
     comments: [Comment]
     user: User
+    date: String
     contentType: String
   }
 `;

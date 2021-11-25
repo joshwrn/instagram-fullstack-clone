@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 
 import { LOGIN } from '../../graphql/mutations/authMutations';
-import { useMutation, useLazyQuery } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 
 import Styles from '../../styles/sign-up/login.module.css';
 
@@ -27,7 +27,6 @@ const Login = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('sign in');
     login({ variables: { username, password } });
   };
 

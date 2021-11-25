@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import HomeCardLike from './HomeCardLike';
@@ -14,7 +14,7 @@ import {
   IoShareSocialOutline,
 } from 'react-icons/io5';
 
-const Card = ({ post }) => {
+const Card = ({ post, index, dummy, feedLength }) => {
   const [likeState, setLikeState] = useState(post?.likes.length);
 
   const [modal, setModal] = useState(false);
@@ -73,7 +73,10 @@ const Card = ({ post }) => {
               src={`data:${post.contentType};base64,${post.image}`}
             />
             {/*//+ footer */}
-            <div className={Styles.footer}>
+            <div
+              ref={index === feedLength - 1 ? dummy : null}
+              className={Styles.footer}
+            >
               <div className={Styles.firstChild}>
                 <div className={Styles.left}>
                   {/*//+ likes button */}

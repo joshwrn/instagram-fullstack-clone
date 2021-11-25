@@ -1,12 +1,13 @@
 import { gql } from '@apollo/client';
 
 export const FIND_FEED = gql`
-  query findFeed {
-    findFeed {
+  query findFeed($offset: Int, $cursor: String) {
+    findFeed(offset: $offset, cursor: $cursor) {
       id
       image
       contentType
       caption
+      date
       likes {
         id
       }

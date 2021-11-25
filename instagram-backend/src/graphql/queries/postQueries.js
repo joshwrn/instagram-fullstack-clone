@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const typeDefs = gql`
   type Query {
     findPost(id: ID!): Post
-    findFeed: [Post]
+    findFeed(offset: Int, cursor: String): [Post]
   }
 `;
 
@@ -26,13 +26,16 @@ const resolvers = {
         });
       return result;
     },
-    findFeed: async (root, args, context) => {
+    findFeed: async (root, { offset, cursor }, context) => {
       if (!context.currentUser) return [];
+      const perPage = 5;
+      console.log(cursor, Date.now());
       const result = await Post.find({
         user: { $in: context.currentUser.following },
+        date: { $lt: cursor ? cursor : Date.now() },
       })
         .sort({ date: -1 })
-        .limit(5)
+        .limit(perPage)
         .populate('user')
         .populate('likes')
         .populate({

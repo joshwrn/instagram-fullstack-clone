@@ -85,7 +85,8 @@ const NotificationsItem = ({ item }) => {
         </Link>
       );
     }
-  } else if (item.type === 'followed') {
+  }
+  if (item.type === 'follow') {
     type = (
       <Link className={Styles.link} to={`/profile/${item.from.id}`}>
         <div className={Styles.container}>

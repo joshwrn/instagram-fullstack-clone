@@ -5,13 +5,19 @@ import ImageLoader from '../reusable/ImageLoader';
 
 import Styles from '../../styles/nav/nav__search__item.module.css';
 
-const NavSearchItem = ({ item, setOpenSearch, setSearchInput }) => {
+const NavSearchItem = ({
+  item,
+  setOpenSearch,
+  setSearchInput,
+  setSearchValue,
+}) => {
   let history = useHistory();
 
   const handleClick = () => {
+    setSearchInput('');
+    setSearchValue('');
     history.push(`/profile/${item.id}`);
     setOpenSearch(false);
-    setSearchInput('');
   };
   return (
     <div onClick={handleClick} className={Styles.container}>

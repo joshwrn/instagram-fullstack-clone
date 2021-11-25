@@ -11,6 +11,7 @@ const NavSearch = ({
   searchInput,
   setOpenSearch,
   setSearchInput,
+  setSearchValue,
   searchRef,
 }) => {
   const [searchResults, setSearchResults] = useState([]);
@@ -64,6 +65,7 @@ const NavSearch = ({
           <NavSearchItem
             key={item.username}
             setSearchInput={setSearchInput}
+            setSearchValue={setSearchValue}
             setOpenSearch={setOpenSearch}
             item={item}
           />

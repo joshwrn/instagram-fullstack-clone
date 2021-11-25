@@ -51,8 +51,27 @@ const splitLink = split(
   authLink.concat(httpLink)
 );
 
+const cache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        feed: {
+          // Don't cache separate results based on
+          // any of this field's arguments.
+          keyArgs: false,
+          // Concatenate the incoming list items with
+          // the existing list items.
+          merge(existing = [], incoming) {
+            return [...existing, ...incoming];
+          },
+        },
+      },
+    },
+  },
+});
+
 const client = new ApolloClient({
-  cache: new InMemoryCache(),
+  cache: cache,
   link: splitLink,
 });
 
