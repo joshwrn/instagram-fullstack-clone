@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 import FollowerListItem from './FollowerListItem';
+
 import useIntersect from '../../hooks/useIntersect';
+import useCursor from '../../hooks/useCursor';
 
 import { useLazyQuery } from '@apollo/client';
 import { FIND_FOLLOWERS } from '../../graphql/queries/userQueries';
@@ -19,9 +21,11 @@ const FollowersModal = ({
 }) => {
   const [getFollow, { loading, error, data }] = useLazyQuery(FIND_FOLLOWERS);
   const [list, setList] = useState([]);
+  const [none, setNone] = useState(false);
 
-  const ref = useRef();
-  const [isFetching, setIsFetching] = useIntersect(ref);
+  // const ref = useRef();
+  // const [isFetching, setIsFetching] = useIntersect(ref);
+  const [isFetching, setIsFetching, cursorRef] = useCursor(none, loading);
 
   const handleSwitch = (e) => {
     e.preventDefault();
@@ -52,7 +56,7 @@ const FollowersModal = ({
   let map;
 
   if (currentTab === 'following') {
-    map = list.map((item) => {
+    map = list.map((item, index) => {
       return (
         <FollowerListItem
           currentTab={currentTab}
@@ -61,13 +65,16 @@ const FollowersModal = ({
           Styles={Styles}
           currentUser={currentUser}
           key={item.id}
+          cursorRef={cursorRef}
+          index={index}
+          listLength={list.length}
         />
       );
     });
   }
 
   if (currentTab === 'followers') {
-    map = list.map((item) => {
+    map = list.map((item, index) => {
       return (
         <FollowerListItem
           currentTab={currentTab}
@@ -76,6 +83,9 @@ const FollowersModal = ({
           Styles={Styles}
           currentUser={currentUser}
           key={item.id}
+          cursorRef={cursorRef}
+          index={index}
+          listLength={list.length}
         />
       );
     });
@@ -117,10 +127,7 @@ const FollowersModal = ({
               />
             </div>
             {/*//+ list of followers is here */}
-            <div className={Styles.listContainer}>
-              {map}
-              <div className={Styles.dummy} ref={ref}></div>
-            </div>
+            <div className={Styles.listContainer}>{map}</div>
           </div>
         </div>
       )}

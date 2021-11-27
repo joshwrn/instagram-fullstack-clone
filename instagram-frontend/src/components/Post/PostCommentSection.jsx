@@ -7,7 +7,13 @@ import useIntersect from '../../hooks/useIntersect';
 import Styles from '../../styles/post/post__comment-section.module.css';
 import Loading from '../../styles/post/post__loading.module.css';
 
-const PostCommentSection = ({ loaded, currentPost, comments, setComments }) => {
+const PostCommentSection = ({
+  loaded,
+  currentPost,
+  comments,
+  setComments,
+  ownPost,
+}) => {
   const ref = useRef();
   const [isFetching, setIsFetching] = useIntersect(ref);
 
@@ -19,6 +25,10 @@ const PostCommentSection = ({ loaded, currentPost, comments, setComments }) => {
     const combine = [...comments, ...sliced];
     setComments(combine);
   };
+
+  useEffect(() => {
+    console.log(ownPost);
+  }, [ownPost]);
 
   useEffect(() => {
     if (!isFetching) return;
@@ -55,8 +65,10 @@ const PostCommentSection = ({ loaded, currentPost, comments, setComments }) => {
                 <PostComment
                   key={item.date}
                   time={item.date}
+                  id={item.id}
                   comment={item.comment}
                   user={item.user}
+                  ownPost={ownPost}
                 />
               );
             })}

@@ -4,13 +4,15 @@ import Card from './HomeCard';
 
 import useCursor from '../../hooks/useCursor';
 
-import { useQuery } from '@apollo/client';
+import { useQuery, useApolloClient } from '@apollo/client';
 import { FIND_FEED } from '../../graphql/queries/postQueries';
 
 import Styles from '../../styles/home/home__feed.module.css';
 
 const HomeFeed = ({ newPost }) => {
   const [feed, setFeed] = useState([]);
+
+  const client = useApolloClient();
 
   const [noPosts, setNoPosts] = useState(false);
 
@@ -25,6 +27,9 @@ const HomeFeed = ({ newPost }) => {
   //# after feed updates set load to false
   useEffect(() => {
     if (!data) return;
+    if (data.findFeed.length % 5 !== 0) {
+      setNoPosts(true);
+    }
     setFeed(data.findFeed);
     setIsFetching(false);
   }, [data]);
@@ -36,18 +41,19 @@ const HomeFeed = ({ newPost }) => {
       variables: {
         cursor: feed.length > 0 ? feed[feed.length - 1].date : null,
       },
-      updateQuery: (previousResult, { fetchMoreResult, queryVariables }) => {
-        if (!previousResult || !previousResult.findFeed) return;
-        if (fetchMoreResult.findFeed.length === 0) {
-          setIsFetching(false);
-          setNoPosts(true);
-        }
-        return {
-          ...previousResult,
-          // Add the new matches data to the end of the old matches data.
-          findFeed: [...previousResult.findFeed, ...fetchMoreResult.findFeed],
-        };
-      },
+
+      // updateQuery: (previousResult, { fetchMoreResult, queryVariables }) => {
+      //   if (!previousResult || !previousResult.findFeed) return;
+      //   if (fetchMoreResult.findFeed.length === 0) {
+      //     setIsFetching(false);
+      //     setNoPosts(true);
+      //   }
+      //   return {
+      //     ...previousResult,
+      //     // Add the new matches data to the end of the old matches data.
+      //     findFeed: [...previousResult.findFeed, ...fetchMoreResult.findFeed],
+      //   };
+      // },
     });
   }, [isFetching]);
 

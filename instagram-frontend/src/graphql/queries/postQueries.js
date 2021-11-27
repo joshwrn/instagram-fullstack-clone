@@ -44,6 +44,7 @@ export const FIND_POST_BY_ID = gql`
       }
       comments {
         comment
+        id
         user {
           displayName
           id

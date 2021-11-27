@@ -9,6 +9,9 @@ const ProfileFollowerListItem = ({
   Styles,
   handleFollowers,
   currentUser,
+  cursorRef,
+  index,
+  listLength,
 }) => {
   let history = useHistory();
 
@@ -19,7 +22,10 @@ const ProfileFollowerListItem = ({
   };
 
   return (
-    <div className={Styles.listItem}>
+    <div
+      ref={index === listLength - 1 ? cursorRef : null}
+      className={Styles.listItem}
+    >
       <div onClick={handleLink} className={Styles.start}>
         <div className={Styles.avatarContainer}>
           <ImageLoader

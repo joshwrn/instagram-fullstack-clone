@@ -62,7 +62,6 @@ const cache = new InMemoryCache({
           // Concatenate the incoming list items with
           // the existing list items.
           merge(existing = [], incoming) {
-            console.log(existing, incoming);
             return [...existing, ...incoming];
           },
         },
@@ -72,7 +71,7 @@ const cache = new InMemoryCache({
 });
 
 const client = new ApolloClient({
-  cache: new InMemoryCache(),
+  cache: cache,
   link: splitLink,
 });
 

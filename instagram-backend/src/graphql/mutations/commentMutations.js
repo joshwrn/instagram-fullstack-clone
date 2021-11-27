@@ -8,7 +8,7 @@ const { pubsub } = require('../subscriptions/pubSub');
 const typeDefs = gql`
   type Mutation {
     addComment(comment: String!, post: ID!): Comment
-    deleteComment(commentId: ID!, post: ID!): String
+    deleteComment(commentId: ID!): String
   }
 `;
 
@@ -55,11 +55,16 @@ const resolvers = {
     deleteComment: async (root, args, context) => {
       if (context.currentUser) {
         try {
-          const check = await Post.findById(args.post);
-          if (check.user._id === context.currentUser.id) {
+          const comment = await Comment.findById(args.commentId);
+          const post = await Post.findById(comment.post);
+          console.log(post.user.toString(), context.currentUser.id);
+          if (
+            post.user.toString() === context.currentUser.id ||
+            comment.user.toString() === context.currentUser.id
+          ) {
             await Comment.findByIdAndDelete(args.commentId);
             await Post.findOneAndUpdate(
-              { _id: args.post },
+              { _id: comment.post },
               { $pull: { comments: args.commentId } }
             );
           } else {

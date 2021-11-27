@@ -44,11 +44,9 @@ const Post = ({ match }) => {
   });
 
   useEffect(() => {
-    console.log(postData);
     if (postData && !postLoading && !postError) {
       setCurrentPost(postData.findPost);
       setPostUser(postData.findPost.user);
-      console.log(postData);
     }
   }, [postData]);
 

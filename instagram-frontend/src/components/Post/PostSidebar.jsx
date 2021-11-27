@@ -31,6 +31,10 @@ const PostSidebar = ({
   const [comments, setComments] = useState([]);
 
   useEffect(() => {
+    console.log('ps', ownPost);
+  }, [ownPost]);
+
+  useEffect(() => {
     if (currentPost) {
       const getCur = convertTime(currentPost.date, Date.now());
       setAddTime(getCur);
@@ -39,6 +43,7 @@ const PostSidebar = ({
     }
   }, [currentPost]);
 
+  //!!!!!! loading
   if (!currentPost || !postUser) {
     return (
       <div className={Styles.sidebar}>
@@ -159,6 +164,7 @@ const PostSidebar = ({
         setComments={setComments}
         currentPost={currentPost}
         loaded={loaded}
+        ownPost={ownPost}
       />
       <div className={Styles.footer}>
         <div className={Styles.firstChild}>

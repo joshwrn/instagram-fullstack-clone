@@ -4,10 +4,19 @@ import { Link } from 'react-router-dom';
 import convertTime from '../../functions/convertTime';
 import ImageLoader from '../reusable/ImageLoader';
 
-import Styles from '../../styles/post/post__comment-section.module.css';
+import { useAuth } from '../../contexts/AuthContext';
+import { useMutation } from '@apollo/client';
+import { DELETE_COMMENT } from '../../graphql/mutations/commentMutations';
 
-const PostComment = ({ comment, user, time }) => {
+import Styles from '../../styles/post/post__comment-section.module.css';
+import { IoIosTrash } from 'react-icons/io';
+import { IoMdTrash } from 'react-icons/io';
+
+const PostComment = ({ comment, user, time, id, ownPost }) => {
   const [addTime, setAddTime] = useState();
+  const [deleteComment] = useMutation(DELETE_COMMENT);
+
+  const { currentUser } = useAuth();
 
   const getTime = () => {
     const currentTime = Date.now();
@@ -18,6 +27,18 @@ const PostComment = ({ comment, user, time }) => {
   useEffect(() => {
     getTime();
   }, [time]);
+
+  useEffect(() => {
+    console.log(ownPost);
+  }, [ownPost]);
+
+  const handleDelete = () => {
+    deleteComment({
+      variables: {
+        commentId: id,
+      },
+    });
+  };
 
   return (
     <div className={Styles.commentContainer}>
@@ -37,7 +58,20 @@ const PostComment = ({ comment, user, time }) => {
           {comment}
         </p>
       </div>
-      <p className={Styles.time}>{addTime}</p>
+      <div className={Styles.deleteContainer}>
+        {(currentUser?.id === user.id || ownPost) && (
+          <IoMdTrash onClick={handleDelete} className={Styles.delete} />
+        )}
+        <p
+          className={
+            currentUser?.id === user.id || ownPost
+              ? Styles.hideTime
+              : Styles.time
+          }
+        >
+          {addTime}
+        </p>
+      </div>
     </div>
   );
 };
