@@ -2,11 +2,9 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 
 import Card from './HomeCard';
 
-import useIntersect from '../../hooks/useIntersect';
 import useCursor from '../../hooks/useCursor';
 
-import { useAuth } from '../../contexts/AuthContext';
-import { useLazyQuery, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { FIND_FEED } from '../../graphql/queries/postQueries';
 
 import Styles from '../../styles/home/home__feed.module.css';
@@ -28,13 +26,12 @@ const HomeFeed = ({ newPost }) => {
   useEffect(() => {
     if (!data) return;
     setFeed(data.findFeed);
-    console.log('data', data);
     setIsFetching(false);
   }, [data]);
 
   useEffect(() => {
-    if (feed.length === 0 || isFetching === false || noPosts) return;
-    console.log('fetching more');
+    if (noPosts) return setIsFetching(false);
+    if (feed.length === 0 || isFetching === false) return;
     fetchMore({
       variables: {
         cursor: feed.length > 0 ? feed[feed.length - 1].date : null,
@@ -68,7 +65,7 @@ const HomeFeed = ({ newPost }) => {
         );
       })}
       <div className={`${Styles.loaderContainer}`}>
-        {isFetching && !noPosts && <div className="loader" />}
+        {isFetching || loading ? <div className="loader" /> : null}
         {noPosts && <div className={Styles.noPosts}>No More Posts</div>}
       </div>
     </div>

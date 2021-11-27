@@ -55,13 +55,14 @@ const cache = new InMemoryCache({
   typePolicies: {
     Query: {
       fields: {
-        feed: {
+        findFeed: {
           // Don't cache separate results based on
           // any of this field's arguments.
           keyArgs: false,
           // Concatenate the incoming list items with
           // the existing list items.
           merge(existing = [], incoming) {
+            console.log(existing, incoming);
             return [...existing, ...incoming];
           },
         },
@@ -71,7 +72,7 @@ const cache = new InMemoryCache({
 });
 
 const client = new ApolloClient({
-  cache: cache,
+  cache: new InMemoryCache(),
   link: splitLink,
 });
 

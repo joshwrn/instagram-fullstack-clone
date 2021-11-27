@@ -55,7 +55,7 @@ const HomeCardComments = ({ Styles, post }) => {
           to={`/Post/${post.user.id}/${post.id}`}
         >
           <p className={Styles.viewAll}>
-            {post.comments.length === 0 ? 'No Comments' : 'View All Comments'}
+            {comments.length === 0 ? 'No Comments' : 'View All Comments'}
           </p>
         </Link>
         <div className={Styles.commentContainer}>

@@ -30,6 +30,7 @@ const resolvers = {
       const notifications = await Notification.find({
         user: context.currentUser.id,
       })
+        .sort({ date: -1 })
         .populate('from')
         .populate('post');
 

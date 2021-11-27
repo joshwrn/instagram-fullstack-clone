@@ -21,7 +21,7 @@
 .inner {
   display: flex;
   position: fixed;
-  flex-direction: column-reverse;
+  flex-direction: column;
   top: 0;
   width: 100%;
   align-items: flex-start;
