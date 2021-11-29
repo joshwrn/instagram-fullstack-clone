@@ -1,9 +1,13 @@
 import { gql } from '@apollo/client';
 
 export const UPLOAD_POST = gql`
-  mutation Mutation($file: String!, $caption: String) {
+  mutation postUpload($file: String!, $caption: String) {
     postUpload(file: $file, caption: $caption) {
       id
+      image
+      contentType
+      likeCount
+      commentCount
     }
   }
 `;

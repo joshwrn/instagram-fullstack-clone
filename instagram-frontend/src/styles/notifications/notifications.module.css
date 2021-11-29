@@ -25,7 +25,7 @@
   top: 0;
   width: 100%;
   align-items: flex-start;
-  justify-content: flex-start;
+  justify-content: center;
   background-color: var(--primary-transparent-color);
   height: fit-content;
   max-height: 550px;
@@ -36,12 +36,6 @@
   border-radius: 0.25rem;
   box-sizing: border-box;
   padding: 10px 10px;
-}
-
-.loader {
-  align-self: center;
-  width: 11px;
-  height: 11px;
 }
 
 .none {

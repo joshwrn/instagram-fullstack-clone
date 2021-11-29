@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import NavSearchItem from './NavSearchItem';
+import LoadingIcon from '../reusable/LoadingIcon';
 
 import { useLazyQuery } from '@apollo/client';
 import { SEARCH_USERS } from '../../graphql/queries/userQueries';
@@ -51,10 +52,6 @@ const NavSearch = ({
 
   let searchInner;
 
-  if (loading) {
-    searchInner = <div className={`loader ${Styles.loader}`} />;
-  }
-
   if (!loading) {
     searchInner = (
       <>
@@ -76,7 +73,10 @@ const NavSearch = ({
 
   return (
     <div ref={searchRef} className={Styles.container}>
-      <div className={Styles.inner}>{searchInner}</div>
+      <div className={Styles.inner}>
+        <LoadingIcon loading={loading} size={15} />
+        {searchInner}
+      </div>
     </div>
   );
 };

@@ -1,5 +1,8 @@
 const updateCacheWith = (client, newItem, query, variables, data) => {
-  const includedIn = (set, object) => set.map((p) => p.id).includes(object.id);
+  const includedIn = (set, object) => {
+    console.log(set, object);
+    set.map((p) => p.id).includes(object.id);
+  };
   const dataInStore = client.readQuery({
     query: query,
     variables: variables,

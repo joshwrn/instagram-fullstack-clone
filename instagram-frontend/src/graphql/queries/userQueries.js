@@ -43,7 +43,7 @@ export const SEARCH_USERS = gql`
 `;
 
 export const FIND_USER_PROFILE = gql`
-  query Query($id: ID!) {
+  query findUser($id: ID!) {
     findUser(id: $id) {
       displayName
       username
@@ -55,13 +55,6 @@ export const FIND_USER_PROFILE = gql`
       id
       banner {
         image
-        contentType
-      }
-      posts {
-        id
-        image
-        commentCount
-        likeCount
         contentType
       }
       followingCount

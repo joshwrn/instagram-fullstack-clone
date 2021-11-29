@@ -40,10 +40,12 @@ const resolvers = {
     },
     searchUsers: async (parent, { search }) => {
       try {
-        const users = await User.find().or([
-          { displayName: { $regex: search, $options: 'i' } },
-          { username: { $regex: search, $options: 'i' } },
-        ]);
+        const users = await User.find()
+          .or([
+            { displayName: { $regex: search, $options: 'i' } },
+            { username: { $regex: search, $options: 'i' } },
+          ])
+          .limit(5);
         return users;
       } catch (err) {
         throw err;
@@ -51,11 +53,7 @@ const resolvers = {
     },
     findUser: async (root, args) => {
       try {
-        const result = await User.findById(args.id).populate({
-          path: 'posts',
-          limit: 9,
-          options: { sort: { date: -1 } },
-        });
+        const result = await User.findById(args.id);
         // convert id to mongoose object, for aggregation
         const id = mongoose.Types.ObjectId(args.id);
         const stats = await User.aggregate([
@@ -72,21 +70,6 @@ const resolvers = {
         result.followerCount = stats[0].total_followers;
         result.followingCount = stats[0].total_following;
         result.postCount = stats[0].total_posts;
-        for (const post of result.posts) {
-          const id = mongoose.Types.ObjectId(post._id);
-          const postStats = await Post.aggregate([
-            { $match: { _id: id } },
-            {
-              $project: {
-                id: 1,
-                total_likes: { $size: '$likes' },
-                total_comments: { $size: '$comments' },
-              },
-            },
-          ]);
-          post.likeCount = postStats[0].total_likes;
-          post.commentCount = postStats[0].total_comments;
-        }
         return result;
       } catch (error) {
         console.log(error);

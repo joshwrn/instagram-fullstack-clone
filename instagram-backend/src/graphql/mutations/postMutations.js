@@ -10,7 +10,7 @@ const Notification = require('../../models/notification');
 const typeDefs = gql`
   scalar Upload
   type Mutation {
-    postUpload(caption: String, file: String!): Post
+    postUpload(caption: String, file: String!): ProfilePost!
     deletePost(id: ID!): String
     likePost(id: ID!, type: String!): String
   }
@@ -37,7 +37,9 @@ const resolvers = {
         { $push: { posts: result._id } },
         { new: true }
       );
-
+      await result.populate('user');
+      result.likeCount = 0;
+      result.commentCount = 0;
       return result;
     },
 

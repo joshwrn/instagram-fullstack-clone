@@ -87,7 +87,7 @@ const Profile = (props) => {
 
   //+ new post modal
   const getModal = (e) => {
-    e.preventDefault();
+    e && e.preventDefault();
     renderModal ? setRenderModal(false) : setRenderModal(true);
     stopScroll(renderModal);
   };

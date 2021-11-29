@@ -56,13 +56,22 @@ const cache = new InMemoryCache({
     Query: {
       fields: {
         findFeed: {
-          // Don't cache separate results based on
-          // any of this field's arguments.
           keyArgs: false,
-          // Concatenate the incoming list items with
-          // the existing list items.
-          merge(existing = [], incoming) {
-            return [...existing, ...incoming];
+          merge(existing = { hasMore: true, posts: [] }, incoming) {
+            return {
+              hasMore: incoming.hasMore,
+              posts: [...existing.posts, ...incoming.posts],
+            };
+          },
+        },
+        findProfileFeed: {
+          keyArgs: ['id'],
+          merge(existing = { hasMore: true, posts: [] }, incoming) {
+            console.log('exisiting', existing, 'incoming', incoming.posts);
+            return {
+              hasMore: incoming.hasMore,
+              posts: [...existing.posts, ...incoming.posts],
+            };
           },
         },
       },

@@ -1,20 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import convertTime from '../../functions/convertTime';
 import ImageLoader from '../reusable/ImageLoader';
+import LoadingIcon from '../reusable/LoadingIcon';
+
+import convertTime from '../../functions/convertTime';
 
 import { useAuth } from '../../contexts/AuthContext';
 import { useMutation } from '@apollo/client';
 import { DELETE_COMMENT } from '../../graphql/mutations/commentMutations';
 
 import Styles from '../../styles/post/post__comment-section.module.css';
-import { IoIosTrash } from 'react-icons/io';
-import { IoMdTrash } from 'react-icons/io';
 
-const PostComment = ({ comment, user, time, id, ownPost }) => {
+import { IoTrashOutline } from 'react-icons/io5';
+
+const PostComment = ({ comment, user, time, id, ownPost, match }) => {
   const [addTime, setAddTime] = useState();
-  const [deleteComment] = useMutation(DELETE_COMMENT);
+  const [deleteComment, { data, loading, error }] = useMutation(
+    DELETE_COMMENT,
+    {
+      update(cache) {
+        const normalizedId = cache.identify({ id, __typename: 'Comment' });
+        console.log(normalizedId);
+        cache.evict({ id: normalizedId });
+        cache.gc();
+      },
+    }
+  );
 
   const { currentUser } = useAuth();
 
@@ -27,10 +39,6 @@ const PostComment = ({ comment, user, time, id, ownPost }) => {
   useEffect(() => {
     getTime();
   }, [time]);
-
-  useEffect(() => {
-    console.log(ownPost);
-  }, [ownPost]);
 
   const handleDelete = () => {
     deleteComment({
@@ -59,10 +67,19 @@ const PostComment = ({ comment, user, time, id, ownPost }) => {
         </p>
       </div>
       <div className={Styles.deleteContainer}>
-        {(currentUser?.id === user.id || ownPost) && (
-          <IoMdTrash onClick={handleDelete} className={Styles.delete} />
+        {(currentUser?.id === user.id || ownPost) && !loading && (
+          <IoTrashOutline onClick={handleDelete} className={Styles.delete} />
         )}
+        <LoadingIcon loading={loading} size={8} />
         <p
+          style={
+            loading
+              ? {
+                  position: 'absolute',
+                  opacity: '0',
+                }
+              : { position: 'relative', opacity: '1' }
+          }
           className={
             currentUser?.id === user.id || ownPost
               ? Styles.hideTime

@@ -4,16 +4,15 @@ import { NavLink, Link, useHistory } from 'react-router-dom';
 import logo from '../../assets/img/logo/logo-2.png';
 import NavUserMenu from './NavUserMenu';
 import Notifications from '../Notifications/Notifications';
-import NavSearch from './NavSearch';
+import NavSearchBox from './NavSearchBox';
 import UploadModal from '../reusable/UploadModal';
 
 import { light, dark } from '../../functions/theme';
-import debounce from '../../functions/debounce';
 import stopScroll from '../../functions/stopScroll';
 import jc from '../../functions/joinClasses';
 
 import { useAuth } from '../../contexts/AuthContext';
-import { useQuery, useSubscription } from '@apollo/client';
+import { useSubscription } from '@apollo/client';
 import { NEW_NOTIFICATION } from '../../graphql/subscriptions/notificationSubscriptions';
 
 import Styles from '../../styles/nav/nav.module.css';
@@ -39,10 +38,6 @@ const Nav = () => {
     loading: notiLoading,
     error: notiError,
   } = useSubscription(NEW_NOTIFICATION);
-
-  const [openSearch, setOpenSearch] = useState(false);
-  const [searchInput, setSearchInput] = useState('');
-  const [searchValue, setSearchValue] = useState('');
 
   const [renderModal, setRenderModal] = useState(false);
   let history = useHistory();
@@ -111,23 +106,6 @@ const Nav = () => {
     }
   }, [currentUser]);
 
-  const debounceChange = useCallback(
-    debounce((nextValue) => setSearchInput(nextValue), 500),
-    []
-  );
-
-  const handleSearch = (e) => {
-    setSearchValue(e.target.value);
-    debounceChange(e.target.value);
-  };
-
-  const searchRef = useRef();
-
-  const handleSearchModal = (e) => {
-    e.preventDefault();
-    !openSearch && setOpenSearch(true);
-  };
-
   return (
     <>
       {renderModal ? (
@@ -142,28 +120,7 @@ const Nav = () => {
               </div>
             </Link>
             {/*//+ search box */}
-            <div className={Styles.search}>
-              <form autoComplete="off">
-                <input
-                  ref={searchRef}
-                  onChange={handleSearch}
-                  value={searchValue}
-                  className={Styles.searchInput}
-                  onClick={handleSearchModal}
-                  type="text"
-                  placeholder="Search"
-                />
-              </form>
-              {openSearch && searchInput !== '' ? (
-                <NavSearch
-                  setSearchInput={setSearchInput}
-                  setSearchValue={setSearchValue}
-                  searchInput={searchInput}
-                  setOpenSearch={setOpenSearch}
-                  searchRef={searchRef}
-                />
-              ) : null}
-            </div>
+            <NavSearchBox Styles={Styles} />
             <div className={Styles.icons}>
               <NavLink exact to="/">
                 <IoHomeOutline className={jc(Styles.icon, Styles.home)} />

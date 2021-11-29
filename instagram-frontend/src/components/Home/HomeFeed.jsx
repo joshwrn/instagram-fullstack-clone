@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Card from './HomeCard';
+import LoadingIcon from '../reusable/LoadingIcon';
 
 import useCursor from '../../hooks/useCursor';
 
-import { useQuery, useApolloClient } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { FIND_FEED } from '../../graphql/queries/postQueries';
 
 import Styles from '../../styles/home/home__feed.module.css';
@@ -12,13 +13,12 @@ import Styles from '../../styles/home/home__feed.module.css';
 const HomeFeed = ({ newPost }) => {
   const [feed, setFeed] = useState([]);
 
-  const client = useApolloClient();
-
   const [noPosts, setNoPosts] = useState(false);
 
   const { data, loading, error, fetchMore } = useQuery(FIND_FEED, {
     variables: {
       cursor: null,
+      limit: 5,
     },
   });
 
@@ -27,10 +27,10 @@ const HomeFeed = ({ newPost }) => {
   //# after feed updates set load to false
   useEffect(() => {
     if (!data) return;
-    if (data.findFeed.length % 5 !== 0) {
+    if (data.findFeed.hasMore === false) {
       setNoPosts(true);
     }
-    setFeed(data.findFeed);
+    setFeed(data.findFeed.posts);
     setIsFetching(false);
   }, [data]);
 
@@ -40,20 +40,8 @@ const HomeFeed = ({ newPost }) => {
     fetchMore({
       variables: {
         cursor: feed.length > 0 ? feed[feed.length - 1].date : null,
+        limit: 5,
       },
-
-      // updateQuery: (previousResult, { fetchMoreResult, queryVariables }) => {
-      //   if (!previousResult || !previousResult.findFeed) return;
-      //   if (fetchMoreResult.findFeed.length === 0) {
-      //     setIsFetching(false);
-      //     setNoPosts(true);
-      //   }
-      //   return {
-      //     ...previousResult,
-      //     // Add the new matches data to the end of the old matches data.
-      //     findFeed: [...previousResult.findFeed, ...fetchMoreResult.findFeed],
-      //   };
-      // },
     });
   }, [isFetching]);
 
@@ -71,7 +59,13 @@ const HomeFeed = ({ newPost }) => {
         );
       })}
       <div className={`${Styles.loaderContainer}`}>
-        {isFetching || loading ? <div className="loader" /> : null}
+        {
+          <LoadingIcon
+            isFetching={isFetching}
+            loading={loading}
+            end={noPosts}
+          />
+        }
         {noPosts && <div className={Styles.noPosts}>No More Posts</div>}
       </div>
     </div>

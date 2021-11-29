@@ -13,6 +13,7 @@ const PostCommentSection = ({
   comments,
   setComments,
   ownPost,
+  match,
 }) => {
   const ref = useRef();
   const [isFetching, setIsFetching] = useIntersect(ref);
@@ -25,10 +26,6 @@ const PostCommentSection = ({
     const combine = [...comments, ...sliced];
     setComments(combine);
   };
-
-  useEffect(() => {
-    console.log(ownPost);
-  }, [ownPost]);
 
   useEffect(() => {
     if (!isFetching) return;
@@ -69,6 +66,7 @@ const PostCommentSection = ({
                   comment={item.comment}
                   user={item.user}
                   ownPost={ownPost}
+                  match={match}
                 />
               );
             })}

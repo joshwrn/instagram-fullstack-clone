@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+import LoadingIcon from './LoadingIcon';
 
 import resizeImage from '../../functions/resizeImage';
 
@@ -19,6 +21,7 @@ const UploadModal = ({ getModal, setNewPost }) => {
       onError(err) {
         console.log(err);
       },
+      refetchQueries: [`findUser`],
     }
   );
 
@@ -32,9 +35,15 @@ const UploadModal = ({ getModal, setNewPost }) => {
     }
   };
 
+  useEffect(() => {
+    if (data) {
+      getModal();
+    }
+  }, [data]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await uploadPost({
+    uploadPost({
       variables: {
         caption: caption,
         file: postFile,
@@ -86,9 +95,8 @@ const UploadModal = ({ getModal, setNewPost }) => {
             </div>
           </div>
         </div>
-        {uploading ? (
-          <div className={`${Styles.loader} loader`} />
-        ) : (
+        <LoadingIcon loading={uploading} />
+        {!uploading && (
           <button
             onClick={
               postFile !== null ? handleSubmit : (e) => e.preventDefault()

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import ImageLoader from '../reusable/ImageLoader';
+import LoadingIcon from '../reusable/LoadingIcon';
 
 import resizeImage from '../../functions/resizeImage';
 
@@ -177,9 +178,8 @@ const Settings = () => {
             </div>
 
             <div className={Styles.profileBtnContainer}>
-              {uploading ? (
-                <div className="loader"></div>
-              ) : (
+              <LoadingIcon loading={uploading} />
+              {!uploading && (
                 <button
                   onClick={handleSave}
                   type="submit"

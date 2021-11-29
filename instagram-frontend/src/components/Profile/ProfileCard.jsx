@@ -14,11 +14,17 @@ const ProfileCard = ({
   likeCount,
   commentCount,
   contentType,
+  index,
+  cursorRef,
+  feedLength,
 }) => {
   const src = convertSrc(base, contentType);
   return (
     <div className={Styles.card}>
-      <div className={Styles.container}>
+      <div
+        ref={index === feedLength - 1 ? cursorRef : null}
+        className={Styles.container}
+      >
         <Link
           className={Styles.link}
           to={`/post/${match.params.uid}/${postId}`}

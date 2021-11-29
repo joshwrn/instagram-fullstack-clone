@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 import FollowerListItem from './FollowerListItem';
+import LoadingIcon from './LoadingIcon';
 
 import useIntersect from '../../hooks/useIntersect';
 import useCursor from '../../hooks/useCursor';
@@ -127,7 +128,10 @@ const FollowersModal = ({
               />
             </div>
             {/*//+ list of followers is here */}
-            <div className={Styles.listContainer}>{map}</div>
+            <div className={Styles.listContainer}>
+              {map}
+              <LoadingIcon />
+            </div>
           </div>
         </div>
       )}

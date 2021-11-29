@@ -31,10 +31,6 @@ const PostSidebar = ({
   const [comments, setComments] = useState([]);
 
   useEffect(() => {
-    console.log('ps', ownPost);
-  }, [ownPost]);
-
-  useEffect(() => {
     if (currentPost) {
       const getCur = convertTime(currentPost.date, Date.now());
       setAddTime(getCur);
@@ -48,67 +44,37 @@ const PostSidebar = ({
     return (
       <div className={Styles.sidebar}>
         <div className={Styles.top}>
-          <Link to={`/profile/${match.params.uid}`}>
-            <div className={Styles.profileContainer}>
-              <div className={Styles.imageContainer}>
-                <div
-                  className={Loading.profileImg + ' ' + 'gradientLoad'}
-                  style={loaded ? { display: 'none' } : null}
-                />
-              </div>
-              <div
-                className={Styles.nameContainer}
-                style={loaded ? { display: 'none' } : null}
-              >
-                <div className={Loading.displayName + ' ' + 'gradientLoad'} />
-                <div className={Loading.username + ' ' + 'gradientLoad'} />
-              </div>
+          <div className={Styles.profileContainer}>
+            <div className={Styles.imageContainer}>
+              <div className={Loading.profileImg + ' ' + 'gradientLoad'} />
             </div>
-          </Link>
+            <div className={Styles.nameContainer}>
+              <div className={Loading.displayName + ' ' + 'gradientLoad'} />
+              <div className={Loading.username + ' ' + 'gradientLoad'} />
+            </div>
+          </div>
           <div className={Styles.captionContainer}>
             <p className={Styles.caption}></p>
           </div>
         </div>
         {/*//+ comments */}
-        <PostCommentSection
-          comments={comments}
-          setComments={setComments}
-          currentPost={currentPost}
-          loaded={loaded}
-        />
+        <PostCommentSection />
         <div className={Styles.footer}>
           <div className={Styles.firstChild}>
             <div className={Styles.left}>
               {/*//+ liked button */}
-              <PostLikeButton
-                Styles={Styles}
-                match={match}
-                currentPost={currentPost}
-                IoHeartOutline={IoHeartOutline}
-                setTotalLikes={setTotalLikes}
-              />
+              <PostLikeButton />
               <IoChatbubbleOutline className={Styles.postIcon} />
               <IoShareOutline className={Styles.postIcon} />
             </div>
             {/*//+ delete menu */}
-            <PostMenu
-              match={match}
-              ownPost={ownPost}
-              currentPost={currentPost}
-            />
+            <PostMenu />
           </div>
           <div className={Styles.infoContainer}>
-            <p className={Styles.likes}>{totalLikes} likes</p>
-            <p className={Styles.time}>{addTime}</p>
+            <p className={Styles.likes}>0 likes</p>
           </div>
           {/*//+ comment box */}
-          <PostCommentBox
-            match={match}
-            comments={comments}
-            setComments={setComments}
-            IoSendOutline={IoSendOutline}
-            Styles={Styles}
-          />
+          <PostCommentBox IoSendOutline={IoSendOutline} Styles={Styles} />
         </div>
       </div>
     );
@@ -164,6 +130,7 @@ const PostSidebar = ({
         setComments={setComments}
         currentPost={currentPost}
         loaded={loaded}
+        match={match}
         ownPost={ownPost}
       />
       <div className={Styles.footer}>
