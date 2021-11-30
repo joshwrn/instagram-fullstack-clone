@@ -17,7 +17,6 @@ const PostCommentSection = ({
   comments,
   setComments,
   ownPost,
-  match,
 }) => {
   const [end, setEnd] = useState(false);
   const [findComments, { loading, data, fetchMore }] = useLazyQuery(
@@ -90,7 +89,6 @@ const PostCommentSection = ({
                   comment={item.comment}
                   user={item.user}
                   ownPost={ownPost}
-                  match={match}
                   cursorRef={cursorRef}
                   index={index}
                   commentsLength={comments.length}

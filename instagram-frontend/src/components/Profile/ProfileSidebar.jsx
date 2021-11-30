@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import FollowersModal from '../reusable/FollowersModal';
+import ImageLoader from '../reusable/ImageLoader';
 
 import stopScroll from '../../functions/stopScroll';
 
@@ -24,13 +25,42 @@ const ProfileSidebar = ({ currentProfile, loaded, currentUser }) => {
     sidebar = (
       <div className={Styles.sidebar}>
         <div className={Styles.usernames}>
-          <div className={`${Styles.nameLoading} gradientLoad`} />
-          <div className={`${Styles.usernameLoading} gradientLoad`} />
+          <ImageLoader
+            type="div"
+            borderRadius="8px"
+            width="160px"
+            height="32px"
+          />
+          <ImageLoader
+            type="div"
+            borderRadius="8px"
+            width="96px"
+            height="16px"
+            margin="8px 0 0 0"
+          />
         </div>
-        <div className={`${Styles.counterLoading}`}>
-          <div className={`${Styles.counterLoading} gradientLoad`} />
-          <div className={`${Styles.counterLoading} gradientLoad`} />
-          <div className={`${Styles.counterLoading} gradientLoad`} />
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <ImageLoader
+            type="div"
+            borderRadius="8px"
+            width="200px"
+            height="32px"
+            margin="20px 0 0 0"
+          />
+          <ImageLoader
+            type="div"
+            borderRadius="8px"
+            width="200px"
+            height="32px"
+            margin="20px 0 0 0"
+          />
+          <ImageLoader
+            type="div"
+            borderRadius="8px"
+            width="200px"
+            height="32px"
+            margin="20px 0 0 0"
+          />
         </div>
       </div>
     );

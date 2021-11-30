@@ -85,10 +85,6 @@ const PostSidebar = ({
         <Link to={`/profile/${match.params.uid}`}>
           <div className={Styles.profileContainer}>
             <div className={Styles.imageContainer}>
-              <div
-                className={Loading.profileImg + ' ' + 'gradientLoad'}
-                style={loaded ? { display: 'none' } : null}
-              />
               <img
                 style={!loaded ? { display: 'none' } : null}
                 onLoad={handleLoad}
@@ -129,7 +125,6 @@ const PostSidebar = ({
         setComments={setComments}
         currentPostId={currentPost.id}
         loaded={loaded}
-        match={match}
         ownPost={ownPost}
       />
       <div className={Styles.footer}>

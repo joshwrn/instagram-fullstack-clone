@@ -4,33 +4,6 @@ import debounce from '../../functions/debounce';
 
 import styled from 'styled-components';
 
-const SearchInput = styled.input`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0em 16px 0 16px;
-  background: rgba(32, 32, 32, 0);
-  border: 1px solid rgba(124, 124, 124, 0.281);
-  border-radius: 8px;
-  gap: 8px;
-  text-align: center;
-  height: 28px;
-  transition: width 0.5s;
-  box-sizing: border-box;
-  width: 175px;
-  color: ${({ theme }) => theme.font.secondary};
-  &:focus {
-    width: 250px;
-    color: ${({ theme }) => theme.font.primary};
-    &::placeholder {
-      color: transparent;
-    }
-  }
-  @media only screen and (max-width: 850px) {
-    display: none;
-  }
-`;
-
 const NavSearchBox = () => {
   const [searchInput, setSearchInput] = useState('');
   const [searchValue, setSearchValue] = useState('');
@@ -73,5 +46,32 @@ const NavSearchBox = () => {
     </div>
   );
 };
+
+const SearchInput = styled.input`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0em 16px 0 16px;
+  background: rgba(32, 32, 32, 0);
+  border: 1px solid rgba(124, 124, 124, 0.281);
+  border-radius: 8px;
+  gap: 8px;
+  text-align: center;
+  height: 28px;
+  transition: width 0.5s;
+  box-sizing: border-box;
+  width: 175px;
+  color: ${({ theme }) => theme.font.secondary};
+  &:focus {
+    width: 250px;
+    color: ${({ theme }) => theme.font.primary};
+    &::placeholder {
+      color: transparent;
+    }
+  }
+  @media only screen and (max-width: 850px) {
+    display: none;
+  }
+`;
 
 export default NavSearchBox;

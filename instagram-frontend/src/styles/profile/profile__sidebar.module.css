@@ -78,33 +78,6 @@
   color: var(--primary-font-color);
 }
 
-/*+ loading */
-
-.nameLoading {
-  border-radius: 8px;
-  width: 160px;
-  height: 32px;
-}
-
-.usernameLoading {
-  margin-top: 8px;
-  border-radius: 8px;
-  width: 96px;
-  height: 16px;
-}
-
-.countersLoading {
-  display: flex;
-  flex-direction: column;
-}
-
-.counterLoading {
-  margin-top: 20px;
-  border-radius: 8px;
-  width: 208px;
-  height: 32px;
-}
-
 /*! mobile */
 @media only screen and (max-width: 850px) {
   .inner {

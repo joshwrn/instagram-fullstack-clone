@@ -20,7 +20,6 @@ const PostComment = ({
   time,
   id,
   ownPost,
-  match,
   index,
   commentsLength,
   cursorRef,
@@ -31,7 +30,6 @@ const PostComment = ({
     {
       update(cache) {
         const normalizedId = cache.identify({ id, __typename: 'Comment' });
-        console.log(normalizedId);
         cache.evict({ id: normalizedId });
         cache.gc();
       },
