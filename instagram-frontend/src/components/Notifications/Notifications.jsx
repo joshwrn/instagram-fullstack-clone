@@ -55,7 +55,7 @@ const Notifications = ({
   return (
     <div onClick={handleNoti} className={Styles.container}>
       <div className={Styles.inner}>
-        <LoadingIcon loading={loading} />
+        <LoadingIcon size={12} loading={loading} />
         {notiFragment}
       </div>
     </div>

@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import ImageLoader from '../reusable/ImageLoader';
-import convertSrc from '../../functions/convertSrc.js';
 
 import { IoHeartOutline, IoChatbubbleOutline } from 'react-icons/io5';
 import Styles from '../../styles/profile/profile__card.module.css';
@@ -18,7 +17,6 @@ const ProfileCard = ({
   cursorRef,
   feedLength,
 }) => {
-  const src = convertSrc(base, contentType);
   return (
     <div className={Styles.card}>
       <div
@@ -38,10 +36,17 @@ const ProfileCard = ({
               <p>{commentCount}</p>
             </div>
           </div>
-          <ImageLoader src={src} borderRadius="9px" />
+          <ImageLoader
+            src={`data:${contentType};base64,${base}`}
+            borderRadius="9px"
+          />
         </Link>
       </div>
-      <img className={Styles.blur} src={src} alt="" />
+      <img
+        className={Styles.blur}
+        src={`data:${contentType};base64,${base}`}
+        alt=""
+      />
     </div>
   );
 };

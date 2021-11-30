@@ -14,7 +14,17 @@ import Styles from '../../styles/post/post__comment-section.module.css';
 
 import { IoTrashOutline } from 'react-icons/io5';
 
-const PostComment = ({ comment, user, time, id, ownPost, match }) => {
+const PostComment = ({
+  comment,
+  user,
+  time,
+  id,
+  ownPost,
+  match,
+  index,
+  commentsLength,
+  cursorRef,
+}) => {
   const [addTime, setAddTime] = useState();
   const [deleteComment, { data, loading, error }] = useMutation(
     DELETE_COMMENT,
@@ -49,7 +59,10 @@ const PostComment = ({ comment, user, time, id, ownPost, match }) => {
   };
 
   return (
-    <div className={Styles.commentContainer}>
+    <div
+      ref={commentsLength === index + 1 ? cursorRef : null}
+      className={Styles.commentContainer}
+    >
       <div className={Styles.start}>
         <Link to={`/profile/${user.id}`}>
           <ImageLoader

@@ -31,6 +31,7 @@ const resolvers = {
         user: context.currentUser.id,
       })
         .sort({ date: -1 })
+        .limit(10)
         .populate('from')
         .populate('post');
 

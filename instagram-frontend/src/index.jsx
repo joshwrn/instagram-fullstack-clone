@@ -67,10 +67,18 @@ const cache = new InMemoryCache({
         findProfileFeed: {
           keyArgs: ['id'],
           merge(existing = { hasMore: true, posts: [] }, incoming) {
-            console.log('exisiting', existing, 'incoming', incoming.posts);
             return {
               hasMore: incoming.hasMore,
               posts: [...existing.posts, ...incoming.posts],
+            };
+          },
+        },
+        findPostComments: {
+          keyArgs: ['id'],
+          merge(existing = { hasMore: true, comments: [] }, incoming) {
+            return {
+              hasMore: incoming.hasMore,
+              comments: [...existing.comments, ...incoming.comments],
             };
           },
         },

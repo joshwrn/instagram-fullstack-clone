@@ -11,8 +11,8 @@ const spin = keyframes`
 `;
 
 const Loader = styled.div`
-  border: 3px solid var(--primary-background-color);
-  border-top: 3px solid var(--secondary-font-color);
+  border: 3px solid #525252;
+  border-top: 3px solid ${(props) => props.theme.font.secondary};
   border-radius: 50%;
   width: ${(props) => props.size}px;
   height: ${(props) => props.size}px;

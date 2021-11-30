@@ -28,7 +28,6 @@
   justify-content: center;
   background-color: var(--primary-transparent-color);
   height: fit-content;
-  max-height: 550px;
   overflow-y: scroll;
   border: var(--primary-border);
   box-shadow: 0px 0px 26px 5px rgba(0, 0, 0, 0.089);

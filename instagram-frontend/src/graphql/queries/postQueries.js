@@ -61,9 +61,23 @@ export const FIND_POST_BY_ID = gql`
       likes {
         id
       }
+      user {
+        username
+        displayName
+        avatar {
+          image
+          contentType
+        }
+      }
+    }
+  }
+`;
+
+export const FIND_POST_COMMENTS = gql`
+  query FindPostComments($id: ID!, $limit: Int!, $skip: Int!) {
+    findPostComments(id: $id, limit: $limit, skip: $skip) {
+      hasMore
       comments {
-        comment
-        id
         user {
           displayName
           id
@@ -72,15 +86,9 @@ export const FIND_POST_BY_ID = gql`
             contentType
           }
         }
+        id
+        comment
         date
-      }
-      user {
-        username
-        displayName
-        avatar {
-          image
-          contentType
-        }
       }
     }
   }

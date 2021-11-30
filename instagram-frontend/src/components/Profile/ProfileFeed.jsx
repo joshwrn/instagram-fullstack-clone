@@ -10,7 +10,7 @@ import { FIND_PROFILE_FEED } from '../../graphql/queries/postQueries';
 
 import Styles from '../../styles/profile/profile__feed.module.css';
 
-const ProfileFeed = ({ match, newPost, noPosts, posts }) => {
+const ProfileFeed = ({ match, noPosts }) => {
   const { data, loading, error, fetchMore } = useQuery(FIND_PROFILE_FEED, {
     variables: { id: match && match.params.uid, skip: 0, limit: 9 },
     onError: (err) => console.log(err),

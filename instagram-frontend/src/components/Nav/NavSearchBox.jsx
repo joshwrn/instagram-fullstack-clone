@@ -2,15 +2,13 @@ import React, { useState, useCallback, useRef, useEffect } from 'react';
 import NavSearch from './NavSearch';
 import debounce from '../../functions/debounce';
 
-import Styles from '../../styles/nav/nav.module.css';
-
 import styled from 'styled-components';
 
 const SearchInput = styled.input`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0em 1em 0 1em;
+  padding: 0em 16px 0 16px;
   background: rgba(32, 32, 32, 0);
   border: 1px solid rgba(124, 124, 124, 0.281);
   border-radius: 8px;
@@ -20,13 +18,16 @@ const SearchInput = styled.input`
   transition: width 0.5s;
   box-sizing: border-box;
   width: 175px;
-  color: var(--secondary-font-color);
+  color: ${({ theme }) => theme.font.secondary};
   &:focus {
     width: 250px;
-    color: var(--primary-font-color);
+    color: ${({ theme }) => theme.font.primary};
     &::placeholder {
       color: transparent;
     }
+  }
+  @media only screen and (max-width: 850px) {
+    display: none;
   }
 `;
 
@@ -48,7 +49,7 @@ const NavSearchBox = () => {
   const searchRef = useRef();
 
   return (
-    <div className={Styles.search}>
+    <div>
       <form autoComplete="off">
         <SearchInput
           open={openSearch}

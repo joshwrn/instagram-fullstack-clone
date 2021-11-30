@@ -10,7 +10,7 @@ import { useMutation } from '@apollo/client';
 import { IoCloseOutline, IoCloudUploadOutline } from 'react-icons/io5';
 import Styles from '../../styles/profile/profile__upload.module.css';
 
-const UploadModal = ({ getModal, setNewPost }) => {
+const UploadModal = ({ getModal, refetch }) => {
   const [postFile, setPostFile] = useState(null);
   const [caption, setCaption] = useState('');
   const [imageFile, setImageFile] = useState();
@@ -21,7 +21,7 @@ const UploadModal = ({ getModal, setNewPost }) => {
       onError(err) {
         console.log(err);
       },
-      refetchQueries: [`findUser`],
+      refetchQueries: [refetch],
     }
   );
 

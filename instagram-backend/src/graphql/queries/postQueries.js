@@ -1,6 +1,7 @@
 const { gql } = require('apollo-server-express');
 const Post = require('../../models/post');
 const User = require('../../models/user');
+const Comment = require('../../models/comment');
 const mongoose = require('mongoose');
 
 const typeDefs = gql`
@@ -19,8 +20,13 @@ const typeDefs = gql`
     posts: [Post]
     hasMore: Boolean!
   }
+  type CommentFeed {
+    comments: [Comment]
+    hasMore: Boolean!
+  }
   type Query {
     findPost(id: ID!): Post
+    findPostComments(id: ID!, limit: Int!, skip: Int!): CommentFeed!
     findProfileFeed(id: ID!, limit: Int!, skip: Int!): ProfileFeed!
     findFeed(limit: Int, cursor: String): HomeFeed!
   }
@@ -32,16 +38,22 @@ const resolvers = {
     findPost: async (root, args) => {
       const result = await Post.findById(args.id)
         .populate('user')
-        .populate('likes')
-        .populate({
-          path: 'comments',
-          perDocumentLimit: 10,
-          options: { sort: { date: -1 } },
-          populate: {
-            path: 'user',
-          },
-        });
+        .populate('likes');
       return result;
+    },
+    // get comments for a post
+    findPostComments: async (root, { id, skip, limit }) => {
+      const result = await Comment.find({ post: id })
+        .populate('user')
+        .limit(limit + 1)
+        .skip(skip)
+        .sort({ date: -1 });
+      let hasMore = false;
+      let comments = result.slice(0, limit);
+      if (result.length > limit) {
+        hasMore = true;
+      }
+      return { hasMore: hasMore, comments: comments };
     },
     //+ Profile Feed
     findProfileFeed: async (root, { id, limit, skip }) => {

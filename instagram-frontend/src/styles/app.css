@@ -94,25 +94,6 @@ html {
   overflow: hidden;
 }
 
-/* loading animation */
-.loader {
-  border: 3px solid var(--primary-background-color);
-  border-top: 3px solid var(--secondary-font-color);
-  border-radius: 50%;
-  width: 21px;
-  height: 21px;
-  animation: spin 2s linear infinite;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
 .gradientLoad {
   animation: gradientMove 2s linear infinite;
   background: var(--loading-gradient);

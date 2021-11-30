@@ -35,7 +35,6 @@ const PostSidebar = ({
       const getCur = convertTime(currentPost.date, Date.now());
       setAddTime(getCur);
       setTotalLikes(currentPost.likes.length);
-      setComments(currentPost.comments);
     }
   }, [currentPost]);
 
@@ -128,7 +127,7 @@ const PostSidebar = ({
       <PostCommentSection
         comments={comments}
         setComments={setComments}
-        currentPost={currentPost}
+        currentPostId={currentPost.id}
         loaded={loaded}
         match={match}
         ownPost={ownPost}

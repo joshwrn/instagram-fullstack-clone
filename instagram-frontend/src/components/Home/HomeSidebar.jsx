@@ -31,7 +31,7 @@ const Sidebar = ({ setNewPost }) => {
 
   //+ new post modal
   const getModal = (e) => {
-    e.preventDefault();
+    e && e.preventDefault();
     renderModal ? setRenderModal(false) : setRenderModal(true);
     stopScroll(renderModal);
   };
@@ -51,7 +51,11 @@ const Sidebar = ({ setNewPost }) => {
       )}
 
       {renderModal && (
-        <UploadModal setNewPost={setNewPost} getModal={getModal} />
+        <UploadModal
+          refetch={`findProfileFeed`}
+          setNewPost={setNewPost}
+          getModal={getModal}
+        />
       )}
       <div className={Styles.container}>
         {userProfile && (

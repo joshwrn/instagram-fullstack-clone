@@ -24,10 +24,9 @@ import {
   IoAddCircleOutline,
 } from 'react-icons/io5';
 
-const Nav = () => {
+const Nav = ({ theme, setTheme }) => {
   const { currentUser } = useAuth();
 
-  const [theme, setTheme] = useState('light');
   const [openMenu, setOpenMenu] = useState(false);
 
   const [currentNotis, setCurrentNotis] = useState(0);

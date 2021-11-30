@@ -1,45 +1,69 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import PostComment from './PostComment';
+import LoadingIcon from '../reusable/LoadingIcon';
 
-import useIntersect from '../../hooks/useIntersect';
+import useCursor from '../../hooks/useCursor';
+
+import { useLazyQuery } from '@apollo/client';
+import { FIND_POST_COMMENTS } from '../../graphql/queries/postQueries';
 
 import Styles from '../../styles/post/post__comment-section.module.css';
 import Loading from '../../styles/post/post__loading.module.css';
 
 const PostCommentSection = ({
   loaded,
-  currentPost,
+  currentPostId,
   comments,
   setComments,
   ownPost,
   match,
 }) => {
-  const ref = useRef();
-  const [isFetching, setIsFetching] = useIntersect(ref);
-
-  const getMore = () => {
-    console.log('get more');
-    if (!currentPost) return;
-    const reverse = currentPost.comments.slice(0).reverse();
-    const sliced = reverse.slice(comments.length, comments.length + 10);
-    const combine = [...comments, ...sliced];
-    setComments(combine);
-  };
+  const [end, setEnd] = useState(false);
+  const [findComments, { loading, data, fetchMore }] = useLazyQuery(
+    FIND_POST_COMMENTS,
+    {
+      onError: (error) => console.log(error),
+    }
+  );
+  const [isFetching, setIsFetching, cursorRef] = useCursor(end, loading);
 
   useEffect(() => {
-    if (!isFetching) return;
-    getMore();
-  }, [isFetching]);
+    if (currentPostId) {
+      findComments({
+        variables: {
+          id: currentPostId,
+          skip: 0,
+          limit: 10,
+        },
+      });
+    }
+  }, [currentPostId]);
 
   useEffect(() => {
+    if (!data) return;
+    if (data.findPostComments.hasMore === false) {
+      setEnd(true);
+    }
+    setComments(data.findPostComments.comments);
     setIsFetching(false);
-  }, [comments]);
+  }, [data]);
+
+  useEffect(() => {
+    if (isFetching) {
+      fetchMore({
+        variables: {
+          id: currentPostId,
+          skip: comments.length,
+          limit: 10,
+        },
+      });
+    }
+  }, [isFetching]);
 
   return (
     <div className={Styles.commentsContainer}>
       <div className={Styles.comments}>
-        {/* <p className="view-all">View All Comments</p> */}
         {!loaded ? (
           <>
             <div className={Styles.commentContainer}>
@@ -57,7 +81,7 @@ const PostCommentSection = ({
           </>
         ) : (
           <>
-            {comments.map((item) => {
+            {comments.map((item, index) => {
               return (
                 <PostComment
                   key={item.date}
@@ -67,12 +91,22 @@ const PostCommentSection = ({
                   user={item.user}
                   ownPost={ownPost}
                   match={match}
+                  cursorRef={cursorRef}
+                  index={index}
+                  commentsLength={comments.length}
                 />
               );
             })}
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <LoadingIcon
+                size={12}
+                isFetching={isFetching}
+                loading={loading}
+                end={end}
+              />
+            </div>
           </>
         )}
-        <div ref={ref}></div>
       </div>
     </div>
   );

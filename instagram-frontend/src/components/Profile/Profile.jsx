@@ -21,7 +21,6 @@ const Profile = (props) => {
   const [currentProfile, setCurrentProfile] = useState(null);
   const [avatarModal, setAvatarModal] = useState(false);
   const [renderModal, setRenderModal] = useState(false);
-  const [newPost, setNewPost] = useState(0);
   const [noPosts, setNoPosts] = useState(false);
   const { match } = props;
   const { currentUser, userProfile } = useAuth();
@@ -68,10 +67,6 @@ const Profile = (props) => {
   }, [userData]);
 
   //+ when theres a new post update the user profile
-  useEffect(() => {
-    setNoPosts(false);
-    // return getUserObject();
-  }, [newPost]);
 
   useEffect(() => {
     // getUserObject();
@@ -112,6 +107,7 @@ const Profile = (props) => {
     );
   }
 
+  //! no profile found
   if (!currentProfile) {
     return (
       <div className={Styles.profile}>
@@ -142,9 +138,6 @@ const Profile = (props) => {
                 />
                 {actionButton}
               </div>
-              {renderModal && (
-                <UploadModal setNewPost={setNewPost} getModal={getModal} />
-              )}
             </div>
           </div>
         </div>
@@ -159,7 +152,6 @@ const Profile = (props) => {
           {/*//+ posts */}
           <ProfileFeed
             posts={[]}
-            newPost={newPost}
             setLoading={setLoading}
             loading={loading}
             loaded={loaded}
@@ -231,7 +223,7 @@ const Profile = (props) => {
                 {actionButton}
               </div>
               {renderModal && (
-                <UploadModal setNewPost={setNewPost} getModal={getModal} />
+                <UploadModal refetch={`findProfileFeed`} getModal={getModal} />
               )}
             </div>
           </div>
@@ -247,7 +239,6 @@ const Profile = (props) => {
           {/*//+ posts */}
           <ProfileFeed
             posts={currentProfile.posts}
-            newPost={newPost}
             setLoading={setLoading}
             loading={loading}
             loaded={loaded}
