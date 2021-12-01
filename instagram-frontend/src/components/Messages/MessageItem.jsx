@@ -17,6 +17,7 @@ const MessageItem = ({
 }) => {
   const [sent, setSent] = useState(false);
   const [group, setGroup] = useState(true);
+  const [loaded, setLoaded] = useState(false);
   const { currentUser } = useAuth();
 
   const getStatus = () => {
@@ -26,6 +27,7 @@ const MessageItem = ({
     } else {
       setSent(false);
     }
+    setLoaded(true);
   };
 
   useEffect(() => {
@@ -49,29 +51,36 @@ const MessageItem = ({
   }, [recipient, sender, thread]);
 
   return (
-    <ItemDiv ref={cursorRef} group={group} sent={sent}>
-      <Bubble sent={sent}>
-        <p>{message}</p>
-      </Bubble>
-      <SideContainer>
-        {!group && currentUser && (
-          <Link to={`/profile/${sent ? currentUser.id : sender.id}`}>
-            <ImageLoader
-              height="38px"
-              width="38px"
-              borderRadius="100%"
-              src={`data:${
-                sent
-                  ? currentUser.avatar.contentType
-                  : sender.avatar.contentType
-              };base64,${
-                sent ? currentUser.avatar.image : sender.avatar.image
-              }`}
-            />
-          </Link>
-        )}
-      </SideContainer>
-    </ItemDiv>
+    <>
+      {loaded && (
+        <ItemDiv ref={cursorRef} group={group} sent={sent}>
+          <BubbleWrapper>
+            <Bubble sent={sent}>
+              <p>{message}</p>
+            </Bubble>
+            {index === 0 && <Status>{seen}</Status>}
+          </BubbleWrapper>
+          <SideContainer>
+            {!group && currentUser && (
+              <Link to={`/profile/${sent ? currentUser.id : sender.id}`}>
+                <ImageLoader
+                  height="38px"
+                  width="38px"
+                  borderRadius="100%"
+                  src={`data:${
+                    sent
+                      ? currentUser.avatar.contentType
+                      : sender.avatar.contentType
+                  };base64,${
+                    sent ? currentUser.avatar.image : sender.avatar.image
+                  }`}
+                />
+              </Link>
+            )}
+          </SideContainer>
+        </ItemDiv>
+      )}
+    </>
   );
 };
 
@@ -80,53 +89,42 @@ const ItemDiv = styled.div`
   width: 100%;
   height: fit-content;
   align-items: center;
-  flex-direction: ${(props) => (props.sent ? 'row' : 'row-reverse')};
+  justify-content: ${(props) => (props.sent ? 'flex-end' : 'flex-start')};
   overflow: hidden;
   flex: 0 0 auto;
   box-sizing: border-box;
   position: relative;
   z-index: 0;
-  border-style: solid;
-  border-color: ${(props) => props.theme.background.primary};
-  border-width: ${(props) => (props.group ? '0px 10px' : '20px 10px 0 10px')};
-  &:before {
-    content: '';
-    flex: 1;
-    background: var(--primary-background-color);
-    pointer-events: none;
-    z-index: 10;
-    position: relative;
-    width: 100%;
-    height: 100%;
-  }
+  padding: ${(props) => (props.group ? '2px 10px' : '20px 10px 0 10px')};
   @media only screen and (max-width: 850px) {
     border-width: 2px 2px;
   }
 `;
 
+const BubbleWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: fit-content;
+  align-items: flex-end;
+`;
+
 const Bubble = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: ${({ theme, sent }) =>
-    sent ? 'none' : theme.message.bubble};
-  border-radius: 32px;
-  padding: 16px 18px;
+    sent ? '#1982fc' : theme.message.bubble};
+  border-radius: 14px;
+  padding: 10px 10px;
   max-width: 60%;
+  min-width: 30px;
   box-sizing: border-box;
   color: ${({ theme, sent }) => (sent ? 'white' : theme.font.primary)};
   z-index: 0;
   position: relative;
   font-size: 15px;
   word-break: break-word;
-  &:before {
-    content: '';
-    position: absolute;
-    left: -15px;
-    top: -15px;
-    bottom: -15px;
-    right: -15px;
-    border: 18px solid ${(props) => props.theme.background.primary};
-    border-radius: 40px;
-    pointer-events: none;
-  }
   @media only screen and (max-width: 850px) {
     max-width: ${(props) => (props.sent ? '75%' : '80%')};
   }
@@ -151,6 +149,15 @@ const SideContainer = styled.div`
       display: none;
     }
   }
+`;
+
+const Status = styled.div`
+  display: flex;
+  align-items: center;
+  color: ${(props) => props.theme.font.secondary};
+  font-size: 12px;
+  margin-top: 3px;
+  margin-right: 4px;
 `;
 
 export default MessageItem;

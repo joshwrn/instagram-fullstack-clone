@@ -19,14 +19,12 @@ const MessageInputBox = ({ currentThread, Styles, setCurrentIndex }) => {
     },
     update: (store, response) => {
       const includedIn = (set, object) => {
-        console.log(set, object);
         set.map((p) => p.id).includes(object.id);
       };
       const dataInStore = client.readQuery({
         query: READ_MESSAGES,
         variables: { threadId: currentThread.id, limit: 25, skip: 0 },
       });
-      console.log(dataInStore);
       if (!dataInStore) return;
       if (
         !includedIn(
@@ -40,10 +38,7 @@ const MessageInputBox = ({ currentThread, Styles, setCurrentIndex }) => {
           data: {
             readMessages: {
               hasMore: dataInStore.readMessages.hasMore,
-              messages: [
-                response.data.createMessage,
-                ...dataInStore.readMessages.messages,
-              ],
+              messages: [response.data.createMessage],
             },
           },
         });

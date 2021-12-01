@@ -112,7 +112,8 @@
   overflow-y: scroll;
   position: relative;
   z-index: 10;
-  background-image: linear-gradient(to top, #00a3e4, #1982fc, #6e39ff);
+  background-color: var(--primary-background-color);
+  /* background-image: linear-gradient(to top, #00a3e4, #1982fc, #6e39ff); */
   background-position: bottom;
   background-size: 100vw 100vh;
 }

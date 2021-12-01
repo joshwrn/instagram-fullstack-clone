@@ -9,8 +9,11 @@ import { useLazyQuery, useSubscription, useApolloClient } from '@apollo/client';
 import { READ_MESSAGES } from '../../graphql/mutations/messageMutations';
 import { NEW_MESSAGE } from '../../graphql/subscriptions/messageSubscriptions';
 
+import { useTheme } from 'styled-components';
+
 const MessageArea = ({ currentThread, Styles, dummyRef }) => {
   const client = useApolloClient();
+  const theme = useTheme();
   const [thread, setThread] = useState([]);
   const [end, setEnd] = useState(false);
   const [readMessages, { data, loading, error, fetchMore }] = useLazyQuery(
@@ -36,10 +39,17 @@ const MessageArea = ({ currentThread, Styles, dummyRef }) => {
   // set the thread and whether or not the end of the thread has been reached
   useEffect(() => {
     if (!data) return;
+    console.log('data', data);
     if (data.readMessages.hasMore === false) {
       setEnd(true);
     }
-    setThread(data.readMessages.messages);
+    const sortedMessages = [...thread, ...data.readMessages.messages].sort(
+      (a, b) => {
+        return b.date - a.date;
+      }
+    );
+    const assign = [...new Set(sortedMessages)];
+    setThread(assign);
     setIsFetching(false);
   }, [data]);
 
@@ -55,7 +65,7 @@ const MessageArea = ({ currentThread, Styles, dummyRef }) => {
     });
   }, [isFetching]);
 
-  // subscribe to new messages
+  //subscribe to new messages
   const {
     data: subData,
     loading: subLoad,
@@ -84,7 +94,7 @@ const MessageArea = ({ currentThread, Styles, dummyRef }) => {
         data: {
           readMessages: {
             hasMore: dataInStore.readMessages.hasMore,
-            messages: [newMessage, ...dataInStore.readMessages.messages],
+            messages: [newMessage],
           },
         },
       });
@@ -98,7 +108,7 @@ const MessageArea = ({ currentThread, Styles, dummyRef }) => {
         return (
           <MessageItem
             key={item.id}
-            seen={item.seen}
+            seen={item.seen ? 'seen' : 'unseen'}
             time={item.date}
             recipient={item.recipient}
             sender={item.sender}
@@ -113,7 +123,7 @@ const MessageArea = ({ currentThread, Styles, dummyRef }) => {
         style={{
           display: 'flex',
           justifyContent: 'center',
-          backgroundColor: 'black',
+          backgroundColor: theme.background.primary,
         }}
       >
         <LoadingIcon isFetching={isFetching} loading={loading} end={end} />

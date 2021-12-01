@@ -85,6 +85,16 @@ const cache = new InMemoryCache({
         readMessages: {
           keyArgs: ['threadId'],
           merge(existing = { hasMore: true, messages: [] }, incoming) {
+            // const includedIn = (set, object) => {
+            //   for (const item of set) {
+            //     if (item['__ref'] === object['__ref']) {
+            //       return true;
+            //     }
+            //   }
+            // };
+            // const newMessages = incoming.messages.filter(
+            //   (message) => !includedIn(existing.messages, message)
+            // );
             return {
               hasMore: incoming.hasMore,
               messages: [...existing.messages, ...incoming.messages],
