@@ -22,22 +22,25 @@ export const CREATE_MESSAGE = gql`
 `;
 
 export const READ_MESSAGES = gql`
-  query readMessages($threadId: ID!) {
-    readMessages(threadId: $threadId) {
-      id
-      message
-      sender {
+  query readMessages($threadId: ID!, $skip: Int!, $limit: Int!) {
+    readMessages(threadId: $threadId, skip: $skip, limit: $limit) {
+      hasMore
+      messages {
+        message
         id
-        avatar {
-          image
-          contentType
+        sender {
+          id
+          avatar {
+            image
+            contentType
+          }
         }
+        recipient {
+          id
+        }
+        date
+        seen
       }
-      recipient {
-        id
-      }
-      date
-      seen
     }
   }
 `;

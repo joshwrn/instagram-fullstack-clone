@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 
-import updateCacheWith from '../../functions/updateCache';
-
 import { useAuth } from '../../contexts/AuthContext';
 import { useMutation, useApolloClient } from '@apollo/client';
 import {
@@ -20,13 +18,36 @@ const MessageInputBox = ({ currentThread, Styles, setCurrentIndex }) => {
       console.log(err);
     },
     update: (store, response) => {
-      updateCacheWith(
-        client,
-        response.data.createMessage,
-        READ_MESSAGES,
-        { threadId: currentThread.id },
-        'readMessages'
-      );
+      const includedIn = (set, object) => {
+        console.log(set, object);
+        set.map((p) => p.id).includes(object.id);
+      };
+      const dataInStore = client.readQuery({
+        query: READ_MESSAGES,
+        variables: { threadId: currentThread.id, limit: 25, skip: 0 },
+      });
+      console.log(dataInStore);
+      if (!dataInStore) return;
+      if (
+        !includedIn(
+          dataInStore.readMessages.messages,
+          response.data.createMessage
+        )
+      ) {
+        client.writeQuery({
+          query: READ_MESSAGES,
+          variables: { threadId: currentThread.id, limit: 25, skip: 0 },
+          data: {
+            readMessages: {
+              hasMore: dataInStore.readMessages.hasMore,
+              messages: [
+                response.data.createMessage,
+                ...dataInStore.readMessages.messages,
+              ],
+            },
+          },
+        });
+      }
     },
   });
   //+ send

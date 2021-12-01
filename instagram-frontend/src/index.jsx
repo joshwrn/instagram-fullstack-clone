@@ -82,6 +82,15 @@ const cache = new InMemoryCache({
             };
           },
         },
+        readMessages: {
+          keyArgs: ['threadId'],
+          merge(existing = { hasMore: true, messages: [] }, incoming) {
+            return {
+              hasMore: incoming.hasMore,
+              messages: [...existing.messages, ...incoming.messages],
+            };
+          },
+        },
       },
     },
   },
