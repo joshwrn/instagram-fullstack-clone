@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import ImageLoader from '../reusable/ImageLoader';
+
+import convertTime from '../../functions/convertTime';
+
 import { useAuth } from '../../contexts/AuthContext';
 
 import styled from 'styled-components';
@@ -12,13 +15,22 @@ const MessageItem = ({
   message,
   thread,
   seen,
+  date,
   index,
   cursorRef,
 }) => {
   const [sent, setSent] = useState(false);
   const [group, setGroup] = useState(true);
+  const [time, setTime] = useState('');
+  const [showTime, setShowTime] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const { currentUser } = useAuth();
+
+  useEffect(() => {
+    if (!date) return;
+    const converted = convertTime(date, Date.now());
+    setTime(converted);
+  }, [date]);
 
   const getStatus = () => {
     if (!currentUser || !sender) return;
@@ -51,13 +63,18 @@ const MessageItem = ({
   }, [recipient, sender, thread]);
 
   return (
-    <>
+    <ItemDiv ref={cursorRef} group={group} sent={sent} loaded={loaded}>
       {loaded && (
-        <ItemDiv ref={cursorRef} group={group} sent={sent}>
+        <>
           <BubbleWrapper>
-            <Bubble sent={sent}>
-              <p>{message}</p>
+            <Bubble
+              onMouseEnter={() => setShowTime(true)}
+              onMouseLeave={() => setShowTime(false)}
+              sent={sent}
+            >
+              {message}
             </Bubble>
+            <Time showTime={showTime}>{time}</Time>
             {index === 0 && <Status>{seen}</Status>}
           </BubbleWrapper>
           <SideContainer>
@@ -78,9 +95,9 @@ const MessageItem = ({
               </Link>
             )}
           </SideContainer>
-        </ItemDiv>
+        </>
       )}
-    </>
+    </ItemDiv>
   );
 };
 
@@ -90,43 +107,14 @@ const ItemDiv = styled.div`
   height: fit-content;
   align-items: center;
   justify-content: ${(props) => (props.sent ? 'flex-end' : 'flex-start')};
-  overflow: hidden;
   flex: 0 0 auto;
   box-sizing: border-box;
   position: relative;
-  z-index: 0;
+  transition: opacity 0.5s ease-in-out;
+  opacity: ${(props) => (props.loaded ? '1' : '0')};
   padding: ${(props) => (props.group ? '2px 10px' : '20px 10px 0 10px')};
   @media only screen and (max-width: 850px) {
     border-width: 2px 2px;
-  }
-`;
-
-const BubbleWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: fit-content;
-  align-items: flex-end;
-`;
-
-const Bubble = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: ${({ theme, sent }) =>
-    sent ? '#1982fc' : theme.message.bubble};
-  border-radius: 14px;
-  padding: 10px 10px;
-  max-width: 60%;
-  min-width: 30px;
-  box-sizing: border-box;
-  color: ${({ theme, sent }) => (sent ? 'white' : theme.font.primary)};
-  z-index: 0;
-  position: relative;
-  font-size: 15px;
-  word-break: break-word;
-  @media only screen and (max-width: 850px) {
-    max-width: ${(props) => (props.sent ? '75%' : '80%')};
   }
 `;
 
@@ -137,7 +125,6 @@ const SideContainer = styled.div`
   width: 50px;
   height: 100%;
   background-color: ${(props) => props.theme.background.primary};
-  overflow: hidden;
   a {
     display: flex;
     align-items: center;
@@ -157,7 +144,56 @@ const Status = styled.div`
   color: ${(props) => props.theme.font.secondary};
   font-size: 12px;
   margin-top: 3px;
-  margin-right: 4px;
+  margin-right: 5px;
+`;
+
+const Time = styled(Status)`
+  opacity: ${(props) => (props.showTime ? '1' : '0')};
+  visibility: ${(props) => (props.showTime ? 'visible' : 'hidden')};
+  transition: opacity 0.25s ease 0.15s, height 0.25s ease;
+  height: ${(props) => (props.showTime ? '12px' : '0px')};
+`;
+
+const BubbleWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: fit-content;
+  align-items: flex-end;
+  position: relative;
+`;
+
+const Bubble = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${({ theme, sent }) =>
+    sent ? '#1982fc' : theme.message.bubble};
+  border-radius: 18px;
+  padding: 10px 13px;
+  max-width: 60%;
+  min-width: 41px;
+  box-sizing: border-box;
+  color: ${({ theme, sent }) => (sent ? 'white' : theme.font.primary)};
+  position: relative;
+  font-size: 15px;
+  transition: margin-bottom 0.25s ease;
+  @media only screen and (max-width: 850px) {
+    max-width: ${(props) => (props.sent ? '75%' : '80%')};
+  }
+  &:before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    bottom: -20px;
+    height: 0px;
+    z-index: 100;
+  }
+  &:hover {
+    &:before {
+      height: 30px;
+    }
+  }
 `;
 
 export default MessageItem;

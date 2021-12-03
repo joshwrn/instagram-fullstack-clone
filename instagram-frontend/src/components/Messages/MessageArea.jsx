@@ -109,7 +109,7 @@ const MessageArea = ({ currentThread, Styles, dummyRef }) => {
           <MessageItem
             key={item.id}
             seen={item.seen ? 'seen' : 'unseen'}
-            time={item.date}
+            date={item.date}
             recipient={item.recipient}
             sender={item.sender}
             thread={thread}

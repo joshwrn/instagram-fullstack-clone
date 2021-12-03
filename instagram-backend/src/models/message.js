@@ -5,7 +5,7 @@ const schema = new mongoose.Schema({
     required: true,
     type: String,
     minlength: 1,
-    maxlength: 140,
+    maxlength: 500,
   },
   thread: {
     required: true,

@@ -2,20 +2,27 @@ const { ApolloServer } = require('apollo-server-express');
 const mongoose = require('mongoose');
 const express = require('express');
 const jwt = require('jsonwebtoken');
+
+// models
 const User = require('./src/models/user');
 const Post = require('./src/models/post');
 const Notification = require('./src/models/notification');
-require('dotenv').config();
 
+// graphql
 const { makeExecutableSchema } = require('@graphql-tools/schema');
 const { createServer } = require('http');
-
 const { execute, subscribe } = require('graphql');
 const { SubscriptionServer } = require('subscriptions-transport-ws');
 const { ApolloServerPluginDrainHttpServer } = require('apollo-server-core');
+const { graphqlUploadExpress } = require('graphql-upload');
 
+// schema
 const { typeDefs, resolvers } = require('./src/graphql/schema');
 
+// env config
+require('dotenv').config();
+
+// keys
 const MONGO_URI = process.env.MONGO_URI;
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
@@ -112,6 +119,7 @@ async function startServer() {
 
   app.use(express.json({ limit: '50mb' }));
   app.use(express.urlencoded({ limit: '50mb' }));
+  app.use(graphqlUploadExpress());
 
   await server.start();
   server.applyMiddleware({ app, path: '/' });
