@@ -88,14 +88,14 @@ const PostSidebar = ({
               <img
                 style={!loaded ? { display: 'none' } : null}
                 onLoad={handleLoad}
-                src={`data:${postUserAvatar.contentType};base64,${postUserAvatar.image}`}
+                src={postUserAvatar}
                 alt="avatar"
                 className={Styles.profileImg}
               />
               <img
                 className={Styles.profileImgBlur}
                 style={!loaded ? { display: 'none' } : null}
-                src={`data:${postUserAvatar.contentType};base64,${postUserAvatar.image}`}
+                src={postUserAvatar}
                 alt=""
               />
             </div>

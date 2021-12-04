@@ -47,7 +47,7 @@ const MessagesCreateMenuItem = ({
       <div className={Styles.start}>
         <div className={Styles.avatarContainer}>
           <ImageLoader
-            src={`data:${contact?.avatar.contentType};base64,${contact?.avatar.image}`}
+            src={contact?.avatar}
             width="65px"
             height="65px"
             borderRadius="100%"

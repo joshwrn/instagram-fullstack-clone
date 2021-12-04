@@ -4,14 +4,8 @@ export const GET_CURRENT_USER = gql`
   query getCurrentUser {
     getCurrentUser {
       username
-      banner {
-        image
-        contentType
-      }
-      avatar {
-        image
-        contentType
-      }
+      banner
+      avatar
       displayName
       bio
       followerCount

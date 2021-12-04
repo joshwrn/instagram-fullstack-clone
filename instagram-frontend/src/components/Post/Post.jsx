@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import PostSidebar from './PostSidebar';
 
 import ScrollToTop from '../../functions/ScrollToTop';
-import useBuffer from '../../hooks/useBuffer';
 
 import { useAuth } from '../../contexts/AuthContext';
 import { FIND_POST_BY_ID } from '../../graphql/queries/postQueries';
@@ -15,7 +14,6 @@ import Loading from '../../styles/post/post__loading.module.css';
 
 const Post = ({ match }) => {
   const [currentPost, setCurrentPost] = useState();
-  const [postImage, setPostImage] = useBuffer(currentPost);
   const [postUser, setPostUser] = useState();
   const [ownPost, setOwnPost] = useState(false);
   const [loading, setLoading] = useState([
@@ -44,11 +42,16 @@ const Post = ({ match }) => {
   });
 
   useEffect(() => {
+    console.log('post data', postData);
     if (postData && !postLoading && !postError) {
       setCurrentPost(postData.findPost);
       setPostUser(postData.findPost.user);
     }
   }, [postData]);
+
+  useEffect(() => {
+    console.log(currentPost);
+  }, [currentPost]);
 
   //+ check if postUser and currentUser are defined then set loading false
   useEffect(() => {
@@ -69,7 +72,7 @@ const Post = ({ match }) => {
   };
 
   let postState;
-
+  //! loading
   if (!currentPost || !postUser) {
     postState = (
       <div className={Styles.post}>
@@ -108,7 +111,7 @@ const Post = ({ match }) => {
           <img
             style={!loaded ? { display: 'none' } : null}
             onLoad={handleLoad}
-            src={postImage}
+            src={currentPost.image}
             alt="post"
             className={Styles.image}
           />

@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-const banner = require('../assets/img/banner');
-const avatar = require('../assets/img/avatar');
 
 const schema = new mongoose.Schema({
   username: {
@@ -36,18 +34,12 @@ const schema = new mongoose.Schema({
     maxlength: 300,
   },
   avatar: {
-    type: mongoose.Schema.Types.Mixed,
-    default: {
-      image: avatar.avatar,
-      contentType: 'image/jpg',
-    },
+    type: String,
+    required: true,
   },
   banner: {
-    type: mongoose.Schema.Types.Mixed,
-    default: {
-      image: banner.banner,
-      contentType: 'image/jpg',
-    },
+    type: String,
+    required: true,
   },
   password: {
     type: String,

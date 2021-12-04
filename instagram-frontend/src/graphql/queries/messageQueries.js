@@ -14,10 +14,7 @@ export const GET_THREADS = gql`
         id
         username
         displayName
-        avatar {
-          image
-          contentType
-        }
+        avatar
       }
     }
   }

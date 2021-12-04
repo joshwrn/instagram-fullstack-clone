@@ -12,7 +12,6 @@ const ProfileCard = ({
   postId,
   likeCount,
   commentCount,
-  contentType,
   index,
   cursorRef,
   feedLength,
@@ -36,17 +35,10 @@ const ProfileCard = ({
               <p>{commentCount}</p>
             </div>
           </div>
-          <ImageLoader
-            src={`data:${contentType};base64,${base}`}
-            borderRadius="9px"
-          />
+          <ImageLoader src={base} borderRadius="9px" />
         </Link>
       </div>
-      <img
-        className={Styles.blur}
-        src={`data:${contentType};base64,${base}`}
-        alt=""
-      />
+      <img className={Styles.blur} src={base} alt="" />
     </div>
   );
 };

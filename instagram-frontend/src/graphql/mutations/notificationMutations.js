@@ -11,15 +11,11 @@ export const READ_NOTIFICATIONS = gql`
       post {
         id
         image
-        contentType
       }
       from {
         id
         displayName
-        avatar {
-          image
-          contentType
-        }
+        avatar
       }
     }
   }

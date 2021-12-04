@@ -63,7 +63,7 @@ const Sidebar = ({ setNewPost }) => {
             <div className={Styles.profileContainer}>
               <div className={Styles.imageContainer}>
                 <ImageLoader
-                  src={`data:${userProfile.avatar.contentType};base64,${userProfile.avatar.image}`}
+                  src={userProfile.avatar}
                   position="absolute"
                   width="80px"
                   height="80px"
@@ -72,7 +72,7 @@ const Sidebar = ({ setNewPost }) => {
                 />
                 <img
                   className={Styles.profileImgBlur}
-                  src={`data:${userProfile.avatar.contentType};base64,${userProfile.avatar.image}`}
+                  src={userProfile.avatar}
                   alt=""
                 />
               </div>

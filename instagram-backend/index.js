@@ -59,6 +59,7 @@ async function startServer() {
       if (auth && auth.toLowerCase().startsWith('bearer ')) {
         const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET_KEY);
         try {
+          console.log('decodedToken', decodedToken);
           const result = await User.findById(decodedToken.userId);
           // get noti
           const noti = await Notification.find({
@@ -82,6 +83,7 @@ async function startServer() {
           result.followingCount = stats[0].total_following;
           result.postCount = stats[0].total_posts;
           result.notiCount = noti.length;
+          console.log('result', result);
           return { currentUser: result };
         } catch (error) {
           throw new Error(error);

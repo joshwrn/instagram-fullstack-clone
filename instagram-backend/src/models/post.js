@@ -5,7 +5,7 @@ const schema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  contentType: {
+  imageKey: {
     type: String,
     required: true,
   },

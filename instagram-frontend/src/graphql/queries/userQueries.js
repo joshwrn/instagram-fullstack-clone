@@ -20,10 +20,7 @@ export const FIND_FOLLOWERS = gql`
       id
       username
       displayName
-      avatar {
-        image
-        contentType
-      }
+      avatar
     }
   }
 `;
@@ -34,10 +31,7 @@ export const SEARCH_USERS = gql`
       id
       username
       displayName
-      avatar {
-        image
-        contentType
-      }
+      avatar
     }
   }
 `;
@@ -48,15 +42,9 @@ export const FIND_USER_PROFILE = gql`
       displayName
       username
       bio
-      avatar {
-        image
-        contentType
-      }
+      avatar
       id
-      banner {
-        image
-        contentType
-      }
+      banner
       followingCount
       followerCount
       postCount

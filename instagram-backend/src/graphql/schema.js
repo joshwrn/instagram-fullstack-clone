@@ -23,9 +23,6 @@ const notificationTypes = require('./types/notificationTypes');
 const commentTypes = require('./types/commentTypes');
 const messageTypes = require('./types/messageTypes');
 
-//aws s3
-const awsSchema = require('./mutations/awsSchema');
-
 const typeDefs = [
   userMutations.typeDefs,
   commentMutations.typeDefs,
@@ -47,8 +44,6 @@ const typeDefs = [
   notificationTypes.typeDefs,
   commentTypes.typeDefs,
   messageTypes.typeDefs,
-
-  awsSchema.typeDefs,
 ];
 
 const resolvers = [
@@ -66,8 +61,6 @@ const resolvers = [
 
   messageSubscriptions.resolvers,
   notificationSubscriptions.resolvers,
-
-  awsSchema.resolvers,
 ];
 
 module.exports = { typeDefs, resolvers };

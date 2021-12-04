@@ -177,7 +177,7 @@ const Profile = (props) => {
           />
           <img
             className={Styles.hero}
-            src={`data:${currentProfile.banner.contentType};base64,${currentProfile.banner.image}`}
+            src={currentProfile.banner}
             alt="banner"
             onLoad={handleLoad}
             style={!loaded ? { display: 'none' } : null}
@@ -194,14 +194,14 @@ const Profile = (props) => {
               <img
                 onClick={getAvatarModal}
                 className={Styles.avatar}
-                src={`data:${currentProfile.avatar.contentType};base64,${currentProfile.avatar.image}`}
+                src={currentProfile.avatar}
                 alt="avatar"
                 onLoad={handleLoad}
                 style={!loaded ? { display: 'none' } : null}
               />
               <img
                 className={Styles.avatarBlur}
-                src={`data:${currentProfile.avatar.contentType};base64,${currentProfile.avatar.image}`}
+                src={currentProfile.avatar}
                 alt="blur"
                 style={!loaded ? { display: 'none' } : null}
               />
@@ -209,7 +209,7 @@ const Profile = (props) => {
             {avatarModal && (
               <ProfileAvatarModal
                 getAvatarModal={getAvatarModal}
-                src={`data:${currentProfile.avatar.contentType};base64,${currentProfile.avatar.image}`}
+                src={currentProfile.avatar}
               />
             )}
             <div className={Styles.topRight}>

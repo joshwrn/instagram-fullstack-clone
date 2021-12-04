@@ -7,6 +7,10 @@ const User = require('../../models/user');
 const Post = require('../../models/post');
 const Notification = require('../../models/notification');
 
+// aws s3
+const s3 = require('../../utils/config');
+require('dotenv').config();
+
 const typeDefs = gql`
   scalar Upload
   type Mutation {
@@ -24,10 +28,35 @@ const resolvers = {
       if (!currentUser) {
         throw new AuthenticationError('not authenticated');
       }
-      //const imageBuffer = await createBuffer(file);
+      console.log('uploading post');
+      //@ upload to aws storage
+      const bucketName = process.env.BUCKETNAME;
+      const params = {
+        Bucket: bucketName,
+        Key: '',
+        Body: '',
+        ACL: 'public-read',
+      };
+
+      const buff = Buffer.from(file, 'base64');
+      params.Body = buff;
+
+      let timestamp = new Date().getTime();
+      params.Key = `images/${context.currentUser.id}/${timestamp}.jpeg`;
+
+      // upload the object.
+      let imageFile = await s3.upload(params).promise().catch(console.log);
+
+      // structure the response.
+      let object = {
+        key: params.Key,
+        url: imageFile.Location,
+      };
+
+      //$ send to mongoDB
       const post = new Post({
-        image: file,
-        contentType: 'image/jpeg',
+        image: object.url,
+        imageKey: object.key,
         caption: caption,
         user: context.currentUser.id,
       });
@@ -48,16 +77,28 @@ const resolvers = {
       if (!currentUser) {
         throw new AuthenticationError('not authenticated');
       }
-      const post = await Post.findById(id);
-      if (post.user.toString() !== currentUser.id) {
-        throw new AuthenticationError('not authenticated');
+      try {
+        const post = await Post.findById(id);
+        if (post.user.toString() !== currentUser.id) {
+          throw new AuthenticationError('not authenticated');
+        }
+
+        const params = {
+          Bucket: process.env.BUCKETNAME,
+          Key: post.imageKey,
+        };
+
+        await s3.deleteObject(params).promise().catch(console.log);
+
+        await post.remove();
+        await User.findOneAndUpdate(
+          { _id: currentUser.id },
+          { $pull: { posts: id } }
+        );
+        return 'success';
+      } catch (err) {
+        throw new Error(err);
       }
-      await post.remove();
-      await User.findOneAndUpdate(
-        { _id: currentUser.id },
-        { $pull: { posts: id } }
-      );
-      return 'success';
     },
 
     likePost: async (parent, { id, type }, context) => {

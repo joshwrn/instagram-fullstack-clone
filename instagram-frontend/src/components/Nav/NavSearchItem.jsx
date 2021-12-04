@@ -28,7 +28,7 @@ const NavSearchItem = ({
               borderRadius="100%"
               width="25px"
               height="25px"
-              src={`data:${item.avatar.contentType};base64,${item.avatar.image}`}
+              src={item.avatar}
             />
           </div>
           <div className={Styles.displayName}>{item.displayName}</div>

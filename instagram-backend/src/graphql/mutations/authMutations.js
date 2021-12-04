@@ -37,9 +37,6 @@ const resolvers = {
       return { value: token };
     },
     addUser: async (root, { password, displayName, username, email }) => {
-      //const avatarBuffer = await createBuffer(avatar);
-      //const bannerBuffer = await createBuffer(banner);
-
       const saltRounds = 10;
       const passwordHash = await bcrypt.hash(password, saltRounds);
 
@@ -51,8 +48,10 @@ const resolvers = {
         displayName,
         username,
         email,
-        //avatar: avatarBuffer,
-        //banner: bannerBuffer,
+        banner:
+          'https://instagram-clone-joshwrn.s3.us-west-1.amazonaws.com/images/default/banner.jpeg',
+        avatar:
+          'https://instagram-clone-joshwrn.s3.us-west-1.amazonaws.com/images/default/avatar.jpg',
       });
       return user.save();
     },

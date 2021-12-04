@@ -7,10 +7,7 @@ export const CREATE_MESSAGE = gql`
       message
       sender {
         id
-        avatar {
-          image
-          contentType
-        }
+        avatar
       }
       recipient {
         id
@@ -30,10 +27,7 @@ export const READ_MESSAGES = gql`
         id
         sender {
           id
-          avatar {
-            image
-            contentType
-          }
+          avatar
         }
         recipient {
           id

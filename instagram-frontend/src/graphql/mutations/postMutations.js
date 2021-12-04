@@ -5,7 +5,6 @@ export const UPLOAD_POST = gql`
     postUpload(file: $file, caption: $caption) {
       id
       image
-      contentType
       likeCount
       commentCount
     }

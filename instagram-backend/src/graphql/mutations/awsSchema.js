@@ -3,6 +3,7 @@ const s3 = require('../../utils/config');
 const { promisify } = require('util');
 const { extname } = require('path');
 const { getUrl } = require('../../utils/object');
+require('dotenv').config();
 
 //$ mutations
 class MutationResolver {
@@ -51,6 +52,8 @@ class MutationResolver {
 
     // set the body of the object as data to read from the file.
     params.Body = fileStream;
+
+    console.log('file:', params.Body);
 
     // get the current time stamp.
     let timestamp = new Date().getTime();
@@ -263,6 +266,53 @@ const resolvers = {
       new QueryResolver().fetchObjects(bucketName),
   },
   Mutation: {
+    uploadImage: async (_, { file }) => {
+      const bucketName = process.env.BUCKETNAME;
+      const params = {
+        Bucket: bucketName,
+        Key: '',
+        Body: '',
+        ACL: 'public-read',
+      };
+
+      // obtain the read stream function and the filename from the file.
+      let { createReadStream, filename } = await file;
+
+      // read the data from the file.
+      let fileStream = createReadStream();
+
+      // in case of an error, log it.
+      fileStream.on('error', (error) => console.error('error', error));
+
+      console.log(fileStream);
+
+      // set the body of the object as data to read from the file.
+      params.Body = fileStream;
+
+      // get the current time stamp.
+      let timestamp = new Date().getTime();
+
+      // get the file extension.
+      let file_extension = extname(filename);
+
+      // set the key as a combination of the folder name, timestamp, and the file extension of the object.
+      params.Key = `images/${timestamp}${file_extension}`;
+
+      // promisify the upload() function so that we can use async/await syntax.
+      //let upload = promisify(this.s3.upload.bind(this.s3));
+
+      // upload the object.
+      let result = await s3.upload(params).promise().catch(console.log);
+
+      // structure the response.
+      let object = {
+        key: params.Key,
+        url: result.Location,
+      };
+
+      // return the response to the client.
+      return object;
+    },
     createBucket: (_, { bucketName }) =>
       new MutationResolver().createBucket(bucketName),
 
@@ -290,6 +340,7 @@ const typeDefs = gql`
   }
   type Mutation {
     createBucket(bucketName: String!): Response
+    uploadImage(file: Upload!): Object
     uploadObject(file: Upload!, bucketName: String!): Object
     uploadObjects(files: [Upload!]!, bucketName: String!): [Object!]!
     deleteObject(bucketName: String!, key: String!): Response

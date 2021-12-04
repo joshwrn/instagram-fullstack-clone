@@ -28,10 +28,7 @@ const ProfileFollowerListItem = ({
     >
       <div onClick={handleLink} className={Styles.start}>
         <div className={Styles.avatarContainer}>
-          <ImageLoader
-            src={`data:${item?.avatar.contentType};base64,${item?.avatar.image}`}
-            borderRadius="100%"
-          />
+          <ImageLoader src={item?.avatar} borderRadius="100%" />
         </div>
         <div className={Styles.names}>
           <p className={Styles.displayName}>{item?.displayName}</p>

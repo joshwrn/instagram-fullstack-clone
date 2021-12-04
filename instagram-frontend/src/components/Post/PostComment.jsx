@@ -64,7 +64,7 @@ const PostComment = ({
       <div className={Styles.start}>
         <Link to={`/profile/${user.id}`}>
           <ImageLoader
-            src={`data:${user.avatar?.contentType};base64,${user.avatar?.image}`}
+            src={user.avatar}
             width="27px"
             height="27px"
             borderRadius="100%"

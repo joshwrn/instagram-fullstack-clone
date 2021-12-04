@@ -43,7 +43,7 @@ const Card = ({ post, index, dummy, feedLength }) => {
               <Link to={`/profile/${post.user.id}`}>
                 <div className={Styles.left}>
                   <img
-                    src={`data:${post.user.avatar.contentType};base64,${post.user.avatar.image}`}
+                    src={post.user.avatar}
                     alt=""
                     className={Styles.avatar}
                   />
@@ -70,7 +70,7 @@ const Card = ({ post, index, dummy, feedLength }) => {
               Styles={Styles}
               postID={post.id}
               userID={post.user.id}
-              src={`data:${post.contentType};base64,${post.image}`}
+              src={post.image}
             />
             {/*//+ footer */}
             <div
@@ -121,7 +121,7 @@ const Card = ({ post, index, dummy, feedLength }) => {
           </div>
           <img
             className={Styles.imageBlur + ' ' + 'blur'}
-            src={`data:${post.contentType};base64,${post.image}`}
+            src={post.image}
             alt=""
           />
         </div>

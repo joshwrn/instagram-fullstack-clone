@@ -84,13 +84,7 @@ const MessageItem = ({
                   height="38px"
                   width="38px"
                   borderRadius="100%"
-                  src={`data:${
-                    sent
-                      ? currentUser.avatar.contentType
-                      : sender.avatar.contentType
-                  };base64,${
-                    sent ? currentUser.avatar.image : sender.avatar.image
-                  }`}
+                  src={sent ? currentUser.avatar : sender.avatar}
                 />
               </Link>
             )}
@@ -150,7 +144,7 @@ const Status = styled.div`
 const Time = styled(Status)`
   opacity: ${(props) => (props.showTime ? '1' : '0')};
   visibility: ${(props) => (props.showTime ? 'visible' : 'hidden')};
-  transition: opacity 0.25s ease 0.15s, height 0.25s ease;
+  transition: opacity 0.25s ease 0.15s, height 0.15s ease-out;
   height: ${(props) => (props.showTime ? '12px' : '0px')};
 `;
 

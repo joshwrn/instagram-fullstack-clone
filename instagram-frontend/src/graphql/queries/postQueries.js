@@ -7,7 +7,6 @@ export const FIND_FEED = gql`
       posts {
         id
         image
-        contentType
         caption
         date
         likes {
@@ -25,10 +24,7 @@ export const FIND_FEED = gql`
           displayName
           username
           id
-          avatar {
-            image
-            contentType
-          }
+          avatar
         }
       }
     }
@@ -43,7 +39,6 @@ export const FIND_PROFILE_FEED = gql`
         image
         commentCount
         likeCount
-        contentType
       }
       hasMore
     }
@@ -56,7 +51,6 @@ export const FIND_POST_BY_ID = gql`
       id
       image
       date
-      contentType
       caption
       likes {
         id
@@ -64,10 +58,7 @@ export const FIND_POST_BY_ID = gql`
       user {
         username
         displayName
-        avatar {
-          image
-          contentType
-        }
+        avatar
       }
     }
   }
@@ -81,10 +72,7 @@ export const FIND_POST_COMMENTS = gql`
         user {
           displayName
           id
-          avatar {
-            image
-            contentType
-          }
+          avatar
         }
         id
         comment

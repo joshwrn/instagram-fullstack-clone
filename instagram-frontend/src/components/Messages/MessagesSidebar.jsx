@@ -40,7 +40,7 @@ const MessagesSidebar = ({
         >
           <Link to={`/profile/${currentUser?.id}`}>
             <ImageLoader
-              src={`data:${currentUser?.avatar.contentType};base64,${currentUser?.avatar.image}`}
+              src={currentUser?.avatar}
               width="65px"
               height="65px"
               borderRadius="100%"
@@ -48,7 +48,7 @@ const MessagesSidebar = ({
             />
             <img
               className={Styles.userAvatarBlur}
-              src={`data:${currentUser?.avatar.contentType};base64,${currentUser?.avatar.image}`}
+              src={currentUser?.avatar}
               alt="avatar"
             />
           </Link>

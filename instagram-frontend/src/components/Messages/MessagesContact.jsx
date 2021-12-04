@@ -40,7 +40,7 @@ const MessagesContact = ({
     >
       <div className={Styles.avatarContainer}>
         <ImageLoader
-          src={`data:${otherUser?.avatar.contentType};base64,${otherUser?.avatar.image}`}
+          src={otherUser?.avatar}
           width="65px"
           height="65px"
           borderRadius="100%"
