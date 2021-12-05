@@ -23,6 +23,12 @@ export const darkTheme = {
     bubble: '#303030',
     sideBar: 'rgba(0, 0, 0, 0.87)',
   },
+  notification: {
+    type: 'rgb(221, 221, 221)',
+  },
+  menu: {
+    hover: 'rgba(255, 255, 255, 0.1)',
+  },
 };
 
 export const lightTheme = {
@@ -43,5 +49,11 @@ export const lightTheme = {
   message: {
     bubble: '#d3d3d3',
     sideBar: 'rgba(255, 255, 255, 0.87)',
+  },
+  notification: {
+    type: 'rgb(75, 75, 75)',
+  },
+  menu: {
+    hover: 'rgba(0, 0, 0, 0.1)',
   },
 };

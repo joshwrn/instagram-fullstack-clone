@@ -200,7 +200,7 @@
 
 /*+ comment input */
 
-.footer .commentBox {
+.commentBox {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -211,11 +211,11 @@
   padding-top: 10px;
 }
 
-.footer .commentForm {
+.commentForm {
   width: 100%;
 }
 
-.footer .inputBox {
+.inputBox {
   width: 100%;
   text-align: left;
   border: 0px solid rgba(124, 124, 124, 0);
@@ -223,7 +223,7 @@
   color: var(--primary-font-color);
 }
 
-.footer .send {
+.send {
   cursor: pointer;
 }
 
@@ -242,15 +242,8 @@
   }
 
   .card {
-    display: flex;
     width: 340px;
     height: 590px;
-    margin: 0 0 4em 0;
-    justify-content: center;
-    /* box-shadow: 0px 0px 26px 5px rgba(0, 0, 0, 0.089); */
-    border: var(--primary-border);
-    position: relative;
-    border-radius: 16px;
   }
 
   .imageContainer {

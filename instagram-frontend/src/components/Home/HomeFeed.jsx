@@ -52,9 +52,7 @@ const HomeFeed = ({ newPost }) => {
           <Card
             key={post.id}
             post={post}
-            dummy={cursorRef}
-            feedLength={feed.length}
-            index={index}
+            cursorRef={index === feed.length - 1 ? cursorRef : null}
           />
         );
       })}

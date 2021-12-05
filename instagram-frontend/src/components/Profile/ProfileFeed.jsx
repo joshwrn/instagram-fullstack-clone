@@ -5,29 +5,43 @@ import LoadingIcon from '../reusable/LoadingIcon';
 
 import useCursor from '../../hooks/useCursor';
 
-import { useQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import { FIND_PROFILE_FEED } from '../../graphql/queries/postQueries';
 
 import Styles from '../../styles/profile/profile__feed.module.css';
 
-const ProfileFeed = ({ match, noPosts }) => {
-  const { data, loading, error, fetchMore } = useQuery(FIND_PROFILE_FEED, {
-    variables: { id: match && match.params.uid, skip: 0, limit: 9 },
-    onError: (err) => console.log(err),
-  });
+const ProfileFeed = ({ match }) => {
+  const [getInitialFeed, { data, loading, error, fetchMore }] = useLazyQuery(
+    FIND_PROFILE_FEED,
+    {
+      onError: (err) => console.log(err),
+    }
+  );
   const [feed, setFeed] = useState([]);
+  const [noPosts, setNoPosts] = useState(false);
 
   const [endFeed, setEndFeed] = useState(false);
 
   const [isFetching, setIsFetching, cursorRef] = useCursor(endFeed, loading);
 
   useEffect(() => {
+    if (!match) return;
+    getInitialFeed({
+      variables: { id: match && match.params.uid, skip: 0, limit: 9 },
+    });
+  }, [match]);
+
+  useEffect(() => {
     if (data) {
       setFeed(data.findProfileFeed.posts);
+      setNoPosts(false);
       setIsFetching(false);
       if (data.findProfileFeed.hasMore === false) {
         setEndFeed(true);
         setIsFetching(false);
+        if (data.findProfileFeed.posts.length === 0) {
+          setNoPosts(true);
+        }
       }
     }
   }, [data]);

@@ -21,7 +21,7 @@ const Profile = (props) => {
   const [currentProfile, setCurrentProfile] = useState(null);
   const [avatarModal, setAvatarModal] = useState(false);
   const [renderModal, setRenderModal] = useState(false);
-  const [noPosts, setNoPosts] = useState(false);
+
   const { match } = props;
   const { currentUser, userProfile } = useAuth();
   const [loaded, setLoaded] = useState(false);
@@ -65,13 +65,6 @@ const Profile = (props) => {
       console.log(userData);
     }
   }, [userData]);
-
-  //+ when theres a new post update the user profile
-
-  useEffect(() => {
-    // getUserObject();
-    setNoPosts(false);
-  }, [match]);
 
   //+ avatar modal
   const getAvatarModal = (e) => {
@@ -131,11 +124,7 @@ const Profile = (props) => {
             <div className={Styles.topRight}>
               <div className={Styles.topIconRow}>
                 {/*//+ following button */}
-                <FollowButton
-                  Styles={Styles}
-                  match={match.params.uid}
-                  currentProfile={currentProfile}
-                />
+                <FollowButton Styles={Styles} />
                 {actionButton}
               </div>
             </div>
@@ -143,23 +132,9 @@ const Profile = (props) => {
         </div>
         <div className={Styles.inner}>
           {/*//+ sidebar */}
-          <ProfileSidebar
-            loaded={loaded}
-            match={match}
-            currentProfile={currentProfile}
-            currentUser={currentUser}
-          />
+          <ProfileSidebar loaded={loaded} />
           {/*//+ posts */}
-          <ProfileFeed
-            posts={[]}
-            setLoading={setLoading}
-            loading={loading}
-            loaded={loaded}
-            match={match}
-            currentProfile={currentProfile}
-            noPosts={noPosts}
-            setNoPosts={setNoPosts}
-          />
+          <ProfileFeed />
         </div>
       </div>
     );
@@ -237,16 +212,7 @@ const Profile = (props) => {
             currentUser={currentUser}
           />
           {/*//+ posts */}
-          <ProfileFeed
-            posts={currentProfile.posts}
-            setLoading={setLoading}
-            loading={loading}
-            loaded={loaded}
-            match={match}
-            currentProfile={currentProfile}
-            noPosts={noPosts}
-            setNoPosts={setNoPosts}
-          />
+          <ProfileFeed match={match} />
         </div>
       </div>
     </>

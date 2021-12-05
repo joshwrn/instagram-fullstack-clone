@@ -5,7 +5,7 @@ import convertTime from '../../functions/convertTime';
 
 import { useAuth } from '../../contexts/AuthContext';
 
-import Styles from '../../styles/notifications/notifications__item.module.css';
+import styled from 'styled-components';
 import { IoPersonAdd } from 'react-icons/io5';
 
 const NotificationsItem = ({ item }) => {
@@ -21,96 +21,129 @@ const NotificationsItem = ({ item }) => {
   let type;
   if (item) {
     if (item.type === 'like') {
-      type = (
-        <Link
-          className={Styles.link}
-          to={`/post/${currentUser.id}/${item.post.id}`}
-        >
-          <div className={Styles.container}>
-            <div className={Styles.start}>
-              <div className={Styles.avatarContainer}>
-                <img
-                  className={Styles.avatar}
-                  src={`data:${item.from.avatar.contentType};base64,${item.from.avatar.image}`}
-                  alt=""
-                />
-              </div>
-              <div className={Styles.displayName}>{item.from.displayName}</div>
-              <div className={Styles.type}>liked your post.</div>
-            </div>
-            <div className={Styles.end}>
-              <span className={Styles.time}>{`${addTime}`}</span>
-              <img
-                className={Styles.preview}
-                src={`data:${item.post.contentType};base64,${item.post.image}`}
-                alt=""
-              />
-            </div>
-          </div>
-        </Link>
-      );
+      type = <Type>liked your post.</Type>;
     }
+
     if (item.type === 'comment') {
       type = (
-        <Link
-          className={Styles.link}
-          to={`/post/${currentUser.id}/${item.post.id}`}
-        >
-          <div className={Styles.container}>
-            <div className={Styles.start}>
-              <div className={Styles.avatarContainer}>
-                <img
-                  className={Styles.avatar}
-                  src={`data:${item.from.avatar.contentType};base64,${item.from.avatar.image}`}
-                  alt=""
-                />
-              </div>
-              <div className={Styles.displayName}>{item.from.displayName}</div>
-              <div className={Styles.type}>left a comment:</div>
-              <div className={Styles.comment}>
-                {item.content.length >= 15
-                  ? item.content.substring(0, 15) + '...'
-                  : item.content}
-              </div>
-            </div>
-            <div className={Styles.end}>
-              <span className={Styles.time}>{`${addTime}`}</span>
-              <img
-                className={Styles.preview}
-                src={`data:${item.post.contentType};base64,${item.post.image}`}
-                alt=""
-              />
-            </div>
-          </div>
-        </Link>
+        <>
+          <Type>left a comment:</Type>
+          <Comment>
+            {item.content.length >= 15
+              ? item.content.substring(0, 15) + '...'
+              : item.content}
+          </Comment>
+        </>
       );
     }
-  }
-  if (item.type === 'follow') {
-    type = (
-      <Link className={Styles.link} to={`/profile/${item.from.id}`}>
-        <div className={Styles.container}>
-          <div className={Styles.start}>
-            <div className={Styles.avatarContainer}>
-              <img
-                className={Styles.avatar}
-                src={`data:${item.from.avatar.contentType};base64,${item.from.avatar.image}`}
-                alt=""
-              />
-            </div>
-            <div className={Styles.displayName}>{item.from.displayName}</div>
-            <div className={Styles.type}>followed you.</div>
-          </div>
-          <div className={Styles.end}>
-            <span className={Styles.time}>{`${addTime}`}</span>
-            <IoPersonAdd className={Styles.followed} />
-          </div>
-        </div>
-      </Link>
-    );
+
+    if (item.type === 'follow') {
+      type = <Type>followed you.</Type>;
+    }
   }
 
-  return <>{item && type}</>;
+  return (
+    <>
+      {item && (
+        <LinkContainer to={`/post/${currentUser.id}/${item.post.id}`}>
+          <Container>
+            <Start>
+              <Avatar src={item.from.avatar} alt="" />
+              <DisplayName>{item.from.displayName}</DisplayName>
+              {type}
+            </Start>
+            <End>
+              <Time>{addTime}</Time>
+              {item.type === 'follow' ? (
+                <Icon />
+              ) : (
+                <Preview src={item.post.image} alt="" />
+              )}
+            </End>
+          </Container>
+        </LinkContainer>
+      )}
+    </>
+  );
 };
+
+// container
+const LinkContainer = styled(Link)`
+  width: 100%;
+`;
+
+const Container = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 50px;
+  padding: 0 10px;
+  box-sizing: border-box;
+  cursor: pointer;
+  border-radius: 10px;
+  font-size: 13.5px;
+  &:hover {
+    background-color: ${({ theme }) => theme.menu.hover};
+  }
+  @media only screen and (max-width: 850px) {
+    font-size: 11px;
+  }
+`;
+
+// sections
+const Start = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 100%;
+`;
+
+const End = styled(Start)`
+  justify-content: center;
+  width: fit-content;
+  gap: 15px;
+  height: 25px;
+`;
+
+// images
+const Image = styled.img`
+  width: 25px;
+  height: 25px;
+  object-fit: cover;
+`;
+
+const Avatar = styled(Image)`
+  border-radius: 100%;
+`;
+
+const Preview = styled(Image)`
+  border-radius: 5px;
+`;
+
+// text
+
+const DisplayName = styled.p`
+  font-weight: bold;
+`;
+
+const Type = styled.p`
+  color: ${({ theme }) => theme.notification.type};
+`;
+
+const Comment = styled.p`
+  color: ${({ theme }) => theme.font.secondary};
+`;
+
+const Time = styled.span`
+  padding-left: 1px;
+  color: ${({ theme }) => theme.font.secondary};
+`;
+
+// icons
+
+const Icon = styled(IoPersonAdd)`
+  font-size: 18px;
+`;
 
 export default NotificationsItem;

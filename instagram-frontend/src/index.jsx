@@ -58,9 +58,19 @@ const cache = new InMemoryCache({
         findFeed: {
           keyArgs: false,
           merge(existing = { hasMore: true, posts: [] }, incoming) {
+            const includedIn = (set, object) => {
+              for (const item of set) {
+                if (item['__ref'] === object['__ref']) {
+                  return true;
+                }
+              }
+            };
+            const newPosts = incoming.posts.filter(
+              (post) => !includedIn(existing.posts, post)
+            );
             return {
               hasMore: incoming.hasMore,
-              posts: [...existing.posts, ...incoming.posts],
+              posts: [...existing.posts, ...newPosts],
             };
           },
         },
@@ -85,16 +95,6 @@ const cache = new InMemoryCache({
         readMessages: {
           keyArgs: ['threadId'],
           merge(existing = { hasMore: true, messages: [] }, incoming) {
-            // const includedIn = (set, object) => {
-            //   for (const item of set) {
-            //     if (item['__ref'] === object['__ref']) {
-            //       return true;
-            //     }
-            //   }
-            // };
-            // const newMessages = incoming.messages.filter(
-            //   (message) => !includedIn(existing.messages, message)
-            // );
             return {
               hasMore: incoming.hasMore,
               messages: [...existing.messages, ...incoming.messages],

@@ -1,7 +1,12 @@
 const { gql, AuthenticationError } = require('apollo-server-express');
+
 const User = require('../../models/user');
 const Notification = require('../../models/notification');
+
 const { pubsub } = require('../subscriptions/pubSub');
+
+const s3 = require('../../utils/config');
+require('dotenv').config();
 
 const typeDefs = gql`
   type Mutation {
@@ -87,11 +92,39 @@ const resolvers = {
         throw new AuthenticationError('not authenticated');
       }
       const user = await User.findById(context.currentUser.id);
+      const bucketName = process.env.BUCKETNAME;
+
       if (avatar) {
-        user.avatar = { image: avatar, contentType: 'image/jpeg' };
+        const params = {
+          Bucket: bucketName,
+          Key: '',
+          Body: '',
+          ACL: 'public-read',
+        };
+        const buff = Buffer.from(avatar, 'base64');
+        params.Body = buff;
+
+        params.Key = `images/${context.currentUser.id}/avatar.jpeg`;
+
+        // upload the object.
+        let imageFile = await s3.upload(params).promise().catch(console.log);
+        user.avatar = imageFile.Location;
       }
       if (banner) {
-        user.banner = { image: banner, contentType: 'image/jpeg' };
+        const params = {
+          Bucket: bucketName,
+          Key: '',
+          Body: '',
+          ACL: 'public-read',
+        };
+        const buff = Buffer.from(banner, 'base64');
+        params.Body = buff;
+
+        params.Key = `images/${context.currentUser.id}/banner.jpeg`;
+
+        // upload the object.
+        let imageFile = await s3.upload(params).promise().catch(console.log);
+        user.banner = imageFile.Location;
       }
       if (displayName) {
         user.displayName = displayName;

@@ -1,22 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import HomeCardLike from './HomeCardLike';
-import HomeCardComments from './HomeCardComments';
+import HomeCardFooter from './HomeCardFooter';
 import HomeCardImage from './HomeCardImage';
 import HomeCardOverlay from './HomeCardOverlay';
 
-import Styles from '../../styles/home/home__card.module.css';
+import styled, { keyframes } from 'styled-components';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import {
-  IoShareOutline,
-  IoChatbubbleOutline,
-  IoShareSocialOutline,
-} from 'react-icons/io5';
 
-const Card = ({ post, index, dummy, feedLength }) => {
-  const [likeState, setLikeState] = useState(post?.likes.length);
-
+const Card = ({ post, cursorRef }) => {
   const [modal, setModal] = useState(false);
   const [type, setType] = useState();
 
@@ -27,9 +19,9 @@ const Card = ({ post, index, dummy, feedLength }) => {
 
   return (
     <>
-      {post ? (
-        <div className={Styles.card}>
-          <div className={Styles.container}>
+      {post && (
+        <Outer>
+          <Container>
             {modal && (
               <HomeCardOverlay
                 getModal={getModal}
@@ -39,95 +31,142 @@ const Card = ({ post, index, dummy, feedLength }) => {
               />
             )}
             {/*//+ header */}
-            <div className={Styles.header}>
+            <Header>
               <Link to={`/profile/${post.user.id}`}>
-                <div className={Styles.left}>
-                  <img
-                    src={post.user.avatar}
-                    alt=""
-                    className={Styles.avatar}
-                  />
-                  <div className={Styles.userInfo}>
-                    <p className={Styles.displayName}>
-                      {post.user.displayName}
-                    </p>
-                    <p className={Styles.username}>@{post.user.username}</p>
-                  </div>
+                <div className="left">
+                  <Avatar src={post.user.avatar} alt="" />
+                  <UserInfo>
+                    <DisplayName>{post.user.displayName}</DisplayName>
+                    <Username>@{post.user.username}</Username>
+                  </UserInfo>
                 </div>
               </Link>
               {/*//+ more icon */}
-              <div className={Styles.right}>
+              <div className="right">
                 <MoreHorizIcon
                   onClick={() => {
                     getModal('follow');
                   }}
-                  className={Styles.moreIcon}
+                  className="icon"
                 />
               </div>
-            </div>
+            </Header>
             {/*//+ image */}
             <HomeCardImage
-              Styles={Styles}
               postID={post.id}
               userID={post.user.id}
               src={post.image}
             />
             {/*//+ footer */}
-            <div
-              ref={index === feedLength - 1 ? dummy : null}
-              className={Styles.footer}
-            >
-              <div className={Styles.firstChild}>
-                <div className={Styles.left}>
-                  {/*//+ likes button */}
-                  <HomeCardLike
-                    setLikeState={setLikeState}
-                    post={post}
-                    userID={post.user.id}
-                  />
-                  <Link
-                    className={Styles.chatLink}
-                    to={`/Post/${post.user.id}/${post.id}`}
-                  >
-                    <IoChatbubbleOutline className={Styles.icon} />
-                  </Link>
-                  <Link
-                    className={Styles.chatLink}
-                    to={`/Post/${post.user.id}/${post.id}`}
-                  >
-                    <IoShareOutline className={Styles.icon} />
-                  </Link>
-                </div>
-                <IoShareSocialOutline
-                  className={Styles.icon}
-                  onClick={() => {
-                    getModal('share');
-                  }}
-                />
-              </div>
-              <Link
-                className={Styles.imageLink}
-                to={`/Post/${post.user.id}/${post.id}`}
-              >
-                <p className={Styles.likes}>{likeState} likes</p>
-              </Link>
-              {/*//+ comment section */}
-              <HomeCardComments
-                Styles={Styles}
-                userID={post.user.id}
-                post={post}
-              />
-            </div>
-          </div>
-          <img
-            className={Styles.imageBlur + ' ' + 'blur'}
-            src={post.image}
-            alt=""
-          />
-        </div>
-      ) : null}
+            <HomeCardFooter post={post} cursorRef={cursorRef} />
+          </Container>
+          <ImageBlur src={post.image} alt="" />
+        </Outer>
+      )}
     </>
   );
 };
+
+const Outer = styled.div`
+  display: flex;
+  width: 560px;
+  height: 750px;
+  margin: 0 0 64px 0;
+  justify-content: center;
+  border: var(--primary-border);
+  position: relative;
+  border-radius: 16px;
+  @media only screen and (max-width: 850px) {
+    width: 340px;
+    height: 590px;
+  }
+`;
+
+const Container = styled.div`
+  position: absolute;
+  width: inherit;
+  height: inherit;
+  border-radius: 16px;
+  overflow: hidden;
+`;
+
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  box-sizing: border-box;
+  height: 56px;
+  background-color: var(--primary-background-color);
+  padding: 1.5em;
+  .left {
+    display: flex;
+  }
+  .right {
+    display: flex;
+    height: 100%;
+    align-items: center;
+  }
+  .icon {
+    cursor: pointer;
+  }
+`;
+
+const Avatar = styled.img`
+  border-radius: 100%;
+  height: 36px;
+  width: 36px;
+  object-fit: cover;
+  display: block;
+  object-position: center;
+  cursor: pointer;
+`;
+
+const UserInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 16px;
+`;
+
+const DisplayName = styled.p`
+  font-weight: bold;
+  font-size: 14.4px;
+  cursor: pointer;
+`;
+
+const Username = styled.p`
+  color: var(--secondary-font-color);
+  font-size: 13.6px;
+  cursor: pointer;
+`;
+
+const fade = keyframes`
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0.3;
+  }
+`;
+
+const ImageBlur = styled.img`
+  position: absolute;
+  filter: blur(32px);
+  opacity: 0;
+  width: inherit;
+  height: inherit;
+  object-fit: cover;
+  display: block;
+  object-position: center;
+  z-index: -2;
+  animation: ${fade} 1.5s forwards;
+  @media only screen and (max-width: 850px) {
+    -webkit-backface-visibility: hidden;
+    -webkit-transform: translateZ(0) scale(1, 1);
+  }
+`;
 
 export default Card;

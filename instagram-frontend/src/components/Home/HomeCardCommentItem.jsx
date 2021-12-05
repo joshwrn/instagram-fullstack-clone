@@ -1,21 +1,34 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const HomeCardCommentItem = ({ Styles, item }) => {
+import styled from 'styled-components';
+
+const HomeCardCommentItem = ({ item }) => {
   return (
     <>
       {item && (
-        <p className={Styles.comment}>
+        <Comment>
           <Link to={`/profile/${item.user.id}`}>
-            <span className={Styles.commentUser}>{item.user.displayName}</span>
+            <User>{item.user.displayName}</User>
           </Link>
           {item.comment.length >= 15
             ? item.comment.substring(0, 50) + '...'
             : item.comment}
-        </p>
+        </Comment>
       )}
     </>
   );
 };
+
+const Comment = styled.div`
+  padding: 0 0 6px 0;
+  height: 15px;
+`;
+
+const User = styled.span`
+  font-weight: bold;
+  cursor: pointer;
+  margin-right: 5px;
+`;
 
 export default HomeCardCommentItem;

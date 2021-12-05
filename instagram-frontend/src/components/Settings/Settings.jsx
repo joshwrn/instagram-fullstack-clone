@@ -32,13 +32,7 @@ const Settings = () => {
     if (!currentUser) return;
     setUserInput(currentUser.displayName);
     setUserBio(currentUser.bio);
-    setAvatarPreview(currentUser.avatar.image);
-    setBannerPreview(currentUser.banner.image);
   }, [currentUser]);
-
-  //+ updates on account sign up
-
-  useEffect(() => {}, [currentUser]);
 
   //! handle photo uploads
   //@ add file to state
@@ -111,8 +105,12 @@ const Settings = () => {
                   />
                   <div className={Styles.bannerContainer}>
                     <ImageLoader
-                      src={`data:${'image/jpeg'};base64,${bannerPreview}`}
-                      zIndex={'0'}
+                      src={
+                        bannerPreview
+                          ? `data:image/jpeg;base64,${bannerPreview}`
+                          : currentUser.banner
+                      }
+                      zIndex="0"
                     />
                   </div>
                   <div className={Styles.bannerOverlay}>
@@ -130,7 +128,11 @@ const Settings = () => {
                         name="profilePhoto"
                       />
                       <ImageLoader
-                        src={`data:${'image/jpeg'};base64,${avatarPreview}`}
+                        src={
+                          avatarPreview
+                            ? `data:image/jpeg;base64,${avatarPreview}`
+                            : currentUser.avatar
+                        }
                         position="relative"
                         borderRadius="100%"
                         width="112px"

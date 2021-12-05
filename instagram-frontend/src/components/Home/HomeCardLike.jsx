@@ -6,7 +6,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useMutation } from '@apollo/client';
 import { LIKE_POST } from '../../graphql/mutations/postMutations';
 
-import Styles from '../../styles/home/home__card.module.css';
+import styled from 'styled-components';
 import { IoHeartOutline } from 'react-icons/io5';
 
 const HomeCardLike = ({ post, setLikeState }) => {
@@ -53,12 +53,20 @@ const HomeCardLike = ({ post, setLikeState }) => {
     }
   };
 
-  return (
-    <IoHeartOutline
-      onClick={handleLike}
-      className={liked ? Styles.likedIcon : Styles.likeIcon}
-    />
-  );
+  return <HeartIcon liked={liked} onClick={handleLike} />;
 };
+
+const HeartIcon = styled(IoHeartOutline)`
+  margin: 0 7px 0 0;
+  cursor: pointer;
+  path {
+    &:hover {
+      fill: red;
+      stroke: red;
+    }
+    fill: ${({ liked }) => liked && 'red'};
+    stroke: ${({ liked }) => liked && 'red'};
+  }
+`;
 
 export default HomeCardLike;

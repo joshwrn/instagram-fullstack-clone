@@ -84,7 +84,9 @@ const resolvers = {
     findFeed: async (root, { limit, cursor }, context) => {
       if (!context.currentUser) return [];
       const result = await Post.find({
-        user: { $in: context.currentUser.following },
+        user: {
+          $in: [...context.currentUser.following, context.currentUser.id],
+        },
         date: { $lt: cursor ? cursor : Date.now() },
       })
         .sort({ date: -1 })

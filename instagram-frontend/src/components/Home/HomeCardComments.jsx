@@ -9,7 +9,9 @@ import { ADD_COMMENT } from '../../graphql/mutations/commentMutations';
 
 import { IoSendOutline } from 'react-icons/io5';
 
-const HomeCardComments = ({ Styles, post }) => {
+import styled from 'styled-components';
+
+const HomeCardComments = ({ post }) => {
   const [commentInput, setCommentInput] = useState('');
   const [comments, setComments] = useState([]);
   const { currentUser } = useAuth();
@@ -42,45 +44,87 @@ const HomeCardComments = ({ Styles, post }) => {
       ]);
       setCommentInput('');
 
-      console.log({ post: post.id, comment: comment });
       await addComment({ variables: { post: post.id, comment: comment } });
     }
   };
 
   return (
     <>
-      <div className={Styles.comments}>
-        <Link
-          className={Styles.imageLink}
-          to={`/Post/${post.user.id}/${post.id}`}
-        >
-          <p className={Styles.viewAll}>
+      <Outer>
+        <Link to={`/Post/${post.user.id}/${post.id}`}>
+          <ViewAll>
             {comments.length === 0 ? 'No Comments' : 'View All Comments'}
-          </p>
+          </ViewAll>
         </Link>
-        <div className={Styles.commentContainer}>
+        <CommentsContainer>
           {comments.map((item) => {
-            return (
-              <HomeCardCommentItem key={item.id} item={item} Styles={Styles} />
-            );
+            return <HomeCardCommentItem key={item.id} item={item} />;
           })}
-        </div>
-      </div>
-      <div className={Styles.commentBox}>
-        <form className={Styles.commentForm} onSubmit={handleSubmit}>
-          <input
-            className={Styles.inputBox}
+        </CommentsContainer>
+      </Outer>
+      <CommentBox>
+        <CommentForm onSubmit={handleSubmit}>
+          <InputBox
             value={commentInput}
             onChange={(e) => setCommentInput(e.target.value)}
             type="text"
             placeholder="Add a comment..."
             maxLength="99"
           />
-        </form>
-        <IoSendOutline onClick={handleSubmit} className={Styles.send} />
-      </div>
+        </CommentForm>
+        <Send onClick={handleSubmit} />
+      </CommentBox>
     </>
   );
 };
+
+const Outer = styled.div`
+  font-size: 13.6px;
+`;
+
+const ViewAll = styled.p`
+  color: ${({ theme }) => theme.font.secondary};
+  margin: 0 0 6px 0;
+  cursor: pointer;
+`;
+
+const CommentsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 48px;
+  width: 100%;
+`;
+
+const CommentBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  background: transparent;
+  border: 1px solid transparent;
+  border-top: 1px solid rgba(124, 124, 124, 0.281);
+  padding-top: 10px;
+`;
+
+const CommentForm = styled.form`
+  width: 100%;
+  input {
+    &::placeholder {
+      font-size: 13px;
+    }
+  }
+`;
+
+const InputBox = styled.input`
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  color: ${({ theme }) => theme.font.primary};
+`;
+
+const Send = styled(IoSendOutline)`
+  cursor: pointer;
+`;
 
 export default HomeCardComments;
