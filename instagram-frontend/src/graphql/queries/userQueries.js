@@ -51,3 +51,21 @@ export const FIND_USER_PROFILE = gql`
     }
   }
 `;
+
+export const FIND_USER_CARD = gql`
+  query findUserCard($id: ID!) {
+    findUserCard(id: $id) {
+      id
+      displayName
+      username
+      avatar
+      followingCount
+      followerCount
+      postCount
+      recentPosts {
+        image
+        id
+      }
+    }
+  }
+`;

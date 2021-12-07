@@ -4,12 +4,14 @@ import { Link } from 'react-router-dom';
 import HomeCardFooter from './HomeCardFooter';
 import HomeCardImage from './HomeCardImage';
 import HomeCardOverlay from './HomeCardOverlay';
+import HoverCard from '../reusable/HoverCard';
 
 import styled, { keyframes } from 'styled-components';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 
 const Card = ({ post, cursorRef }) => {
   const [modal, setModal] = useState(false);
+  const [hover, setHover] = useState(false);
   const [type, setType] = useState();
 
   const getModal = (modalType) => {
@@ -32,15 +34,26 @@ const Card = ({ post, cursorRef }) => {
             )}
             {/*//+ header */}
             <Header>
-              <Link to={`/profile/${post.user.id}`}>
-                <div className="left">
+              <div
+                onMouseLeave={() => setHover(false)}
+                onMouseEnter={() => setHover(true)}
+                className="left"
+              >
+                <Link to={`/profile/${post.user.id}`}>
                   <Avatar src={post.user.avatar} alt="" />
-                  <UserInfo>
+                </Link>
+                <UserInfo>
+                  <HoverCard
+                    userId={post.user.id}
+                    show={hover}
+                    setShow={setHover}
+                  />
+                  <Link to={`/profile/${post.user.id}`}>
                     <DisplayName>{post.user.displayName}</DisplayName>
                     <Username>@{post.user.username}</Username>
-                  </UserInfo>
-                </div>
-              </Link>
+                  </Link>
+                </UserInfo>
+              </div>
               {/*//+ more icon */}
               <div className="right">
                 <MoreHorizIcon
@@ -73,7 +86,7 @@ const Outer = styled.div`
   height: 750px;
   margin: 0 0 64px 0;
   justify-content: center;
-  border: var(--primary-border);
+  border: ${({ theme }) => theme.border.primary};
   position: relative;
   border-radius: 16px;
   @media only screen and (max-width: 850px) {
@@ -99,7 +112,7 @@ const Header = styled.div`
   width: 100%;
   box-sizing: border-box;
   height: 56px;
-  background-color: var(--primary-background-color);
+  background-color: ${({ theme }) => theme.background.primary};
   padding: 1.5em;
   .left {
     display: flex;
@@ -138,7 +151,7 @@ const DisplayName = styled.p`
 `;
 
 const Username = styled.p`
-  color: var(--secondary-font-color);
+  color: ${({ theme }) => theme.font.secondary};
   font-size: 13.6px;
   cursor: pointer;
 `;

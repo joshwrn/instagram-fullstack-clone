@@ -38,7 +38,6 @@ const resolvers = {
       const result = await Post.findById(args.id)
         .populate('user')
         .populate('likes');
-      console.log('result', result);
       return result;
     },
     // get comments for a post

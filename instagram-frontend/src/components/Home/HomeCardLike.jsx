@@ -10,7 +10,7 @@ import styled from 'styled-components';
 import { IoHeartOutline } from 'react-icons/io5';
 
 const HomeCardLike = ({ post, setLikeState }) => {
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState('false');
   const { currentUser } = useAuth();
   let history = useHistory();
   const [likePost] = useMutation(LIKE_POST, {
@@ -22,7 +22,7 @@ const HomeCardLike = ({ post, setLikeState }) => {
   useEffect(() => {
     if (!post || !currentUser) return;
     if (post.likes.some((like) => like.id === currentUser.id)) {
-      setLiked(true);
+      setLiked('true');
     }
   }, [post]);
 
@@ -31,8 +31,8 @@ const HomeCardLike = ({ post, setLikeState }) => {
       return history.push('/sign-up');
     }
     if (currentUser) {
-      if (liked) {
-        setLiked(false);
+      if (liked === 'true') {
+        setLiked('false');
         setLikeState((prev) => prev - 1);
         await likePost({
           variables: {
@@ -41,7 +41,7 @@ const HomeCardLike = ({ post, setLikeState }) => {
           },
         });
       } else {
-        setLiked(true);
+        setLiked('true');
         setLikeState((prev) => prev + 1);
         await likePost({
           variables: {
@@ -64,8 +64,8 @@ const HeartIcon = styled(IoHeartOutline)`
       fill: red;
       stroke: red;
     }
-    fill: ${({ liked }) => liked && 'red'};
-    stroke: ${({ liked }) => liked && 'red'};
+    fill: ${({ liked }) => liked === 'true' && 'red'};
+    stroke: ${({ liked }) => liked === 'true' && 'red'};
   }
 `;
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 
 import ProfileCard from './ProfileCard';
 import LoadingIcon from '../reusable/LoadingIcon';
+import NoPosts from '../reusable/NoPosts';
 
 import useCursor from '../../hooks/useCursor';
 
@@ -100,7 +101,7 @@ const ProfileFeed = ({ match }) => {
         <div className={Styles.outer}>
           <div className={Styles.notFound}>
             <div className={Styles.notFoundContainer}>
-              <button className={Styles.notFoundButton}>No Posts</button>
+              <NoPosts text="No Posts" noPosts={noPosts} />
             </div>
           </div>
         </div>

@@ -99,8 +99,8 @@
 /*! desktop */
 @media only screen and (min-width: 1500px) {
   .card {
-    width: 20vw;
-    height: 20vw;
+    width: 350px;
+    height: 350px;
   }
 }
 

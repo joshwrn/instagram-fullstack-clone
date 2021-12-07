@@ -6,11 +6,22 @@ const mongoose = require('mongoose');
 // returns userProfile type which uses profilePost type
 
 const typeDefs = gql`
+  type UserCard {
+    id: ID!
+    username: String!
+    displayName: String!
+    followerCount: Int!
+    followingCount: Int!
+    postCount: Int!
+    avatar: String!
+    recentPosts: [Post]
+  }
   type Query {
     findUser(id: ID!): UserProfile
     findFollowers(id: ID!, type: String!): [UserProfile]
     searchUsers(search: String!): [UserProfile]
     findAllUsers: Int
+    findUserCard(id: ID!): UserCard
   }
 `;
 
@@ -71,6 +82,31 @@ const resolvers = {
         return result;
       } catch (error) {
         console.log(error);
+      }
+    },
+    findUserCard: async (root, args) => {
+      try {
+        const user = await User.findById(args.id);
+        const recentPosts = await Post.find({ user: args.id }).limit(3);
+        const id = mongoose.Types.ObjectId(args.id);
+        const stats = await User.aggregate([
+          { $match: { _id: id } },
+          {
+            $project: {
+              id: 1,
+              total_followers: { $size: '$followers' },
+              total_following: { $size: '$following' },
+              total_posts: { $size: '$posts' },
+            },
+          },
+        ]);
+        user.followerCount = stats[0].total_followers;
+        user.followingCount = stats[0].total_following;
+        user.postCount = stats[0].total_posts;
+        user.recentPosts = recentPosts;
+        return user;
+      } catch (err) {
+        throw err;
       }
     },
   },

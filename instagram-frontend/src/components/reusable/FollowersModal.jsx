@@ -24,8 +24,6 @@ const FollowersModal = ({
   const [list, setList] = useState([]);
   const [none, setNone] = useState(false);
 
-  // const ref = useRef();
-  // const [isFetching, setIsFetching] = useIntersect(ref);
   const [isFetching, setIsFetching, cursorRef] = useCursor(none, loading);
 
   const handleSwitch = (e) => {

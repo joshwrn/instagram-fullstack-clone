@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 
 import Card from './HomeCard';
 import LoadingIcon from '../reusable/LoadingIcon';
+import NoPosts from '../reusable/NoPosts';
 
 import useCursor from '../../hooks/useCursor';
 
 import { useQuery } from '@apollo/client';
 import { FIND_FEED } from '../../graphql/queries/postQueries';
 
-import Styles from '../../styles/home/home__feed.module.css';
+import styled from 'styled-components';
 
 const HomeFeed = ({ newPost }) => {
   const [feed, setFeed] = useState([]);
@@ -46,7 +47,7 @@ const HomeFeed = ({ newPost }) => {
   }, [isFetching]);
 
   return (
-    <div className={Styles.container}>
+    <Container>
       {feed.map((post, index) => {
         return (
           <Card
@@ -56,7 +57,7 @@ const HomeFeed = ({ newPost }) => {
           />
         );
       })}
-      <div className={`${Styles.loaderContainer}`}>
+      <LoaderContainer>
         {
           <LoadingIcon
             isFetching={isFetching}
@@ -64,10 +65,24 @@ const HomeFeed = ({ newPost }) => {
             end={noPosts}
           />
         }
-        {noPosts && <div className={Styles.noPosts}>No More Posts</div>}
-      </div>
-    </div>
+        <NoPosts noPosts={noPosts} text="No More Posts" />
+      </LoaderContainer>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  @media only screen and (max-width: 850px) {
+    padding-bottom: 54px;
+  }
+`;
+
+const LoaderContainer = styled.div`
+  margin-bottom: 100px;
+`;
 
 export default HomeFeed;

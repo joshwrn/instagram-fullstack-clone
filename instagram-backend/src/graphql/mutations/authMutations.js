@@ -39,8 +39,6 @@ const resolvers = {
       const saltRounds = 10;
       const passwordHash = await bcrypt.hash(password, saltRounds);
 
-      console.log(password, displayName, username, email);
-
       const user = new User({
         password: passwordHash,
         bio: `Hi i'm ${displayName}`,

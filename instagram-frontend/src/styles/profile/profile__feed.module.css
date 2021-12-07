@@ -7,7 +7,6 @@
 .feed {
   display: grid;
   grid-template-columns: repeat(auto-fill, 300px);
-  grid-template-rows: repeat(auto-fill, 1fr);
   padding: 0 0 100px 24px;
   justify-content: center;
   justify-items: center;
@@ -75,7 +74,7 @@
 /*! desktop */
 @media only screen and (min-width: 1500px) {
   .feed {
-    grid-template-columns: repeat(auto-fill, 20vw);
+    grid-template-columns: repeat(3, 350px);
   }
 }
 

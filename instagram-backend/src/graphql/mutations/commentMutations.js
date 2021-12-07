@@ -43,7 +43,6 @@ const resolvers = {
         });
         const savedNotification = await notify.save();
         await savedNotification.populate('user');
-        console.log('saved', savedNotification);
         pubsub.publish('NEW_NOTIFICATION', {
           newNotification: savedNotification,
         });
@@ -57,7 +56,6 @@ const resolvers = {
         try {
           const comment = await Comment.findById(args.commentId);
           const post = await Post.findById(comment.post);
-          console.log(post.user.toString(), context.currentUser.id);
           if (
             post.user.toString() === context.currentUser.id ||
             comment.user.toString() === context.currentUser.id

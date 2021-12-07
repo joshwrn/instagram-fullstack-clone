@@ -45,7 +45,11 @@ const NotificationsItem = ({ item }) => {
   return (
     <>
       {item && (
-        <LinkContainer to={`/post/${currentUser.id}/${item.post.id}`}>
+        <LinkContainer
+          to={`/post/${currentUser.id}/${
+            item.type === 'follow' ? item.from.id : item.post?.id
+          }`}
+        >
           <Container>
             <Start>
               <Avatar src={item.from.avatar} alt="" />
@@ -57,7 +61,7 @@ const NotificationsItem = ({ item }) => {
               {item.type === 'follow' ? (
                 <Icon />
               ) : (
-                <Preview src={item.post.image} alt="" />
+                <Preview src={item.post?.image} alt="" />
               )}
             </End>
           </Container>

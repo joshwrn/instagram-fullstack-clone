@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 import { DELETE_POST } from '../../graphql/mutations/postMutations';
 import { useMutation } from '@apollo/client';
@@ -8,11 +8,21 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { IoShareSocialOutline, IoTrashOutline } from 'react-icons/io5';
 import Styles from '../../styles/post/post__menu.module.css';
 
-const PostMenu = ({ ownPost, match, currentPost }) => {
+const PostMenu = ({ ownPost, currentPostId }) => {
+  const history = useHistory();
+  const params = useParams();
+  const menuRef = useRef();
   const [menuStatus, setMenuStatus] = useState(false);
-  let history = useHistory();
-  let menuRef = useRef();
-  const [deletePost] = useMutation(DELETE_POST);
+  const [deletePost, { data }] = useMutation(DELETE_POST, {
+    update(cache) {
+      const normalizedId = cache.identify({
+        id: currentPostId,
+        __typename: 'ProfilePost',
+      });
+      cache.evict({ id: normalizedId });
+      cache.gc();
+    },
+  });
 
   const handleMenu = () => {
     menuStatus ? setMenuStatus(false) : setMenuStatus(true);
@@ -21,11 +31,16 @@ const PostMenu = ({ ownPost, match, currentPost }) => {
   const handleDelete = async () => {
     await deletePost({
       variables: {
-        id: currentPost.id,
+        id: currentPostId,
       },
     });
-    history.push(`/profile/${match.params.uid}`);
   };
+
+  useEffect(() => {
+    if (data && data.deletePost === 'success') {
+      history.push(`/profile/${params.uid}`);
+    }
+  }, [data]);
 
   const handleShare = () => {
     copyToClipboard(window.location.href);

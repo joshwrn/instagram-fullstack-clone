@@ -8,18 +8,16 @@ import MessagesSidebar from './MessagesSidebar';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLazyQuery } from '@apollo/client';
 import { GET_THREADS } from '../../graphql/queries/messageQueries';
-import { NEW_MESSAGES } from '../../graphql/subscriptions/messageSubscriptions';
 
 import Styles from '../../styles/messages/messages.module.css';
 
-const Messages = ({ match }) => {
+const Messages = () => {
   const [messageThreads, setMessageThreads] = useState([]);
   const [currentThread, setCurrentThread] = useState();
   const [currentIndex, setCurrentIndex] = useState();
   const [createModal, setCreateModal] = useState(false);
   const { currentUser } = useAuth();
   const dummyRef = useRef(null);
-  //const subRef = useRef();
   const [getThreads, { data, loading, error }] = useLazyQuery(GET_THREADS, {
     onError: (err) => console.log(err),
   });

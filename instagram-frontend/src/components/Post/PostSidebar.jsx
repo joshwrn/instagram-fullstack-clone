@@ -142,7 +142,11 @@ const PostSidebar = ({
             <IoShareOutline className={Styles.postIcon} />
           </div>
           {/*//+ delete menu */}
-          <PostMenu match={match} ownPost={ownPost} currentPost={currentPost} />
+          <PostMenu
+            match={match}
+            ownPost={ownPost}
+            currentPostId={currentPost.id}
+          />
         </div>
         <div className={Styles.infoContainer}>
           <p className={Styles.likes}>{totalLikes} likes</p>

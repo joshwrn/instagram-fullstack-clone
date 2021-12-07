@@ -28,7 +28,6 @@ const resolvers = {
       if (!currentUser) {
         throw new AuthenticationError('not authenticated');
       }
-      console.log('uploading post');
       //@ upload to aws storage
       const bucketName = process.env.BUCKETNAME;
       const params = {

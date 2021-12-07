@@ -83,7 +83,6 @@ async function startServer() {
           result.followingCount = stats[0].total_following;
           result.postCount = stats[0].total_posts;
           result.notiCount = noti.length;
-          console.log('result', result);
           return { currentUser: result };
         } catch (error) {
           throw new Error(error);
@@ -99,7 +98,6 @@ async function startServer() {
       execute,
       subscribe,
       async onConnect(connectionParams, webSocket) {
-        console.log('subscription auth');
         if (connectionParams.authorization) {
           const decodedToken = jwt.verify(
             connectionParams.authorization.substring(7),

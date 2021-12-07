@@ -142,7 +142,6 @@ const resolvers = {
       }
       try {
         const user = await User.findById(context.currentUser.id);
-        console.log(user.theme);
         if (user.theme === 'light') {
           user.theme = 'dark';
         } else if (user.theme === 'dark') {
