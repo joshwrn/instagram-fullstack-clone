@@ -2,6 +2,9 @@ const baseTheme = {
   font: {
     secondary: 'rgb(136, 136, 136)',
   },
+  shadow: {
+    primary: '0px 0px 20px 1px rgba(0, 0, 0, 0.103)',
+  },
 };
 
 export const darkTheme = {
@@ -29,6 +32,9 @@ export const darkTheme = {
   menu: {
     hover: 'rgba(255, 255, 255, 0.1)',
   },
+  shadow: {
+    primary: baseTheme.shadow.primary,
+  },
 };
 
 export const lightTheme = {
@@ -55,5 +61,8 @@ export const lightTheme = {
   },
   menu: {
     hover: 'rgba(0, 0, 0, 0.1)',
+  },
+  shadow: {
+    primary: baseTheme.shadow.primary,
   },
 };

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import LoadingIcon from './LoadingIcon';
-//import FollowButton from './FollowButton';
 import ImageLoader from './ImageLoader';
 
-import { useQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import { FIND_USER_CARD } from '../../graphql/queries/userQueries';
 
 import styled from 'styled-components';
@@ -21,22 +20,20 @@ const Stat = ({ label, number }) => {
 
 const HoverCard = ({ show, setShow, userId }) => {
   const [user, setUser] = useState(null);
-  const { loading, error, data } = useQuery(FIND_USER_CARD, {
-    variables: { id: userId },
+  const [getCard, { loading, data }] = useLazyQuery(FIND_USER_CARD, {
     onError: (err) => console.log(err),
   });
-  const history = useHistory();
-
-  const handleLink = (e) => {
-    console.log('wtf');
-    e.preventDefault();
-    history.push(`/profile/${userId}`);
-  };
 
   useEffect(() => {
     if (!data) return;
     setUser(data.findUserCard);
   }, [data]);
+
+  useEffect(() => {
+    if (show) {
+      getCard({ variables: { id: userId } });
+    }
+  }, [show]);
 
   return (
     <>
@@ -108,6 +105,7 @@ const Container = styled.div`
   border-radius: 16px;
   box-shadow: 0px 0px 20px 1px rgba(0, 0, 0, 0.103);
   cursor: initial;
+  z-index: 10;
 
   &:before {
     background-color: transparent;
@@ -184,7 +182,7 @@ const StatBox = styled.div`
   justify-content: center;
   align-items: center;
   height: 60px;
-  cursor: pointer;
+  cursor: default;
 
   &:hover ${StatLabel} {
     color: ${({ theme }) => theme.font.primary};

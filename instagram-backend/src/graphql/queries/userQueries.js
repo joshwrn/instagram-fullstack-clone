@@ -22,6 +22,7 @@ const typeDefs = gql`
     searchUsers(search: String!): [UserProfile]
     findAllUsers: Int
     findUserCard(id: ID!): UserCard
+    suggestedUsers: [UserProfile]
   }
 `;
 
@@ -87,7 +88,9 @@ const resolvers = {
     findUserCard: async (root, args) => {
       try {
         const user = await User.findById(args.id);
-        const recentPosts = await Post.find({ user: args.id }).limit(3);
+        const recentPosts = await Post.find({ user: args.id })
+          .limit(3)
+          .sort({ date: -1 });
         const id = mongoose.Types.ObjectId(args.id);
         const stats = await User.aggregate([
           { $match: { _id: id } },
@@ -105,6 +108,20 @@ const resolvers = {
         user.postCount = stats[0].total_posts;
         user.recentPosts = recentPosts;
         return user;
+      } catch (err) {
+        throw err;
+      }
+    },
+    suggestedUsers: async (root, args, context) => {
+      try {
+        const user = await User.findById(context.currentUser).populate(
+          'following'
+        );
+        const following = user.following;
+        const users = await User.find({
+          _id: { $nin: following, $ne: context.currentUser },
+        }).limit(3);
+        return users;
       } catch (err) {
         throw err;
       }

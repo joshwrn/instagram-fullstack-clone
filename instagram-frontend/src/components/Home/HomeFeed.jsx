@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
+import StoriesBar from '../Stories/StoriesBar';
 import Card from './HomeCard';
 import LoadingIcon from '../reusable/LoadingIcon';
 import NoPosts from '../reusable/NoPosts';

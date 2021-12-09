@@ -69,3 +69,14 @@ export const FIND_USER_CARD = gql`
     }
   }
 `;
+
+export const SUGGESTED_USERS = gql`
+  query suggestedUsers {
+    suggestedUsers {
+      id
+      username
+      displayName
+      avatar
+    }
+  }
+`;

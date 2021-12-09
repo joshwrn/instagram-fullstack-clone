@@ -72,10 +72,7 @@ const PostMenu = ({ ownPost, currentPostId }) => {
   let menu;
 
   menu = (
-    <div
-      ref={menuRef}
-      className={ownPost ? Styles.containerOwn : Styles.container}
-    >
+    <div className={ownPost ? Styles.containerOwn : Styles.container}>
       <div className={Styles.inner}>
         <div onClick={handleShare} className={Styles.option}>
           <IoShareSocialOutline className={Styles.icon} />
@@ -94,9 +91,9 @@ const PostMenu = ({ ownPost, currentPostId }) => {
   );
 
   return (
-    <div>
+    <div ref={menuRef} onClick={handleMenu}>
       {menuStatus ? menu : null}
-      <MoreHorizIcon onClick={handleMenu} className={Styles.postIcon} />
+      <MoreHorizIcon className={Styles.postIcon} />
     </div>
   );
 };
