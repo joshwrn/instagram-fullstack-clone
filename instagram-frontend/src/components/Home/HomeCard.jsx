@@ -71,7 +71,11 @@ const Card = ({ post, cursorRef }) => {
               src={post.image}
             />
             {/*//+ footer */}
-            <HomeCardFooter post={post} cursorRef={cursorRef} />
+            <HomeCardFooter
+              getModal={getModal}
+              post={post}
+              cursorRef={cursorRef}
+            />
           </Container>
           <ImageBlur src={post.image} alt="" />
         </Outer>

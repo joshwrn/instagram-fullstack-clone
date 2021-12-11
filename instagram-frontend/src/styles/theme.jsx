@@ -11,6 +11,7 @@ export const darkTheme = {
   font: {
     primary: '#fff',
     secondary: baseTheme.font.secondary,
+    subtle: '#c2c2c2',
   },
   background: {
     primary: '#000',
@@ -18,6 +19,7 @@ export const darkTheme = {
   border: {
     primary: '1px solid rgb(41, 41, 41)',
     secondary: '1px solid rgb(41, 41, 41)',
+    subtle: '1px solid rgb(49, 49, 49)',
   },
   gradient: {
     loading: 'linear-gradient(to right, #000000, #353535)',
@@ -41,6 +43,7 @@ export const lightTheme = {
   font: {
     primary: '#000',
     secondary: baseTheme.font.secondary,
+    subtle: '#969696',
   },
   background: {
     primary: '#fff',
@@ -48,6 +51,7 @@ export const lightTheme = {
   border: {
     primary: '1px solid transparent',
     secondary: '1px solid rgb(206, 206, 206)',
+    subtle: '1px solid rgb(218, 218, 218)',
   },
   gradient: {
     loading: 'linear-gradient(to right, #ffffff, #c2c2c2)',

@@ -7,7 +7,7 @@ import Styles from '../../styles/home/home__card__overlay.module.css';
 import { IoCloseOutline } from 'react-icons/io5';
 
 const HomeCardOverlay = ({ getModal, type, userID, post }) => {
-  const { userProfile } = useAuth();
+  const { currentUser } = useAuth();
   let history = useHistory();
   //+ unfollow
   const handleUnfollow = async () => {
@@ -50,7 +50,7 @@ const HomeCardOverlay = ({ getModal, type, userID, post }) => {
   }
 
   if (type === 'follow') {
-    if (!userProfile) {
+    if (!currentUser) {
       button = (
         <button
           onClick={() => {
@@ -63,8 +63,8 @@ const HomeCardOverlay = ({ getModal, type, userID, post }) => {
       );
     }
 
-    if (userProfile) {
-      if (userProfile.userID === userID) {
+    if (currentUser) {
+      if (currentUser.id === userID) {
         button = (
           <button
             onClick={() => {
@@ -76,7 +76,7 @@ const HomeCardOverlay = ({ getModal, type, userID, post }) => {
           </button>
         );
       }
-      if (userProfile.userID !== userID) {
+      if (currentUser.id !== userID) {
         button = (
           <button onClick={handleUnfollow} className={Styles.button}>
             Unfollow

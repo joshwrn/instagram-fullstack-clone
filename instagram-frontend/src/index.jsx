@@ -51,6 +51,14 @@ const splitLink = split(
   authLink.concat(httpLink)
 );
 
+const includedIn = (set, object) => {
+  for (const item of set) {
+    if (item['__ref'] === object['__ref']) {
+      return true;
+    }
+  }
+};
+
 const cache = new InMemoryCache({
   typePolicies: {
     Query: {
@@ -58,13 +66,6 @@ const cache = new InMemoryCache({
         findFeed: {
           keyArgs: false,
           merge(existing = { hasMore: true, posts: [] }, incoming) {
-            const includedIn = (set, object) => {
-              for (const item of set) {
-                if (item['__ref'] === object['__ref']) {
-                  return true;
-                }
-              }
-            };
             const newPosts = incoming.posts.filter(
               (post) => !includedIn(existing.posts, post)
             );
@@ -95,9 +96,12 @@ const cache = new InMemoryCache({
         readMessages: {
           keyArgs: ['threadId'],
           merge(existing = { hasMore: true, messages: [] }, incoming) {
+            const newMessages = incoming.messages.filter(
+              (message) => !includedIn(existing.messages, message)
+            );
             return {
               hasMore: incoming.hasMore,
-              messages: [...existing.messages, ...incoming.messages],
+              messages: [...existing.messages, ...newMessages],
             };
           },
         },

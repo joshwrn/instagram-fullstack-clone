@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import ImageLoader from '../reusable/ImageLoader';
+import FollowButton from '../reusable/FollowButton';
 
 import { useQuery } from '@apollo/client';
 import { SUGGESTED_USERS } from '../../graphql/queries/userQueries';
@@ -25,7 +26,7 @@ const User = ({ username, displayName, avatar, id }) => {
           </NameContainer>
         </UserStart>
       </Link>
-      <Button>Follow</Button>
+      <Button currentProfile={id} />
     </UserContainer>
   );
 };
@@ -72,9 +73,9 @@ const Container = styled.div`
 `;
 
 const Header = styled.div`
-  font-size: 15px;
+  font-size: 14px;
   font-weight: bold;
-  color: #c2c2c2;
+  color: ${({ theme }) => theme.font.subtle};
 `;
 
 const UserContainer = styled.div`
@@ -107,16 +108,15 @@ const DisplayName = styled.p`
   font-weight: bold;
 `;
 
-const Button = styled.button`
+const Button = styled(FollowButton)`
   width: 65px;
-  height: 30px;
+  height: 27px;
   font-size: 11px;
   background: transparent;
-  border: ${({ theme }) => theme.border.primary};
+  border: ${({ theme }) => theme.border.subtle};
   color: ${({ theme }) => theme.font.primary};
   border-radius: 16px;
   transition: background-color 0.25s ease-in-out;
-  box-shadow: 0px 0px 20px 1px rgba(0, 0, 0, 0.103);
   &:hover {
     background-color: ${({ theme }) => theme.font.primary};
     cursor: pointer;

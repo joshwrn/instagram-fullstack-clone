@@ -11,7 +11,7 @@ import {
   IoShareSocialOutline,
 } from 'react-icons/io5';
 
-const HomeCardFooter = ({ post, cursorRef }) => {
+const HomeCardFooter = ({ post, cursorRef, getModal }) => {
   const [likeState, setLikeState] = useState(post?.likes.length);
   return (
     <>

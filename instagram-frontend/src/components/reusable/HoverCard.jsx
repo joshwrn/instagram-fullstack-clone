@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 import LoadingIcon from './LoadingIcon';
 import ImageLoader from './ImageLoader';
+import FollowButton from './FollowButton';
 
 import { useLazyQuery } from '@apollo/client';
 import { FIND_USER_CARD } from '../../graphql/queries/userQueries';
@@ -74,7 +75,9 @@ const HoverCard = ({ show, setShow, userId }) => {
               </PostsContainer>
               <Footer>
                 <Button>Message</Button>
-                <Button>Follow</Button>
+                <Button currentProfile={userId} as={FollowButton}>
+                  Follow
+                </Button>
               </Footer>
             </>
           ) : (

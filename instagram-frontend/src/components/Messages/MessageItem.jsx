@@ -66,7 +66,7 @@ const MessageItem = ({
     <ItemDiv ref={cursorRef} group={group} sent={sent} loaded={loaded}>
       {loaded && (
         <>
-          <BubbleWrapper>
+          <BubbleWrapper sent={sent}>
             <Bubble
               onMouseEnter={() => setShowTime(true)}
               onMouseLeave={() => setShowTime(false)}
@@ -75,7 +75,7 @@ const MessageItem = ({
               {message}
             </Bubble>
             <Time showTime={showTime}>{time}</Time>
-            {index === 0 && <Status>{seen}</Status>}
+            {index === 0 && sent && <Status>{seen}</Status>}
           </BubbleWrapper>
           <SideContainer>
             {!group && currentUser && (
@@ -97,11 +97,11 @@ const MessageItem = ({
 
 const ItemDiv = styled.div`
   display: flex;
+  flex-direction: ${(props) => (props.sent ? 'row' : 'row-reverse')};
   width: 100%;
+  gap: 5px;
   height: fit-content;
   align-items: center;
-  justify-content: ${(props) => (props.sent ? 'flex-end' : 'flex-start')};
-  flex: 0 0 auto;
   box-sizing: border-box;
   position: relative;
   transition: opacity 0.5s ease-in-out;
@@ -153,8 +153,8 @@ const BubbleWrapper = styled.div`
   flex-direction: column;
   width: 100%;
   height: fit-content;
-  align-items: flex-end;
   position: relative;
+  align-items: ${(props) => (props.sent ? 'flex-end' : 'flex-start')};
 `;
 
 const Bubble = styled.div`

@@ -9,18 +9,21 @@ import {
   UNFOLLOW_USER,
 } from '../../graphql/mutations/userMutations';
 
-const FollowButton = ({ Styles, match, currentProfile, handleFollowers }) => {
+const FollowButton = ({ className, currentProfile, handleFollowers }) => {
   const [following, setFollowing] = useState(false);
-  const { currentUser } = useAuth();
-  let history = useHistory();
+  const [text, setText] = useState('Follow');
+
   const [checkFollowing, { data, loading, error }] =
     useLazyQuery(CHECK_FOLLOWING);
   const [followUser] = useMutation(FOLLOW_USER);
   const [unfollowUser] = useMutation(UNFOLLOW_USER);
 
+  const { currentUser } = useAuth();
+  let history = useHistory();
+
   useEffect(() => {
     // need to switch to check signed in user
-    if (currentUser && currentUser.id !== match) {
+    if (currentUser && currentUser.id !== currentProfile) {
       checkFollowing({ variables: { id: currentUser.id, type: 'following' } });
     }
   }, [currentUser, currentProfile]);
@@ -28,18 +31,19 @@ const FollowButton = ({ Styles, match, currentProfile, handleFollowers }) => {
   useEffect(() => {
     if (data) {
       const { findFollowers } = data;
-      const following = findFollowers.some((follower) => follower.id === match);
+      const following = findFollowers.some(
+        (follower) => follower.id === currentProfile
+      );
       setFollowing(following);
     }
   }, [data]);
 
   //+ follow
   const handleFollow = async (e) => {
-    e.preventDefault();
     if (!currentUser) return history.push('/sign-up');
     followUser({
       variables: {
-        followedUser: currentProfile.id,
+        followedUser: currentProfile,
       },
     });
     setFollowing(true);
@@ -47,47 +51,47 @@ const FollowButton = ({ Styles, match, currentProfile, handleFollowers }) => {
 
   //+ unfollow
   const handleUnfollow = async (e) => {
-    e.preventDefault();
     unfollowUser({
       variables: {
-        followedUser: currentProfile.id,
+        followedUser: currentProfile,
       },
     });
     setFollowing(false);
   };
 
   const handleLink = (e) => {
-    e.preventDefault();
     if (handleFollowers) {
       handleFollowers(e);
     }
     history.push('/settings');
   };
 
-  //+ decides if profile button should be follow, unfollow, or edit
-  let button = (
-    <button onClick={handleFollow} className={Styles.profileBtn}>
-      Follow
+  const handleClick = () => {
+    if (following) {
+      handleUnfollow();
+    } else if (currentUser && currentUser.id === currentProfile) {
+      handleLink();
+    } else {
+      handleFollow();
+    }
+  };
+
+  useEffect(() => {
+    if (following) {
+      setText('Unfollow');
+    } else {
+      setText('Follow');
+    }
+    if (currentUser && currentUser.id === currentProfile) {
+      setText('Edit Profile');
+    }
+  }, [following, currentUser, currentProfile]);
+
+  return (
+    <button className={className} onClick={handleClick}>
+      {text}
     </button>
   );
-
-  if (following) {
-    button = (
-      <button onClick={handleUnfollow} className={Styles.profileBtn}>
-        Unfollow
-      </button>
-    );
-  }
-
-  if (currentUser && currentUser.id === match) {
-    button = (
-      <button onClick={handleLink} className={Styles.profileBtn}>
-        Edit Profile
-      </button>
-    );
-  }
-
-  return <>{button}</>;
 };
 
 export default FollowButton;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 
 import ProfileSidebar from './ProfileSidebar';
 import ProfileFeed from './ProfileFeed';
@@ -16,6 +16,7 @@ import { useAuth } from '../../contexts/AuthContext';
 
 import { IoSendOutline, IoAddOutline } from 'react-icons/io5';
 import Styles from '../../styles/profile/profile.module.css';
+import styled from 'styled-components';
 
 const Profile = (props) => {
   const [currentProfile, setCurrentProfile] = useState(null);
@@ -23,6 +24,7 @@ const Profile = (props) => {
   const [renderModal, setRenderModal] = useState(false);
 
   const { match } = props;
+  const params = useParams();
   const { currentUser, userProfile } = useAuth();
   const [loaded, setLoaded] = useState(false);
   const [loading, setLoading] = useState([
@@ -88,17 +90,16 @@ const Profile = (props) => {
 
   //+ decides if action button should be post or message
   let actionButton = (
-    <button onClick={newMessage} className={Styles.actionBtn}>
-      <IoSendOutline className="action-icon" />
-    </button>
-  );
-  if (currentUser?.id === match.params.uid) {
-    actionButton = (
-      <button onClick={getModal} className={Styles.actionBtn}>
+    <ActionButton
+      onClick={currentUser?.id === params.uid ? getModal : newMessage}
+    >
+      {currentUser?.id === params.uid ? (
         <IoAddOutline className="action-icon" />
-      </button>
-    );
-  }
+      ) : (
+        <IoSendOutline className="action-icon" />
+      )}
+    </ActionButton>
+  );
 
   //! no profile found
   if (!currentProfile) {
@@ -124,7 +125,7 @@ const Profile = (props) => {
             <div className={Styles.topRight}>
               <div className={Styles.topIconRow}>
                 {/*//+ following button */}
-                <FollowButton Styles={Styles} />
+                <StyledFollowButton as={FollowButton} Styles={Styles} />
                 {actionButton}
               </div>
             </div>
@@ -190,10 +191,9 @@ const Profile = (props) => {
             <div className={Styles.topRight}>
               <div className={Styles.topIconRow}>
                 {/*//+ following button */}
-                <FollowButton
-                  Styles={Styles}
-                  match={match.params.uid}
-                  currentProfile={currentProfile}
+                <StyledFollowButton
+                  as={FollowButton}
+                  currentProfile={currentProfile.id}
                 />
                 {actionButton}
               </div>
@@ -218,5 +218,36 @@ const Profile = (props) => {
     </>
   );
 };
+
+const BaseButton = styled.button`
+  border: none;
+  box-shadow: 0px 0px 20px 1px rgba(0, 0, 0, 0.103);
+  background-color: white;
+  color: black;
+  height: 44px;
+  transition: box-shadow 0.25s, transform 0.25s;
+  cursor: pointer;
+  box-sizing: border-box;
+  font-weight: bold;
+  &:hover {
+    box-shadow: 0px 3px 20px 1px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+  }
+`;
+
+const StyledFollowButton = styled(BaseButton)`
+  border-radius: 20px;
+  font-size: 17px;
+  padding: 0 32px;
+`;
+
+const ActionButton = styled(BaseButton)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  font-size: 19px;
+  border-radius: 100%;
+`;
 
 export default Profile;
