@@ -9,14 +9,23 @@ import {
   UNFOLLOW_USER,
 } from '../../graphql/mutations/userMutations';
 
-const FollowButton = ({ className, currentProfile, handleFollowers }) => {
+const FollowButton = ({
+  className,
+  currentProfile,
+  handleFollowers,
+  queries = [],
+}) => {
   const [following, setFollowing] = useState(false);
   const [text, setText] = useState('Follow');
 
   const [checkFollowing, { data, loading, error }] =
     useLazyQuery(CHECK_FOLLOWING);
-  const [followUser] = useMutation(FOLLOW_USER);
-  const [unfollowUser] = useMutation(UNFOLLOW_USER);
+  const [followUser] = useMutation(FOLLOW_USER, {
+    refetchQueries: [`getCurrentUser`, ...queries],
+  });
+  const [unfollowUser] = useMutation(UNFOLLOW_USER, {
+    refetchQueries: [`getCurrentUser`, ...queries],
+  });
 
   const { currentUser } = useAuth();
   let history = useHistory();

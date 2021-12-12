@@ -31,7 +31,6 @@
   box-sizing: border-box;
   height: 56px;
   background-color: var(--primary-background-color);
-  padding: 1.5em;
 }
 
 .header .left {

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../../contexts/AuthContext';
 
 import { useMutation } from '@apollo/client';
-import { LIKE_POST } from '../../graphql/mutations/postMutations';
+import { LIKE_POST } from '../../../graphql/mutations/postMutations';
 
 import styled from 'styled-components';
 import { IoHeartOutline } from 'react-icons/io5';

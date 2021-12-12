@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import ImageLoader from '../reusable/ImageLoader';
+import ImageLoader from '../../reusable/ImageLoader';
 
 import styled from 'styled-components';
 

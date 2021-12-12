@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 
 import HomeCardCommentItem from './HomeCardCommentItem';
 
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../../contexts/AuthContext';
 import { useMutation } from '@apollo/client';
-import { ADD_COMMENT } from '../../graphql/mutations/commentMutations';
+import { ADD_COMMENT } from '../../../graphql/mutations/commentMutations';
 
 import { IoSendOutline } from 'react-icons/io5';
 

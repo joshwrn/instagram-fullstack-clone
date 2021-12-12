@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import ImageLoader from '../reusable/ImageLoader';
-import FollowButton from '../reusable/FollowButton';
+import ImageLoader from '../../reusable/ImageLoader';
+import FollowButton from '../../reusable/FollowButton';
 
 import { useQuery } from '@apollo/client';
-import { SUGGESTED_USERS } from '../../graphql/queries/userQueries';
+import { SUGGESTED_USERS } from '../../../graphql/queries/userQueries';
 
 import styled from 'styled-components';
 
@@ -26,7 +26,7 @@ const User = ({ username, displayName, avatar, id }) => {
           </NameContainer>
         </UserStart>
       </Link>
-      <Button currentProfile={id} />
+      <Button currentProfile={id} queries={[`suggestedUsers`]} />
     </UserContainer>
   );
 };
@@ -42,7 +42,7 @@ const Suggested = () => {
 
   return (
     <Container>
-      <Header>Suggestions For You</Header>
+      {users.length > 0 && <Header>Suggestions For You</Header>}
       {users.map((user) => (
         <User
           key={user.id}
@@ -67,7 +67,7 @@ const Container = styled.div`
   margin-top: 30px;
   display: flex;
   flex-direction: column;
-  width: 230px;
+  width: 240px;
   justify-content: center;
   gap: 14px;
 `;

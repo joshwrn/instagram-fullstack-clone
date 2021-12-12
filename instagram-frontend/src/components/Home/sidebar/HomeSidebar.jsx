@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import LoginButton from './LoginButton';
-import FollowersModal from '../reusable/FollowersModal';
-import UploadModal from '../reusable/UploadModal';
-import Suggested from '../Suggested/Suggested';
+import LoginButton from '../LoginButton';
+import FollowersModal from '../../reusable/FollowersModal';
+import UploadModal from '../../reusable/UploadModal';
+import Suggested from './Suggested';
 
-import stopScroll from '../../functions/stopScroll';
-import ImageLoader from '../reusable/ImageLoader';
+import stopScroll from '../../../functions/stopScroll';
+import ImageLoader from '../../reusable/ImageLoader';
 
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../../contexts/AuthContext';
 
-import Styles from '../../styles/home/home__sidebar.module.css';
+import Styles from '../../../styles/home/home__sidebar.module.css';
 import { IoAddCircleOutline } from 'react-icons/io5';
 
 const Sidebar = ({ setNewPost }) => {

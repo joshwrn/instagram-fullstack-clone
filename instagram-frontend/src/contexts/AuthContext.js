@@ -28,7 +28,6 @@ export function AuthProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    console.log('auth context data:', data);
     if (data && data.getCurrentUser) {
       setCurrentUser(data.getCurrentUser);
     }

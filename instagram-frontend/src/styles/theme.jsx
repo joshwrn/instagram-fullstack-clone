@@ -37,6 +37,9 @@ export const darkTheme = {
   shadow: {
     primary: baseTheme.shadow.primary,
   },
+  overlay: {
+    homeCard: 'rgba(0, 0, 0, 0.85)',
+  },
 };
 
 export const lightTheme = {
@@ -68,5 +71,8 @@ export const lightTheme = {
   },
   shadow: {
     primary: baseTheme.shadow.primary,
+  },
+  overlay: {
+    homeCard: 'rgba(255, 255, 255, 0.85)',
   },
 };

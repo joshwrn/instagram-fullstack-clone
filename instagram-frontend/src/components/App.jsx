@@ -12,16 +12,16 @@ import Messages from './Messages/Messages';
 
 import { AuthProvider } from '../contexts/AuthContext';
 
-import '../styles/app.css';
-
 import { ThemeProvider } from 'styled-components';
 import { darkTheme, lightTheme } from '../styles/theme';
+import GlobalStyles from '../styles/GlobalStyles';
 
 function App() {
   const [theme, setTheme] = useState('dark');
 
   return (
     <ThemeProvider theme={theme === 'dark' ? darkTheme : lightTheme}>
+      <GlobalStyles />
       <HashRouter>
         <AuthProvider>
           <div className="App">

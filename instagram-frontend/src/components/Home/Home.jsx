@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import Sidebar from './HomeSidebar';
+import Sidebar from './sidebar/HomeSidebar';
 import HomeFeed from './HomeFeed';
 
 import ScrollToTop from '../../functions/ScrollToTop';

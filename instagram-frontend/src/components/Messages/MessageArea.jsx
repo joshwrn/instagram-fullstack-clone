@@ -11,7 +11,7 @@ import { NEW_MESSAGE } from '../../graphql/subscriptions/messageSubscriptions';
 
 import { useTheme } from 'styled-components';
 
-const MessageArea = ({ currentThread, Styles, dummyRef }) => {
+const MessageArea = ({ currentIndex, currentThread, Styles, dummyRef }) => {
   const client = useApolloClient();
   const theme = useTheme();
   const [thread, setThread] = useState([]);
@@ -35,6 +35,10 @@ const MessageArea = ({ currentThread, Styles, dummyRef }) => {
       },
     });
   }, [currentThread]);
+
+  useEffect(() => {
+    setThread([]);
+  }, [currentIndex]);
 
   // set the thread and whether or not the end of the thread has been reached
   useEffect(() => {

@@ -74,7 +74,9 @@ const HoverCard = ({ show, setShow, userId }) => {
                 })}
               </PostsContainer>
               <Footer>
-                <Button>Message</Button>
+                <Link to={`/messages/${userId}`}>
+                  <Button>Message</Button>
+                </Link>
                 <Button currentProfile={userId} as={FollowButton}>
                   Follow
                 </Button>

@@ -19,3 +19,13 @@ export const GET_THREADS = gql`
     }
   }
 `;
+
+export const GET_NEW_CONTACT = gql`
+  query findNewContact($id: ID!) {
+    findUser(id: $id) {
+      displayName
+      avatar
+      id
+    }
+  }
+`;

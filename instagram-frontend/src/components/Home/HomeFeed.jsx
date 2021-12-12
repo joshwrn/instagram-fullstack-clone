@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import StoriesBar from '../Stories/StoriesBar';
-import Card from './HomeCard';
+import Card from './card/HomeCard';
 import LoadingIcon from '../reusable/LoadingIcon';
 import NoPosts from '../reusable/NoPosts';
 
@@ -12,7 +11,7 @@ import { FIND_FEED } from '../../graphql/queries/postQueries';
 
 import styled from 'styled-components';
 
-const HomeFeed = ({ newPost }) => {
+const HomeFeed = () => {
   const [feed, setFeed] = useState([]);
 
   const [noPosts, setNoPosts] = useState(false);

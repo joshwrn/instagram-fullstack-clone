@@ -24,7 +24,7 @@
   position: relative;
   align-items: center;
   justify-content: center;
-  max-width: 250px;
+  width: 240px;
 }
 
 /* .bg {

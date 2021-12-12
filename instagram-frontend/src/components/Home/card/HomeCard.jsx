@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import HomeCardFooter from './HomeCardFooter';
 import HomeCardImage from './HomeCardImage';
 import HomeCardOverlay from './HomeCardOverlay';
-import HoverCard from '../reusable/HoverCard';
+import HoverCard from '../../reusable/HoverCard';
 
 import styled, { keyframes } from 'styled-components';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
@@ -56,12 +56,14 @@ const Card = ({ post, cursorRef }) => {
               </div>
               {/*//+ more icon */}
               <div className="right">
-                <MoreHorizIcon
-                  onClick={() => {
-                    getModal('follow');
-                  }}
-                  className="icon"
-                />
+                {!modal && (
+                  <MoreHorizIcon
+                    onClick={() => {
+                      getModal('follow');
+                    }}
+                    className="icon"
+                  />
+                )}
               </div>
             </Header>
             {/*//+ image */}

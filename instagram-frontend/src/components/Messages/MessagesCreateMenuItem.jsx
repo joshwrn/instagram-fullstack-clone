@@ -21,10 +21,7 @@ const MessagesCreateMenuItem = ({
           otherUser: {
             id: contact.id,
             displayName: contact.displayName,
-            avatar: {
-              image: contact.avatar.image,
-              contentType: contact.avatar.contentType,
-            },
+            avatar: contact.avatar,
           },
           date: Date.now(),
           messages: [],
