@@ -1,6 +1,6 @@
 A fullstack clone and rededign of instagram using React for the frontend, GraphQL for the backend, MongoDB for the database, and AWS S3 to store images.
 
-Orginally I did all of the backend related things Googles's Firestore, but I wanted to practice using GraphQL.
+Orginally I used Googles's Firestore for all backend related things, but I wanted to practice using GraphQL.
 [Original Project](https://github.com/joshwrn/instagram-clone)
 
 ## Post Page
