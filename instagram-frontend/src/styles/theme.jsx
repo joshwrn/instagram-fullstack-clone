@@ -15,6 +15,7 @@ export const darkTheme = {
   },
   background: {
     primary: '#000',
+    nav: 'rgba(0, 0, 0, 0.733)',
   },
   border: {
     primary: '1px solid rgb(41, 41, 41)',
@@ -50,6 +51,7 @@ export const lightTheme = {
   },
   background: {
     primary: '#fff',
+    nav: 'rgba(255, 255, 255, 0.733)',
   },
   border: {
     primary: '1px solid transparent',

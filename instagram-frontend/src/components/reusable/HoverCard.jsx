@@ -5,6 +5,8 @@ import LoadingIcon from './LoadingIcon';
 import ImageLoader from './ImageLoader';
 import FollowButton from './FollowButton';
 
+import { useAuth } from '../../contexts/AuthContext';
+
 import { useLazyQuery } from '@apollo/client';
 import { FIND_USER_CARD } from '../../graphql/queries/userQueries';
 
@@ -21,6 +23,7 @@ const Stat = ({ label, number }) => {
 
 const HoverCard = ({ show, setShow, userId }) => {
   const [user, setUser] = useState(null);
+  const { currentUser } = useAuth();
   const [getCard, { loading, data }] = useLazyQuery(FIND_USER_CARD, {
     onError: (err) => console.log(err),
   });
@@ -74,9 +77,11 @@ const HoverCard = ({ show, setShow, userId }) => {
                 })}
               </PostsContainer>
               <Footer>
-                <Link to={`/messages/${userId}`}>
-                  <Button>Message</Button>
-                </Link>
+                {currentUser && currentUser.id === userId ? null : (
+                  <Link to={`/messages/${userId}`}>
+                    <Button>Message</Button>
+                  </Link>
+                )}
                 <Button currentProfile={userId} as={FollowButton}>
                   Follow
                 </Button>

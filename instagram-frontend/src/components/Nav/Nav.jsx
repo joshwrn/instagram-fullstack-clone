@@ -9,13 +9,13 @@ import UploadModal from '../reusable/UploadModal';
 
 import { light, dark } from '../../functions/theme';
 import stopScroll from '../../functions/stopScroll';
-import jc from '../../functions/joinClasses';
 
 import { useAuth } from '../../contexts/AuthContext';
 import { useSubscription } from '@apollo/client';
 import { NEW_NOTIFICATION } from '../../graphql/subscriptions/notificationSubscriptions';
 
 import Styles from '../../styles/nav/nav.module.css';
+import styled from 'styled-components';
 import {
   IoHomeOutline,
   IoChatbubbleOutline,
@@ -110,8 +110,8 @@ const Nav = ({ theme, setTheme }) => {
       {renderModal ? (
         <UploadModal getModal={getModal} />
       ) : (
-        <div className={Styles.nav}>
-          <div className={Styles.inner}>
+        <StyledNav>
+          <Inner>
             <Link to="/">
               <div className={Styles.logo}>
                 <img className={Styles.logoImg} src={logo} alt="" />
@@ -120,24 +120,21 @@ const Nav = ({ theme, setTheme }) => {
             </Link>
             {/*//+ search box */}
             <NavSearchBox Styles={Styles} />
-            <div className={Styles.icons}>
+            <IconsContainer>
               <NavLink exact to="/">
-                <IoHomeOutline className={jc(Styles.icon, Styles.home)} />
+                <HomeIcon as={IoHomeOutline} />
               </NavLink>
               <NavLink exact to={currentUser ? '/messages' : '/sign-up'}>
-                <IoChatbubbleOutline className={jc(Styles.icon, Styles.chat)} />
+                <Icon as={IoChatbubbleOutline} />
               </NavLink>
-              <IoAddCircleOutline
-                onClick={getModal}
-                className={jc(Styles.icon, Styles.add)}
-              />
+              <AddIcon as={IoAddCircleOutline} onClick={getModal} />
               {/*//+ notifications */}
               <div
                 onClick={handleNoti}
                 className={Styles.notiContainer}
                 ref={notiRef}
               >
-                <IoHeartOutline className={jc(Styles.icon, Styles.heart)} />
+                <HeartIcon as={IoHeartOutline} />
                 {currentNotis > 0 ? (
                   <div className={Styles.notiBadge}>{currentNotis}</div>
                 ) : null}
@@ -158,10 +155,7 @@ const Nav = ({ theme, setTheme }) => {
                   exact
                   to={`/profile/${currentUser?.id}`}
                 >
-                  <IoPersonOutline
-                    onClick={handleUserIcon}
-                    className={jc(Styles.icon, Styles.person)}
-                  />
+                  <PersonIcon as={IoPersonOutline} onClick={handleUserIcon} />
                 </NavLink>
                 {openMenu && (
                   <NavUserMenu
@@ -171,12 +165,69 @@ const Nav = ({ theme, setTheme }) => {
                   />
                 )}
               </div>
-            </div>
-          </div>
-        </div>
+            </IconsContainer>
+          </Inner>
+        </StyledNav>
       )}
     </>
   );
 };
+
+const StyledNav = styled.div`
+  display: flex;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  background-color: ${({ theme }) => theme.background.nav};
+  backdrop-filter: blur(32px);
+  height: 54px;
+  border-bottom: ${({ theme }) => theme.border.primary};
+  box-shadow: 0px 0px 26px 5px rgba(0, 0, 0, 0.089);
+  z-index: 100;
+  box-sizing: border-box;
+`;
+
+const Inner = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1600px;
+  width: 100%;
+  padding: 0 60px 0 60px;
+  box-sizing: border-box;
+`;
+
+const IconsContainer = styled.div`
+  display: flex;
+  gap: 24px;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const Icon = styled.div`
+  cursor: pointer;
+  font-size: 1.5rem !important;
+`;
+
+const PersonIcon = styled(Icon)`
+  transform: translateY(2px) translateX(-1px);
+  font-size: 1.45rem !important;
+`;
+
+const HeartIcon = styled(Icon)`
+  font-size: 1.65rem !important;
+  transform: translateY(-1px);
+`;
+
+const HomeIcon = styled(Icon)`
+  transform: translateY(1px);
+  font-size: 1.5rem !important;
+`;
+
+const AddIcon = styled(Icon)`
+  display: none;
+`;
 
 export default Nav;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import LoginButton from '../LoginButton';
+import LoginButton from './LoginButton';
 import FollowersModal from '../../reusable/FollowersModal';
 import UploadModal from '../../reusable/UploadModal';
 import Suggested from './Suggested';

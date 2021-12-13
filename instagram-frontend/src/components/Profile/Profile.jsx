@@ -84,8 +84,8 @@ const Profile = (props) => {
 
   //+ new message link
   const newMessage = () => {
-    if (!userProfile) return history.push('/sign-up');
-    history.push(`/messages/${currentProfile.userID}`);
+    if (!currentUser) return history.push('/sign-up');
+    history.push(`/messages/${currentProfile.id}`);
   };
 
   //+ decides if action button should be post or message

@@ -43,17 +43,13 @@ const MessageArea = ({ currentIndex, currentThread, Styles, dummyRef }) => {
   // set the thread and whether or not the end of the thread has been reached
   useEffect(() => {
     if (!data) return;
-    console.log('data', data);
     if (data.readMessages.hasMore === false) {
       setEnd(true);
     }
-    const sortedMessages = [...thread, ...data.readMessages.messages].sort(
-      (a, b) => {
-        return b.date - a.date;
-      }
-    );
-    const assign = [...new Set(sortedMessages)];
-    setThread(assign);
+    const sortedMessages = [...data.readMessages.messages].sort((a, b) => {
+      return b.date - a.date;
+    });
+    setThread(sortedMessages);
     setIsFetching(false);
   }, [data]);
 

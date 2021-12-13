@@ -53,6 +53,7 @@
   cursor: pointer;
   font-size: 1.5rem !important;
 }
+
 .person {
   transform: translateY(2px) translateX(-1px);
   font-size: 1.45rem !important;
