@@ -70,7 +70,7 @@ const Messages = () => {
   useEffect(() => {
     if (params.uid && !loading) {
       const check = messageThreads.find((thread) => {
-        thread.otherUser.id === params.uid;
+        return thread.otherUser.id === params.uid;
       });
       if (check) {
         getCurrentMessage(messageThreads.indexOf(check));

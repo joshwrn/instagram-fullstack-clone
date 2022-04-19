@@ -19,18 +19,18 @@ const convertTime = (start, end) => {
     const converted = Math.floor(total / 86400);
     return `${converted}d`;
   }
-  if (total >= 604800 && total < 2592000) {
+  if (total >= 604800) {
     const converted = Math.floor(total / 604800);
     return `${converted}w`;
   }
-  if (total >= 2592000 && total < 31536000) {
-    const converted = Math.floor(total / 2592000);
-    return `${converted}${converted === 1 ? 'month' : 'months'}`;
-  }
-  if (total >= 31536000) {
-    const converted = Math.floor(total / 31536000);
-    return `${converted}${converted === 1 ? 'year' : 'years'}`;
-  }
+  // if (total >= 2592000 && total < 31536000) {
+  //   const converted = Math.floor(total / 2592000);
+  //   return `${converted}${converted === 1 ? ' month ago' : ' months ago'}`;
+  // }
+  // if (total >= 31536000) {
+  //   const converted = Math.floor(total / 31536000);
+  //   return `${converted}${converted === 1 ? ' year ago' : ' years ago'}`;
+  // }
 };
 
 export default convertTime;
